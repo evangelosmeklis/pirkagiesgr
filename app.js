@@ -400,7 +400,24 @@ class GreeceFierAlert {
         const timeStr = time.toString().padStart(4, '0');
         const hours = timeStr.substring(0, 2);
         const minutes = timeStr.substring(2, 4);
-        return `${date} ${hours}:${minutes} UTC`;
+        
+        // Create UTC date object
+        const utcDateTime = new Date(`${date}T${hours}:${minutes}:00Z`);
+        
+        // Convert to Greece time (Europe/Athens)
+        const greeceTime = new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Europe/Athens',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }).format(utcDateTime);
+        
+        // Format the result
+        const [datePart, timePart] = greeceTime.split(', ');
+        return `${datePart} ${timePart} Greece Time`;
     }
 
     getAccuracyAlert(fire) {

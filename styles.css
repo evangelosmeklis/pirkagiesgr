@@ -1020,49 +1020,31 @@ body {
     text-decoration: underline;
 }
 
-/* Custom Fire Markers */
-.fire-marker {
-    border-radius: 50%;
-    border: 3px solid white;
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4);
+/* Fire Emoji Markers */
+.fire-emoji-marker {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
     cursor: pointer;
-    transition: all 0.3s ease;
 }
 
-.fire-marker:hover {
-    transform: scale(1.2);
-    z-index: 1000;
+.fire-emoji-marker:hover {
+    background: transparent !important;
 }
 
-.fire-marker.high-confidence {
-    background: #ff6b6b;
-    animation: glow-red 2s ease-in-out infinite alternate;
+/* Override any Leaflet default marker styling */
+.leaflet-div-icon {
+    background: transparent !important;
+    border: none !important;
 }
 
-.fire-marker.medium-confidence {
-    background: #ffa500;
-    animation: glow-orange 2s ease-in-out infinite alternate;
+.leaflet-marker-icon {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
-.fire-marker.low-confidence {
-    background: #4ecdc4;
-    animation: glow-teal 2s ease-in-out infinite alternate;
-}
 
-@keyframes glow-red {
-    0% { box-shadow: 0 0 0 3px white, 0 0 0 5px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4); }
-    100% { box-shadow: 0 0 0 3px white, 0 0 0 5px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 107, 107, 0.6); }
-}
-
-@keyframes glow-orange {
-    0% { box-shadow: 0 0 0 3px white, 0 0 0 5px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4); }
-    100% { box-shadow: 0 0 0 3px white, 0 0 0 5px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 165, 0, 0.6); }
-}
-
-@keyframes glow-teal {
-    0% { box-shadow: 0 0 0 3px white, 0 0 0 5px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4); }
-    100% { box-shadow: 0 0 0 3px white, 0 0 0 5px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 20px rgba(78, 205, 196, 0.6); }
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
