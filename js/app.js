@@ -131,21 +131,8 @@ class GreeceFierAlert {
     }
 
     async loadSettings() {
-        // Check backend API status
-        try {
-            const response = await fetch('/api/status');
-            const status = await response.json();
-            
-            if (!status.nasa_firms_configured) {
-                this.showNotification('NASA FIRMS API key not configured on server. Please update config.env file.', 'warning');
-            }
-            
-            if (!status.openweather_configured) {
-                console.warn('OpenWeather API key not configured - weather features will be limited');
-            }
-        } catch (error) {
-            console.error('Failed to check API status:', error);
-        }
+        // No backend API to check anymore - using static files and GitHub Actions
+        console.log('Application initialized with static data files');
     }
 
     async loadFireData() {
@@ -372,9 +359,9 @@ class GreeceFierAlert {
     }
 
     generateBasicFireInfo(fire, locationName = null) {
-        const confidenceClass = this.getConfidenceClass(fire.confidence);
+        const confidenceClass = this.getConfidenceClass(fire.confidence || 0);
         const detectionTime = this.formatFireTime(fire.acq_date, fire.acq_time);
-        const coordinates = `${fire.latitude.toFixed(4)}°N, ${fire.longitude.toFixed(4)}°E`;
+        const coordinates = `${(fire.latitude || 0).toFixed(4)}°N, ${(fire.longitude || 0).toFixed(4)}°E`;
         
         // Format location to show both place name and coordinates
         let location;
@@ -403,12 +390,12 @@ class GreeceFierAlert {
                 
                 <div class="fire-detail">
                     <label>Brightness Temperature:</label>
-                    <span>${fire.brightness.toFixed(1)}K</span>
+                    <span>${(fire.brightness || 0).toFixed(1)}K</span>
                 </div>
                 
                 <div class="fire-detail">
                     <label>Fire Radiative Power:</label>
-                    <span>${fire.frp.toFixed(1)} MW</span>
+                    <span>${(fire.frp || 0).toFixed(1)} MW</span>
                 </div>
                 
                 <div class="fire-detail">
@@ -643,7 +630,7 @@ class GreeceFierAlert {
 
         sortedFires.forEach(fire => {
             const row = document.createElement('tr');
-            const coordinates = `${fire.latitude.toFixed(4)}°N, ${fire.longitude.toFixed(4)}°E`;
+            const coordinates = `${(fire.latitude || 0).toFixed(4)}°N, ${(fire.longitude || 0).toFixed(4)}°E`;
             
             // Format location to show both place name and coordinates
             let location;
@@ -658,10 +645,10 @@ class GreeceFierAlert {
             row.innerHTML = `
                 <td>${detectionTime}</td>
                 <td>${location}</td>
-                <td><span class="confidence-badge confidence-${this.getConfidenceClass(fire.confidence)}">${fire.confidence}%</span></td>
-                <td>${fire.brightness.toFixed(1)}K</td>
-                <td>${fire.frp.toFixed(1)} MW</td>
-                <td>${fire.satellite}</td>
+                <td><span class="confidence-badge confidence-${this.getConfidenceClass(fire.confidence || 0)}">${fire.confidence || 0}%</span></td>
+                <td>${(fire.brightness || 0).toFixed(1)}K</td>
+                <td>${(fire.frp || 0).toFixed(1)} MW</td>
+                <td>${fire.satellite || fire.data_source || 'Unknown'}</td>
             `;
             tbody.appendChild(row);
         });
@@ -670,7 +657,7 @@ class GreeceFierAlert {
     updateHistoricalStats(fires) {
         const total = fires.length;
         const avgDaily = total > 0 ? (total / 7).toFixed(1) : 0; // Average per day over 7 days
-        const avgIntensity = total > 0 ? (fires.reduce((sum, fire) => sum + fire.frp, 0) / total).toFixed(1) : 0;
+        const avgIntensity = total > 0 ? (fires.reduce((sum, fire) => sum + (fire.frp || 0), 0) / total).toFixed(1) : 0;
 
         document.getElementById('total-historical').textContent = total;
         document.getElementById('avg-daily').textContent = avgDaily;
@@ -863,7 +850,7 @@ class GreeceFierAlert {
         }
         
         // Create cache key
-        const cacheKey = `${lat.toFixed(4)},${lon.toFixed(4)}`;
+        const cacheKey = `${(lat || 0).toFixed(4)},${(lon || 0).toFixed(4)}`;
         
         // Check cache first
         if (this.geocodeCache.has(cacheKey)) {
@@ -871,7 +858,7 @@ class GreeceFierAlert {
         }
         
         // Fallback to coordinates
-        const fallback = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+        const fallback = `${(lat || 0).toFixed(4)}, ${(lon || 0).toFixed(4)}`;
         this.geocodeCache.set(cacheKey, fallback);
         return fallback;
     }
