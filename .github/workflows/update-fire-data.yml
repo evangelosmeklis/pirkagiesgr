@@ -12,6 +12,8 @@ on:
 jobs:
   update-data:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Allow the action to write to the repository
     
     steps:
     - name: Checkout repository

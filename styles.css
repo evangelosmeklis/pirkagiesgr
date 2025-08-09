@@ -96,6 +96,76 @@ body {
     gap: 0.75rem;
 }
 
+/* Beta Disclaimer Styles */
+.beta-disclaimer {
+    background: linear-gradient(135deg, #ff4444, #ff6b35);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 999;
+    animation: betaPulse 2s ease-in-out infinite;
+}
+
+@keyframes betaPulse {
+    0%, 100% { background: linear-gradient(135deg, #ff4444, #ff6b35); }
+    50% { background: linear-gradient(135deg, #ff6b35, #ff4444); }
+}
+
+.beta-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0.75rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+}
+
+.beta-icon {
+    font-size: 1.2rem;
+    color: #ffffff;
+    animation: shake 1s ease-in-out infinite;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+.beta-text {
+    flex: 1;
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.beta-text strong {
+    font-weight: 800;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.beta-close {
+    background: none;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    opacity: 0.8;
+}
+
+.beta-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.beta-disclaimer.hidden {
+    display: none;
+}
+
 /* Button Styles */
 .btn {
     padding: 0.75rem 1.5rem;
