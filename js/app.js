@@ -54,6 +54,14 @@ class GreeceFierAlert {
             });
         }
 
+        // Map controls toggle button (mobile)
+        const controlsToggle = document.getElementById('controls-toggle');
+        if (controlsToggle) {
+            controlsToggle.addEventListener('click', () => {
+                this.toggleMapControls();
+            });
+        }
+
         // Update schedule display is handled in setupUpdateScheduleDisplay method
 
         // Fire info panel
@@ -491,6 +499,22 @@ class GreeceFierAlert {
             const betaDisclaimer = document.querySelector('.beta-disclaimer');
             if (betaDisclaimer) {
                 betaDisclaimer.classList.add('hidden');
+            }
+        }
+    }
+
+    toggleMapControls() {
+        const mapControls = document.querySelector('.map-controls');
+        const toggleIcon = document.querySelector('#controls-toggle i');
+        
+        if (mapControls && toggleIcon) {
+            mapControls.classList.toggle('collapsed');
+            
+            // Update toggle icon
+            if (mapControls.classList.contains('collapsed')) {
+                toggleIcon.className = 'fas fa-chevron-down';
+            } else {
+                toggleIcon.className = 'fas fa-chevron-up';
             }
         }
     }

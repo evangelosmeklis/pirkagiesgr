@@ -386,24 +386,58 @@ body {
     background: rgba(22, 24, 28, 0.95);
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
-    padding: 1.5rem;
-    border-radius: 16px;
+    padding: 1rem;
+    border-radius: 12px;
     border: 1px solid #2f3336;
     z-index: 1000;
-    min-width: 300px;
+    min-width: 280px;
+    max-width: 320px;
+    transition: all 0.3s ease;
 }
 
 .controls-header {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
     border-bottom: 1px solid #2f3336;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .controls-header h3 {
     color: #e7e9ea;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 700;
     margin: 0;
+}
+
+.controls-toggle {
+    background: none;
+    border: none;
+    color: #8b98a5;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: none; /* Hidden by default, shown on mobile */
+}
+
+.controls-toggle:hover {
+    color: #e7e9ea;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.controls-content {
+    transition: all 0.3s ease;
+}
+
+.map-controls.collapsed .controls-content {
+    display: none;
+}
+
+.map-controls.collapsed {
+    min-width: auto;
+    width: auto;
 }
 
 .data-source-info {
@@ -1320,12 +1354,48 @@ body {
     }
     
     .map-controls {
-        position: relative;
-        top: auto;
+        position: fixed;
+        top: 10px;
+        right: 10px;
         left: auto;
-        margin: 1rem;
-        width: calc(100% - 2rem);
+        margin: 0;
+        width: auto;
+        min-width: 250px;
+        max-width: calc(100vw - 20px);
+        padding: 0.75rem;
+        z-index: 1001;
+    }
+    
+    .controls-toggle {
+        display: block !important;
+    }
+    
+    .map-controls.collapsed {
         min-width: auto;
+        width: auto;
+        padding: 0.75rem;
+    }
+    
+    .controls-header {
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+    }
+    
+    .controls-header h3 {
+        font-size: 0.85rem;
+    }
+    
+    .control-group {
+        margin-bottom: 0.75rem;
+    }
+    
+    .data-source-info {
+        margin-top: 1rem;
+        padding-top: 0.75rem;
+    }
+    
+    .source-description {
+        font-size: 0.65rem;
     }
     
     .fire-info-panel {
