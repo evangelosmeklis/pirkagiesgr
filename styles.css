@@ -885,6 +885,88 @@ body {
     transition: all 0.3s ease;
 }
 
+/* Cookie Consent Banner */
+.cookie-consent-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(22, 24, 28, 0.95);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid #2f3336;
+    padding: 1.5rem;
+    z-index: 10001;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.cookie-consent-banner.show {
+    transform: translateY(0);
+}
+
+.cookie-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.cookie-text h3 {
+    color: #e7e9ea;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.cookie-text p {
+    color: #8b98a5;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 0;
+    max-width: 600px;
+}
+
+.cookie-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.btn-accept {
+    background: #1d9bf0;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 9999px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-accept:hover {
+    background: #1a8cd8;
+}
+
+.btn-reject {
+    background: transparent;
+    color: #8b98a5;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid #2f3336;
+    border-radius: 9999px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-reject:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #e7e9ea;
+}
+
 .loading-overlay.active {
     opacity: 1;
     visibility: visible;
@@ -1026,22 +1108,42 @@ body {
     border: none !important;
     box-shadow: none !important;
     cursor: pointer;
+    border-radius: 0 !important;
+    width: auto !important;
+    height: auto !important;
 }
 
 .fire-emoji-marker:hover {
     background: transparent !important;
+    border: none !important;
+}
+
+.fire-emoji-marker span {
+    background: transparent !important;
+    border: none !important;
+    display: block !important;
 }
 
 /* Override any Leaflet default marker styling */
 .leaflet-div-icon {
     background: transparent !important;
     border: none !important;
+    border-radius: 0 !important;
 }
 
 .leaflet-marker-icon {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+/* Specifically target fire emoji markers */
+.leaflet-div-icon.fire-emoji-marker {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
 }
 
 
@@ -1151,6 +1253,16 @@ body {
     .historical-table th,
     .historical-table td {
         padding: 0.75rem 0.5rem;
+    }
+    
+    .cookie-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .cookie-buttons {
+        width: 100%;
+        justify-content: center;
     }
 }
 

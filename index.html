@@ -8,6 +8,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Google Analytics (conditional loading based on consent) -->
+    <script>
+        // Google Analytics with consent management
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        // Check if user has accepted cookies
+        const hasConsentedToAnalytics = localStorage.getItem('analytics_consent') === 'accepted';
+        
+        if (hasConsentedToAnalytics) {
+            // Load Google Analytics
+            gtag('config', 'G-XXXXXXXXXX', {
+                anonymize_ip: true,
+                allow_google_signals: false,
+                allow_ad_personalization_signals: false
+            });
+        } else {
+            // Disable Google Analytics
+            gtag('config', 'G-XXXXXXXXXX', {
+                send_page_view: false
+            });
+        }
+        
+        // Function to enable analytics
+        window.enableAnalytics = function() {
+            gtag('config', 'G-XXXXXXXXXX', {
+                anonymize_ip: true,
+                allow_google_signals: false,
+                allow_ad_personalization_signals: false
+            });
+            gtag('event', 'page_view');
+        };
+        
+        // Function to disable analytics
+        window.disableAnalytics = function() {
+            gtag('config', 'G-XXXXXXXXXX', {
+                send_page_view: false
+            });
+        };
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
 </head>
 <body>
     <div class="app-container">
@@ -296,6 +339,20 @@
             <div class="loading-spinner">
                 <i class="fas fa-fire"></i>
                 <p>Loading fire data...</p>
+            </div>
+        </div>
+
+        <!-- Cookie Consent Banner -->
+        <div class="cookie-consent-banner" id="cookie-consent-banner">
+            <div class="cookie-content">
+                <div class="cookie-text">
+                    <h3>🍪 Cookie Consent</h3>
+                    <p>We use Google Analytics to understand how visitors interact with our website. This helps us improve the user experience. You can choose to accept or reject analytics cookies.</p>
+                </div>
+                <div class="cookie-buttons">
+                    <button class="btn btn-reject" id="reject-cookies">Reject</button>
+                    <button class="btn btn-accept" id="accept-cookies">Accept</button>
+                </div>
             </div>
         </div>
 

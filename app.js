@@ -26,6 +26,7 @@ class GreeceFierAlert {
             await this.loadSettings();
             await this.loadFireData();
             this.setupAutoRefresh();
+            this.setupCookieConsent();
             this.hideLoading();
         } catch (error) {
             console.error('Failed to initialize application:', error);
@@ -245,9 +246,10 @@ class GreeceFierAlert {
 
         const markerIcon = L.divIcon({
             className: 'fire-emoji-marker',
-            html: `<span style="font-size: ${size}px; cursor: pointer; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">${emoji}</span>`,
+            html: `<span style="font-size: ${size}px; cursor: pointer; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); display: block; background: transparent;">${emoji}</span>`,
             iconSize: [size, size],
-            iconAnchor: [size/2, size/2]
+            iconAnchor: [size/2, size/2],
+            popupAnchor: [0, -size/2]
         });
 
         const marker = L.marker([fire.latitude, fire.longitude], {
@@ -404,20 +406,22 @@ class GreeceFierAlert {
         // Create UTC date object
         const utcDateTime = new Date(`${date}T${hours}:${minutes}:00Z`);
         
-        // Convert to Greece time (Europe/Athens)
-        const greeceTime = new Intl.DateTimeFormat('en-GB', {
+        // Convert to Greece time (Europe/Athens) 
+        const options = {
             timeZone: 'Europe/Athens',
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
             hour: '2-digit',
             minute: '2-digit',
+            second: '2-digit',
             hour12: false
-        }).format(utcDateTime);
+        };
         
-        // Format the result
-        const [datePart, timePart] = greeceTime.split(', ');
-        return `${datePart} ${timePart} Greece Time`;
+        const greeceDateTime = utcDateTime.toLocaleString('en-GB', options);
+        
+        // Format as: DD/MM/YYYY, HH:MM:SS (Greece Time)
+        return `${greeceDateTime} (Greece Time)`;
     }
 
     getAccuracyAlert(fire) {
@@ -602,6 +606,48 @@ class GreeceFierAlert {
 
     showError(message) {
         this.showNotification(message, 'error');
+    }
+
+    setupCookieConsent() {
+        const banner = document.getElementById('cookie-consent-banner');
+        const acceptBtn = document.getElementById('accept-cookies');
+        const rejectBtn = document.getElementById('reject-cookies');
+        
+        // Check if user has already made a choice
+        const consent = localStorage.getItem('analytics_consent');
+        
+        if (!consent) {
+            // Show banner after a short delay
+            setTimeout(() => {
+                banner.classList.add('show');
+            }, 2000);
+        }
+        
+        // Accept cookies
+        acceptBtn.addEventListener('click', () => {
+            localStorage.setItem('analytics_consent', 'accepted');
+            banner.classList.remove('show');
+            
+            // Enable Google Analytics
+            if (window.enableAnalytics) {
+                window.enableAnalytics();
+            }
+            
+            this.showNotification('Analytics cookies accepted. This helps us improve the website.', 'success');
+        });
+        
+        // Reject cookies
+        rejectBtn.addEventListener('click', () => {
+            localStorage.setItem('analytics_consent', 'rejected');
+            banner.classList.remove('show');
+            
+            // Disable Google Analytics
+            if (window.disableAnalytics) {
+                window.disableAnalytics();
+            }
+            
+            this.showNotification('Analytics cookies rejected. No tracking data will be collected.', 'success');
+        });
     }
 }
 
