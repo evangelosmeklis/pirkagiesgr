@@ -1,10 +1,9 @@
 {
-  "last_update": "2024-01-01T00:00:00.000Z",
+  "last_update": "2025-08-09T14:57:17.091641",
   "datasets": {
-    "live": 0,
-    "recent": 0,
-    "historical": 0
+    "live": 59,
+    "recent": 59,
+    "historical": 59
   },
-  "status": "sample_data",
-  "message": "Waiting for first GitHub Actions run to fetch real data"
+  "status": "success"
 }
