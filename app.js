@@ -257,16 +257,16 @@ class GreeceFierAlert {
         // Add hover effect
         marker.on('mouseover', function() {
             const element = this.getElement();
-            if (element) {
-                element.style.transform = 'scale(1.2)';
+            if (element && element.firstChild) {
+                element.firstChild.style.transform = 'scale(1.2)';
                 element.style.zIndex = '1000';
             }
         });
 
         marker.on('mouseout', function() {
             const element = this.getElement();
-            if (element) {
-                element.style.transform = 'scale(1)';
+            if (element && element.firstChild) {
+                element.firstChild.style.transform = 'scale(1)';
                 element.style.zIndex = '';
             }
         });
