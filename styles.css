@@ -212,11 +212,11 @@ body {
     font-size: 0.875rem;
 }
 
-.auto-refresh-indicator {
-    background: rgba(22, 24, 28, 0.8);
-    color: #8b98a5;
+.update-schedule-indicator {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
     padding: 0.75rem 1.5rem;
-    border: 1px solid #2f3336;
+    border: 1px solid rgba(34, 197, 94, 0.3);
     border-radius: 50px;
     font-weight: 500;
     display: flex;
@@ -225,9 +225,51 @@ body {
     font-size: 0.85rem;
 }
 
-.auto-refresh-indicator i {
+.update-schedule-indicator i {
     font-size: 0.8rem;
-    color: #1d9bf0;
+    color: #22c55e;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Update info section styling */
+.update-info {
+    background: rgba(34, 197, 94, 0.05);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.update-info ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.update-info li {
+    margin: 0.5rem 0;
+    color: #e7e9ea;
+    line-height: 1.5;
+}
+
+.update-note {
+    background: rgba(34, 197, 94, 0.1);
+    border-left: 4px solid #22c55e;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    color: #e7e9ea;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.update-note i {
+    color: #22c55e;
+    margin-right: 0.5rem;
 }
 
 .btn-settings {

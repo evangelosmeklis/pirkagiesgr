@@ -28,7 +28,7 @@ class GreeceFierAlert {
             this.initializeMap();
             await this.loadSettings();
             await this.loadFireData();
-            this.setupAutoRefresh();
+            this.setupUpdateScheduleDisplay();
             this.setupCookieConsent();
             this.checkBetaDisclaimer();
             this.hideLoading();
@@ -54,7 +54,7 @@ class GreeceFierAlert {
             });
         }
 
-        // Auto-refresh is handled in setupAutoRefresh method
+        // Update schedule display is handled in setupUpdateScheduleDisplay method
 
         // Fire info panel
         document.getElementById('close-panel').addEventListener('click', () => {
@@ -667,54 +667,32 @@ class GreeceFierAlert {
 
 
 
-    setupAutoRefresh() {
-        // Clear existing intervals
-        if (this.refreshInterval) {
-            clearInterval(this.refreshInterval);
+    setupUpdateScheduleDisplay() {
+        // Display information about GitHub Action update schedule
+        const updateElement = document.getElementById('next-update');
+        if (updateElement) {
+            // Get the last update time from the data
+            this.apiService.loadStaticData('recent').then(data => {
+                if (data && data.last_updated) {
+                    const lastUpdate = new Date(data.last_updated);
+                    const nextUpdate = new Date(lastUpdate.getTime() + 30 * 60 * 1000); // Add 30 minutes
+                    const now = new Date();
+                    
+                    if (nextUpdate > now) {
+                        const minutesUntilUpdate = Math.ceil((nextUpdate - now) / (1000 * 60));
+                        updateElement.textContent = `Next update in ~${minutesUntilUpdate} minutes`;
+                    } else {
+                        updateElement.textContent = `Data updates every 30 minutes`;
+                    }
+                } else {
+                    updateElement.textContent = `Data updates every 30 minutes`;
+                }
+            }).catch(() => {
+                updateElement.textContent = `Data updates every 30 minutes`;
+            });
         }
-        if (this.countdownInterval) {
-            clearInterval(this.countdownInterval);
-        }
-
-        // 30 minutes auto-refresh (prevent abuse)
-        const intervalMinutes = 30;
-        const intervalMs = intervalMinutes * 60 * 1000;
-        let timeRemaining = intervalMs;
-
-        // Set up the refresh interval
-        this.refreshInterval = setInterval(() => {
-            if (this.currentTab === 'live') {
-                this.refreshFireData();
-                timeRemaining = intervalMs; // Reset countdown
-            }
-        }, intervalMs);
-
-        // Set up the countdown display
-        this.countdownInterval = setInterval(() => {
-            timeRemaining -= 1000;
-            
-            if (timeRemaining <= 0) {
-                timeRemaining = intervalMs;
-            }
-            
-            this.updateCountdownDisplay(timeRemaining);
-        }, 1000);
-
-        // Initial countdown display
-        this.updateCountdownDisplay(timeRemaining);
         
-        console.log(`Auto-refresh set to ${intervalMinutes} minutes`);
-    }
-
-    updateCountdownDisplay(timeRemaining) {
-        const nextRefreshElement = document.getElementById('next-refresh');
-        if (nextRefreshElement) {
-            const minutes = Math.floor(timeRemaining / (1000 * 60));
-            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-            
-            const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            nextRefreshElement.textContent = `Auto-refresh in ${formattedTime}`;
-        }
+        console.log('GitHub Action updates fire data every 30 minutes automatically');
     }
 
     async refreshFireData() {

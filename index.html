@@ -73,9 +73,9 @@
                     </div>
                 </div>
                 <div class="header-controls">
-                    <div class="auto-refresh-indicator">
-                        <i class="fas fa-clock"></i>
-                        <span id="next-refresh">Auto-refresh in 30:00</span>
+                    <div class="update-schedule-indicator">
+                        <i class="fas fa-sync-alt"></i>
+                        <span id="next-update">Data updates every 30 minutes</span>
                     </div>
                 </div>
             </div>
@@ -346,12 +346,30 @@
                         </div>
 
                         <div class="about-section">
+                            <h2>🔄 Automatic Data Updates</h2>
+                            <div class="update-info">
+                                <p><strong>How it works:</strong> This website automatically updates fire data every 30 minutes using GitHub Actions.</p>
+                                <ul>
+                                    <li><strong>GitHub Action runs every 30 minutes</strong> to fetch fresh fire data from NASA FIRMS</li>
+                                    <li><strong>New data is automatically processed</strong> and saved as JSON files</li>
+                                    <li><strong>Website updates instantly</strong> when you refresh the page or visit it</li>
+                                    <li><strong>No manual intervention required</strong> - everything happens automatically</li>
+                                </ul>
+                                <p class="update-note">
+                                    <i class="fas fa-info-circle"></i>
+                                    You don't need to manually refresh the page. Simply reload the website to get the latest fire data that was fetched by our automated system.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="about-section">
                             <h2>🔧 Technical Information</h2>
                             <div class="tech-details">
-                                <p><strong>Data Update Frequency:</strong> Every 3-6 hours (depending on satellite overpass)</p>
+                                <p><strong>NASA Data Update Frequency:</strong> Every 3-6 hours (depending on satellite overpass)</p>
+                                <p><strong>Our Fetch Frequency:</strong> Every 30 minutes via GitHub Actions</p>
                                 <p><strong>Detection Resolution:</strong> 375m - 1km depending on sensor</p>
                                 <p><strong>Geographic Coverage:</strong> Greece (Hellenic Republic)</p>
-                                <p><strong>Database:</strong> Local browser storage for historical analysis</p>
+                                <p><strong>Data Storage:</strong> Static JSON files updated automatically</p>
                             </div>
                         </div>
 
