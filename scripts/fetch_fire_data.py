@@ -8,7 +8,7 @@ import os
 import json
 import requests
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 class FireDataFetcher:
     def __init__(self):
@@ -57,7 +57,7 @@ class FireDataFetcher:
             for fire in fires:
                 fire['data_source'] = source
                 fire['id'] = f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}"
-                fire['fetch_timestamp'] = datetime.now().isoformat()
+                fire['fetch_timestamp'] = datetime.now(timezone.utc).isoformat()
             
             print(f"✅ Fetched {len(fires)} fires from {source}")
             return fires
@@ -134,7 +134,7 @@ class FireDataFetcher:
     
     def save_data(self, datasets):
         """Save datasets as JSON files"""
-        timestamp = datetime.now().isoformat()
+        timestamp = datetime.now(timezone.utc).isoformat()
         
         for dataset_name, fires in datasets.items():
             data = {
@@ -177,7 +177,7 @@ def main():
         
         # Create error status file
         error_status = {
-            'last_update': datetime.now().isoformat(),
+            'last_update': datetime.now(timezone.utc).isoformat(),
             'status': 'error',
             'error': str(e)
         }
