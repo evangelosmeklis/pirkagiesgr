@@ -335,8 +335,8 @@ if __name__ == '__main__':
         print("Get OpenWeather API key from: https://openweathermap.org/api")
         
         if not NASA_FIRMS_MAP_KEY or NASA_FIRMS_MAP_KEY == 'your_nasa_firms_api_key_here':
-            print("\n❌ Cannot start without NASA FIRMS API key.")
-            sys.exit(1)
+            print("\n⚠️  Starting in DEMO MODE - configure API keys for live data.")
+            print("The UI will be functional but fire data will show placeholder messages.")
     
     print(f"\n✅ Server starting on http://localhost:{FLASK_PORT}")
     print("📊 API endpoints available:")

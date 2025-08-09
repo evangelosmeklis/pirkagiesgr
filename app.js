@@ -41,18 +41,7 @@ class GreeceFierAlert {
             });
         });
 
-        // Settings modal
-        document.getElementById('settings-btn').addEventListener('click', () => {
-            this.showSettingsModal();
-        });
 
-        document.getElementById('close-settings').addEventListener('click', () => {
-            this.hideSettingsModal();
-        });
-
-        document.getElementById('save-settings').addEventListener('click', () => {
-            this.saveSettings();
-        });
 
         // Refresh button
         document.getElementById('refresh-btn').addEventListener('click', () => {
@@ -82,17 +71,9 @@ class GreeceFierAlert {
             this.filterHistoricalData();
         });
 
-        // Close modal when clicking outside
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal')) {
-                this.hideSettingsModal();
-            }
-        });
-
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                this.hideSettingsModal();
                 this.hideFireInfoPanel();
             }
             if (e.key === 'r' && e.ctrlKey) {
@@ -142,10 +123,6 @@ class GreeceFierAlert {
     }
 
     async loadSettings() {
-        // Load saved settings from localStorage (now only refresh interval)
-        const refreshInterval = localStorage.getItem('refresh_interval') || '10';
-        document.getElementById('refresh-interval').value = refreshInterval;
-
         // Check backend API status
         try {
             const response = await fetch('/api/status');
@@ -161,17 +138,6 @@ class GreeceFierAlert {
         } catch (error) {
             console.error('Failed to check API status:', error);
         }
-    }
-
-    saveSettings() {
-        const refreshInterval = document.getElementById('refresh-interval').value;
-        localStorage.setItem('refresh_interval', refreshInterval);
-
-        // Update auto-refresh
-        this.setupAutoRefresh();
-
-        this.hideSettingsModal();
-        this.showNotification('Settings saved successfully!');
     }
 
     async loadFireData() {
@@ -650,13 +616,7 @@ class GreeceFierAlert {
         this.showNotification('Fire data refreshed successfully!');
     }
 
-    showSettingsModal() {
-        document.getElementById('settings-modal').classList.add('active');
-    }
 
-    hideSettingsModal() {
-        document.getElementById('settings-modal').classList.remove('active');
-    }
 
     showLoading(message = 'Loading...') {
         const overlay = document.getElementById('loading-overlay');
