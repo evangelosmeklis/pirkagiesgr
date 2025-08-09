@@ -181,7 +181,8 @@ class GreeceFierAlert {
                     
                     // Parse numeric values
                     if (['latitude', 'longitude', 'brightness', 'scan', 'track', 'frp', 'confidence'].includes(header)) {
-                        fire[header] = parseFloat(value) || 0;
+                        const numValue = parseFloat(value);
+                        fire[header] = isNaN(numValue) ? null : numValue;
                     } else if (['acq_time'].includes(header)) {
                         fire[header] = parseInt(value) || 0;
                     } else {
@@ -385,7 +386,7 @@ class GreeceFierAlert {
                 
                 <div class="fire-detail">
                     <label>Confidence Level:</label>
-                    <span class="confidence-badge confidence-${confidenceClass}">${fire.confidence}%</span>
+                    <span class="confidence-badge confidence-${confidenceClass}">${fire.confidence !== null && fire.confidence !== undefined ? Math.round(fire.confidence) : 'Unknown'}%</span>
                 </div>
                 
                 <div class="fire-detail">
@@ -645,7 +646,7 @@ class GreeceFierAlert {
             row.innerHTML = `
                 <td>${detectionTime}</td>
                 <td>${location}</td>
-                <td><span class="confidence-badge confidence-${this.getConfidenceClass(fire.confidence || 0)}">${fire.confidence || 0}%</span></td>
+                <td><span class="confidence-badge confidence-${this.getConfidenceClass(fire.confidence || 0)}">${fire.confidence !== null && fire.confidence !== undefined ? Math.round(fire.confidence) : 'Unknown'}%</span></td>
                 <td>${(fire.brightness || 0).toFixed(1)}K</td>
                 <td>${(fire.frp || 0).toFixed(1)} MW</td>
                 <td>${fire.satellite || fire.data_source || 'Unknown'}</td>
@@ -857,8 +858,55 @@ class GreeceFierAlert {
             return this.geocodeCache.get(cacheKey);
         }
         
-        // Fallback to coordinates
+        // Fallback coordinates
         const fallback = `${(lat || 0).toFixed(4)}, ${(lon || 0).toFixed(4)}`;
+        
+        try {
+            // Try to get location name using OpenStreetMap Nominatim API
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=12&addressdetails=1&accept-language=en`,
+                {
+                    headers: {
+                        'User-Agent': 'PirkagiesGr-Fire-Monitor/1.0'
+                    }
+                }
+            );
+            
+            if (response.ok) {
+                const data = await response.json();
+                
+                if (data && data.address) {
+                    const address = data.address;
+                    let locationName = '';
+                    
+                    // Build location name from available components
+                    if (address.village || address.town || address.city) {
+                        locationName = address.village || address.town || address.city;
+                    } else if (address.municipality) {
+                        locationName = address.municipality;
+                    } else if (address.county) {
+                        locationName = address.county;
+                    } else if (address.state) {
+                        locationName = address.state;
+                    }
+                    
+                    // Add region if available and different
+                    if (address.state && locationName !== address.state) {
+                        locationName += `, ${address.state}`;
+                    }
+                    
+                    // If we got a location name, cache and return it
+                    if (locationName) {
+                        this.geocodeCache.set(cacheKey, locationName);
+                        return locationName;
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('Geocoding failed:', error);
+        }
+        
+        // Cache and return fallback
         this.geocodeCache.set(cacheKey, fallback);
         return fallback;
     }
