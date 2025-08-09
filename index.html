@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greece Fire Alert - Real-time Fire Monitoring</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-fire"></i>
+                    <h1>Greece Fire Alert</h1>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="active-fires">0</span>
+                        <span class="stat-label">Active Fires</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="last-update">--:--</span>
+                        <span class="stat-label">Last Update</span>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <button class="btn btn-refresh" id="refresh-btn">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                    <button class="btn btn-settings" id="settings-btn" title="Settings">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="live">
+                <i class="fas fa-map-marked-alt"></i>
+                Live Fire Map
+            </button>
+            <button class="tab-btn" data-tab="historical">
+                <i class="fas fa-history"></i>
+                Historical Fires
+            </button>
+            <button class="tab-btn" data-tab="analytics">
+                <i class="fas fa-chart-line"></i>
+                Analytics
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Live Fire Map Tab -->
+            <div class="tab-content active" id="live-tab">
+                <div class="map-container">
+                    <div id="map"></div>
+                    
+                    <!-- Map Controls -->
+                    <div class="map-controls">
+                        <div class="control-group">
+                            <label>Fire Confidence:</label>
+                            <select id="confidence-filter" title="Filter by confidence level">
+                                <option value="all">All Levels</option>
+                                <option value="high">High (>80%)</option>
+                                <option value="medium">Medium (50-80%)</option>
+                                <option value="low">Low (<50%)</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Time Period:</label>
+                            <select id="time-filter" title="Select time period">
+                                <option value="1">Last 24 hours</option>
+                                <option value="3">Last 3 days</option>
+                                <option value="7">Last week</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Data Source:</label>
+                            <select id="source-filter" title="Select data source">
+                                <option value="MODIS_NRT">MODIS (Real-time)</option>
+                                <option value="VIIRS_SNPP_NRT">VIIRS SNPP</option>
+                                <option value="VIIRS_NOAA20_NRT">VIIRS NOAA20</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Fire Info Panel -->
+                    <div class="fire-info-panel" id="fire-info-panel">
+                        <div class="panel-header">
+                            <h3>Fire Information</h3>
+                            <button class="close-btn" id="close-panel" title="Close panel">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="panel-content" id="panel-content">
+                            <p>Click on a fire marker to see details</p>
+                        </div>
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="map-legend">
+                        <h4>Fire Confidence</h4>
+                        <div class="legend-item">
+                            <div class="legend-marker high-confidence"></div>
+                            <span>High (80-100%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-marker medium-confidence"></div>
+                            <span>Medium (50-79%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-marker low-confidence"></div>
+                            <span>Low (0-49%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historical Fires Tab -->
+            <div class="tab-content" id="historical-tab">
+                <div class="historical-container">
+                    <div class="historical-header">
+                        <h2>Historical Fire Data</h2>
+                        <div class="historical-controls">
+                            <input type="date" id="start-date" class="date-input" title="Start date">
+                            <input type="date" id="end-date" class="date-input" title="End date">
+                            <button class="btn btn-primary" id="filter-historical">Filter</button>
+                        </div>
+                    </div>
+                    <div class="historical-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-fire"></i>
+                            <div class="stat-info">
+                                <span class="stat-value" id="total-historical">0</span>
+                                <span class="stat-title">Total Fires</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-calendar-day"></i>
+                            <div class="stat-info">
+                                <span class="stat-value" id="avg-daily">0</span>
+                                <span class="stat-title">Avg Daily</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-thermometer-three-quarters"></i>
+                            <div class="stat-info">
+                                <span class="stat-value" id="avg-intensity">0</span>
+                                <span class="stat-title">Avg Intensity</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="historical-table-container">
+                        <table class="historical-table" id="historical-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Location</th>
+                                    <th>Confidence</th>
+                                    <th>Brightness</th>
+                                    <th>FRP</th>
+                                    <th>Satellite</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historical-tbody">
+                                <!-- Historical data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div class="tab-content" id="analytics-tab">
+                <div class="analytics-container">
+                    <h2>Fire Analytics Dashboard</h2>
+                    <div class="charts-grid">
+                        <div class="chart-container">
+                            <canvas id="monthly-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="confidence-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loading-overlay">
+            <div class="loading-spinner">
+                <i class="fas fa-fire"></i>
+                <p>Loading fire data...</p>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div class="modal" id="settings-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Settings</h3>
+                    <button class="close-btn" id="close-settings" title="Close settings">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-group">
+                        <h4>API Configuration</h4>
+                        <p>API keys are now configured securely on the server in the <code>config.env</code> file.</p>
+                        <ul>
+                            <li>NASA FIRMS API Key: <a href="https://firms.modaps.eosdis.nasa.gov/api/map_key" target="_blank" rel="noopener">Get free key</a></li>
+                            <li>OpenWeather API Key: <a href="https://openweathermap.org/api" target="_blank" rel="noopener">Get free key</a></li>
+                        </ul>
+                    </div>
+                    <div class="setting-group">
+                        <label for="refresh-interval">Auto-refresh interval (minutes):</label>
+                        <select id="refresh-interval">
+                            <option value="5">5 minutes</option>
+                            <option value="10" selected>10 minutes</option>
+                            <option value="15">15 minutes</option>
+                            <option value="30">30 minutes</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="save-settings">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="database.js"></script>
+    <script src="weather.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
