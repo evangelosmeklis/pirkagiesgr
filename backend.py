@@ -327,6 +327,64 @@ def get_fire_weather(fire_id):
     except (IndexError, ValueError):
         return jsonify({'error': 'Invalid fire ID format'}), 400
 
+@app.route('/api/geocode')
+def reverse_geocode():
+    """Get location name from coordinates using reverse geocoding"""
+    if not weather_service:
+        return jsonify({'error': 'OpenWeather API key not configured'}), 400
+    
+    try:
+        lat = float(request.args.get('lat'))
+        lon = float(request.args.get('lon'))
+    except (TypeError, ValueError):
+        return jsonify({'error': 'Invalid latitude/longitude parameters'}), 400
+    
+    try:
+        # Use OpenWeatherMap's reverse geocoding API (free with weather API key)
+        geocode_url = f'http://api.openweathermap.org/geo/1.0/reverse'
+        params = {
+            'lat': lat,
+            'lon': lon,
+            'limit': 1,
+            'appid': weather_service.api_key
+        }
+        
+        response = requests.get(geocode_url, params=params, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        
+        if data and len(data) > 0:
+            location = data[0]
+            # Construct readable location name
+            parts = []
+            if 'name' in location:
+                parts.append(location['name'])
+            if 'state' in location and location['state'] != location.get('name'):
+                parts.append(location['state'])
+            if 'country' in location:
+                parts.append(location['country'])
+            
+            location_name = ', '.join(parts) if parts else 'Unknown Location'
+            return jsonify({
+                'location': location_name,
+                'coordinates': {'lat': lat, 'lon': lon},
+                'timestamp': datetime.now().isoformat()
+            })
+        else:
+            return jsonify({
+                'location': 'Unknown Location',
+                'coordinates': {'lat': lat, 'lon': lon},
+                'timestamp': datetime.now().isoformat()
+            })
+            
+    except Exception as e:
+        logger.error(f"Geocoding error: {e}")
+        return jsonify({
+            'location': f'{lat:.4f}, {lon:.4f}',
+            'coordinates': {'lat': lat, 'lon': lon},
+            'timestamp': datetime.now().isoformat()
+        })
+
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({'error': 'Endpoint not found'}), 404

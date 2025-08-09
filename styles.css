@@ -512,37 +512,15 @@ body {
 }
 
 .legend-marker {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
-}
-
-.legend-marker.high-confidence {
-    background: transparent;
-}
-
-.legend-marker.high-confidence::after {
-    content: "🔥";
-}
-
-.legend-marker.medium-confidence {
-    background: transparent;
-}
-
-.legend-marker.medium-confidence::after {
-    content: "🟠";
-}
-
-.legend-marker.low-confidence {
-    background: transparent;
-}
-
-.legend-marker.low-confidence::after {
-    content: "🟡";
+    font-size: 14px;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
 }
 
 .legend-item span {
@@ -561,17 +539,23 @@ body {
 
 .historical-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     margin-bottom: 2rem;
-    flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .historical-header h2 {
     font-size: 1.75rem;
     font-weight: 800;
     color: #e7e9ea;
+    margin-bottom: 0;
+}
+
+.historical-disclaimer {
+    color: #8b98a5;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-bottom: 1rem;
 }
 
 .historical-controls {

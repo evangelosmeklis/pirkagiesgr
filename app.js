@@ -6,6 +6,7 @@ class GreeceFierAlert {
         this.activeFires = [];
         this.refreshInterval = null;
         this.currentTab = 'live';
+        this.geocodeCache = new Map(); // Cache for location names
         
         // Greece bounds
         this.greeceBounds = {
@@ -229,18 +230,18 @@ class GreeceFierAlert {
         let emoji = '🔥';
         let size = 30;
         
-        // Different fire emojis based on confidence and intensity
+        // Different emojis based on confidence and intensity
         if (confidence >= 80 && fire.frp > 20) {
-            emoji = '🔥'; // High intensity
+            emoji = '🔥'; // High intensity fire
             size = 35;
         } else if (confidence >= 80) {
-            emoji = '🔥'; // High confidence
+            emoji = '🔥'; // High confidence fire
             size = 30;
         } else if (confidence >= 50) {
-            emoji = '🟠'; // Medium confidence
+            emoji = '⚠️'; // Medium confidence warning
             size = 25;
         } else {
-            emoji = '🟡'; // Low confidence
+            emoji = '⭐'; // Low confidence detection
             size = 20;
         }
 
@@ -319,9 +320,18 @@ class GreeceFierAlert {
         
         panel.classList.add('active');
         
-        // Show basic fire information immediately
+        // Show basic fire information immediately (with coordinates as placeholder)
         const basicInfo = this.generateBasicFireInfo(fire);
         content.innerHTML = basicInfo;
+
+        // Get location name and update the display
+        try {
+            const locationName = await this.getLocationName(fire.latitude, fire.longitude);
+            const updatedInfo = this.generateBasicFireInfo(fire, locationName);
+            content.innerHTML = updatedInfo;
+        } catch (error) {
+            console.warn('Failed to get location name:', error);
+        }
 
         // Load weather data asynchronously
         try {
@@ -331,27 +341,30 @@ class GreeceFierAlert {
             );
             
             if (weatherData) {
+                const locationName = await this.getLocationName(fire.latitude, fire.longitude);
+                const updatedInfo = this.generateBasicFireInfo(fire, locationName);
                 const weatherHTML = window.weatherService.generateWeatherHTML(
                     weatherData, 
                     fire.latitude, 
                     fire.longitude
                 );
-                content.innerHTML = basicInfo + weatherHTML;
+                content.innerHTML = updatedInfo + weatherHTML;
             }
         } catch (error) {
             console.warn('Failed to load weather data:', error);
         }
     }
 
-    generateBasicFireInfo(fire) {
+    generateBasicFireInfo(fire, locationName = null) {
         const confidenceClass = this.getConfidenceClass(fire.confidence);
         const detectionTime = this.formatFireTime(fire.acq_date, fire.acq_time);
+        const location = locationName || `${fire.latitude.toFixed(4)}°N, ${fire.longitude.toFixed(4)}°E`;
         
         return `
             <div class="fire-details">
                 <div class="fire-detail">
                     <label>Location:</label>
-                    <span>${fire.latitude.toFixed(4)}°N, ${fire.longitude.toFixed(4)}°E</span>
+                    <span>${location}</span>
                 </div>
                 
                 <div class="fire-detail">
@@ -472,12 +485,53 @@ class GreeceFierAlert {
 
     async loadHistoricalData() {
         try {
-            const fires = await window.fireDB.getAllFires();
-            this.displayHistoricalFires(fires);
-            this.updateHistoricalStats(fires);
+            // Show loading state
+            this.showLoading();
+            
+            // Get 7 days of historical data from API
+            const response = await fetch('http://localhost:5000/api/fires?source=MODIS_NRT&days=7&confidence=all');
+            const data = await response.json();
+            
+            if (data.fires) {
+                // Add location names for historical fires
+                const firesWithLocations = await this.addLocationNamesToFires(data.fires);
+                this.displayHistoricalFires(firesWithLocations);
+                this.updateHistoricalStats(firesWithLocations);
+            } else {
+                throw new Error('No fire data received');
+            }
+            
+            this.hideLoading();
         } catch (error) {
             console.error('Failed to load historical data:', error);
+            this.showError('Failed to load historical fire data. Please try again.');
+            this.hideLoading();
         }
+    }
+
+    async addLocationNamesToFires(fires) {
+        // Process fires in smaller batches to avoid overwhelming the API
+        const batchSize = 10;
+        const result = [];
+        
+        for (let i = 0; i < fires.length; i += batchSize) {
+            const batch = fires.slice(i, i + batchSize);
+            
+            const batchPromises = batch.map(async (fire) => {
+                const locationName = await this.getLocationName(fire.latitude, fire.longitude);
+                return { ...fire, locationName };
+            });
+            
+            const batchResults = await Promise.all(batchPromises);
+            result.push(...batchResults);
+            
+            // Small delay between batches to be nice to the API
+            if (i + batchSize < fires.length) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
+        
+        return result;
     }
 
     displayHistoricalFires(fires) {
@@ -489,9 +543,12 @@ class GreeceFierAlert {
 
         sortedFires.forEach(fire => {
             const row = document.createElement('tr');
+            const location = fire.locationName || `${fire.latitude.toFixed(4)}°N, ${fire.longitude.toFixed(4)}°E`;
+            const detectionTime = this.formatFireTime(fire.acq_date, fire.acq_time);
+            
             row.innerHTML = `
-                <td>${fire.acq_date}</td>
-                <td>${fire.latitude.toFixed(4)}°N, ${fire.longitude.toFixed(4)}°E</td>
+                <td>${detectionTime}</td>
+                <td>${location}</td>
                 <td><span class="confidence-badge confidence-${this.getConfidenceClass(fire.confidence)}">${fire.confidence}%</span></td>
                 <td>${fire.brightness.toFixed(1)}K</td>
                 <td>${fire.frp.toFixed(1)} MW</td>
@@ -503,7 +560,7 @@ class GreeceFierAlert {
 
     updateHistoricalStats(fires) {
         const total = fires.length;
-        const avgDaily = total > 0 ? (total / 30).toFixed(1) : 0; // Rough estimate
+        const avgDaily = total > 0 ? (total / 7).toFixed(1) : 0; // Average per day over 7 days
         const avgIntensity = total > 0 ? (fires.reduce((sum, fire) => sum + fire.frp, 0) / total).toFixed(1) : 0;
 
         document.getElementById('total-historical').textContent = total;
@@ -520,12 +577,43 @@ class GreeceFierAlert {
             return;
         }
 
+        // Check if date range is within last 7 days
+        const today = new Date();
+        const sevenDaysAgo = new Date(today.getTime() - (7 * 24 * 60 * 60 * 1000));
+        const selectedStart = new Date(startDate);
+        const selectedEnd = new Date(endDate);
+
+        if (selectedStart < sevenDaysAgo) {
+            this.showNotification('Historical data is only available for the last 7 days', 'warning');
+            return;
+        }
+
         try {
-            const fires = await window.fireDB.getFiresByDateRange(startDate, endDate);
-            this.displayHistoricalFires(fires);
-            this.updateHistoricalStats(fires);
+            // Show loading state
+            this.showLoading();
+            
+            // Get data and filter by date range
+            const response = await fetch('http://localhost:5000/api/fires?source=MODIS_NRT&days=7&confidence=all');
+            const data = await response.json();
+            
+            if (data.fires) {
+                // Filter fires by date range
+                const filteredFires = data.fires.filter(fire => {
+                    const fireDate = new Date(fire.acq_date);
+                    return fireDate >= selectedStart && fireDate <= selectedEnd;
+                });
+                
+                // Add location names
+                const firesWithLocations = await this.addLocationNamesToFires(filteredFires);
+                this.displayHistoricalFires(firesWithLocations);
+                this.updateHistoricalStats(firesWithLocations);
+            }
+            
+            this.hideLoading();
         } catch (error) {
             console.error('Failed to filter historical data:', error);
+            this.showError('Failed to filter historical data. Please try again.');
+            this.hideLoading();
         }
     }
 
@@ -648,6 +736,33 @@ class GreeceFierAlert {
             
             this.showNotification('Analytics cookies rejected. No tracking data will be collected.', 'success');
         });
+    }
+
+    async getLocationName(lat, lon) {
+        // Create cache key
+        const cacheKey = `${lat.toFixed(4)},${lon.toFixed(4)}`;
+        
+        // Check cache first
+        if (this.geocodeCache.has(cacheKey)) {
+            return this.geocodeCache.get(cacheKey);
+        }
+        
+        try {
+            const response = await fetch(`http://localhost:5000/api/geocode?lat=${lat}&lon=${lon}`);
+            const data = await response.json();
+            
+            const locationName = data.location || `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+            
+            // Cache the result
+            this.geocodeCache.set(cacheKey, locationName);
+            
+            return locationName;
+        } catch (error) {
+            console.error('Geocoding error:', error);
+            const fallback = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+            this.geocodeCache.set(cacheKey, fallback);
+            return fallback;
+        }
     }
 }
 
