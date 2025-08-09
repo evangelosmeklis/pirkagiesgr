@@ -237,7 +237,45 @@ body {
     border-radius: 16px;
     border: 1px solid #2f3336;
     z-index: 1000;
-    min-width: 280px;
+    min-width: 300px;
+}
+
+.controls-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #2f3336;
+}
+
+.controls-header h3 {
+    color: #e7e9ea;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.data-source-info {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #2f3336;
+}
+
+.source-badge {
+    background: linear-gradient(135deg, #1d9bf0, #0f7cc9);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.source-description {
+    font-size: 0.7rem;
+    color: #8b98a5;
+    line-height: 1.4;
+    margin: 0;
+    text-align: center;
 }
 
 .control-group {

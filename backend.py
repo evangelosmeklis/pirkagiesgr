@@ -214,18 +214,26 @@ def get_fires():
     
     # Get parameters from request
     source = request.args.get('source', 'MODIS_NRT')
-    days = int(request.args.get('days', 1))
+    days_param = request.args.get('days', '1')
     confidence_filter = request.args.get('confidence', 'all')
+    
+    # Handle fractional days (for "last hour" = 0.04 days)
+    try:
+        days = float(days_param)
+        # Convert to integer for API call, minimum 1 day
+        api_days = max(1, int(days))
+    except ValueError:
+        return jsonify({'error': 'Invalid days parameter'}), 400
     
     # Validate parameters
     if source not in DATA_SOURCES:
         return jsonify({'error': f'Invalid data source. Available: {DATA_SOURCES}'}), 400
         
-    if days < 1 or days > 10:
-        return jsonify({'error': 'Days parameter must be between 1 and 10'}), 400
+    if days < 0.01 or days > 10:
+        return jsonify({'error': 'Days parameter must be between 0.01 and 10'}), 400
     
     # Get fire data
-    fires = fire_service.get_country_fires(source, days)
+    fires = fire_service.get_country_fires(source, api_days)
     
     # Apply confidence filter
     if confidence_filter != 'all':
@@ -236,7 +244,7 @@ def get_fires():
         elif confidence_filter == 'low':
             fires = [f for f in fires if f.get('confidence', 0) < 50]
     
-    # Filter to ensure fires are within Greece bounds
+    # Filter to ensure fires are within Greece bounds and time period
     greece_bounds = {
         'north': 41.75,
         'south': 34.5,
@@ -244,14 +252,32 @@ def get_fires():
         'west': 19.5
     }
     
+    # Calculate cutoff time for fractional days
+    from datetime import datetime, timedelta
+    now = datetime.now()
+    cutoff_time = now - timedelta(days=days)
+    
     filtered_fires = []
     for fire in fires:
         lat = float(fire.get('latitude', 0))
         lon = float(fire.get('longitude', 0))
         
-        if (greece_bounds['south'] <= lat <= greece_bounds['north'] and 
-            greece_bounds['west'] <= lon <= greece_bounds['east']):
-            filtered_fires.append(fire)
+        # Check geographic bounds
+        if not (greece_bounds['south'] <= lat <= greece_bounds['north'] and 
+                greece_bounds['west'] <= lon <= greece_bounds['east']):
+            continue
+            
+        # Check time bounds for fractional days
+        if days < 1:
+            try:
+                fire_date = datetime.strptime(fire.get('acq_date', ''), '%Y-%m-%d')
+                if fire_date < cutoff_time.replace(hour=0, minute=0, second=0, microsecond=0):
+                    continue
+            except (ValueError, TypeError):
+                # If we can't parse the date, include the fire
+                pass
+                
+        filtered_fires.append(fire)
     
     return jsonify({
         'fires': filtered_fires,

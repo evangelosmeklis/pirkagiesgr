@@ -47,10 +47,6 @@
                 <i class="fas fa-history"></i>
                 Historical Fires
             </button>
-            <button class="tab-btn" data-tab="analytics">
-                <i class="fas fa-chart-line"></i>
-                Analytics
-            </button>
             <button class="tab-btn" data-tab="about">
                 <i class="fas fa-info-circle"></i>
                 About
@@ -74,8 +70,11 @@
                     
                     <!-- Map Controls -->
                     <div class="map-controls">
+                        <div class="controls-header">
+                            <h3>🔥 Fire Controls</h3>
+                        </div>
                         <div class="control-group">
-                            <label>Fire Confidence:</label>
+                            <label>🎯 Fire Confidence:</label>
                             <select id="confidence-filter" title="Filter by confidence level">
                                 <option value="all">All Levels</option>
                                 <option value="high">High (>80%)</option>
@@ -84,20 +83,19 @@
                             </select>
                         </div>
                         <div class="control-group">
-                            <label>Time Period:</label>
+                            <label>⏱️ Time Period:</label>
                             <select id="time-filter" title="Select time period">
+                                <option value="0.04" selected>Last Hour</option>
                                 <option value="1">Last 24 hours</option>
                                 <option value="3">Last 3 days</option>
                                 <option value="7">Last week</option>
                             </select>
                         </div>
-                        <div class="control-group">
-                            <label>Data Source:</label>
-                            <select id="source-filter" title="Select data source">
-                                <option value="MODIS_NRT">MODIS (Real-time)</option>
-                                <option value="VIIRS_SNPP_NRT">VIIRS SNPP</option>
-                                <option value="VIIRS_NOAA20_NRT">VIIRS NOAA20</option>
-                            </select>
+                        <div class="data-source-info">
+                            <div class="source-badge">
+                                🛰️ MODIS Real-time Data
+                            </div>
+                            <p class="source-description">High-quality satellite fire detection from NASA Terra & Aqua satellites</p>
                         </div>
                     </div>
 
@@ -187,20 +185,7 @@
                 </div>
             </div>
 
-            <!-- Analytics Tab -->
-            <div class="tab-content" id="analytics-tab">
-                <div class="analytics-container">
-                    <h2>Fire Analytics Dashboard</h2>
-                    <div class="charts-grid">
-                        <div class="chart-container">
-                            <canvas id="monthly-chart"></canvas>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="confidence-chart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- About Tab -->
             <div class="tab-content" id="about-tab">

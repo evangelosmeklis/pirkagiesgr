@@ -54,22 +54,27 @@ class GreeceFierAlert {
         });
 
         // Map controls
-        document.getElementById('confidence-filter').addEventListener('change', () => {
-            this.filterFireMarkers();
-        });
+        const confidenceFilter = document.getElementById('confidence-filter');
+        if (confidenceFilter) {
+            confidenceFilter.addEventListener('change', () => {
+                this.filterFireMarkers();
+            });
+        }
 
-        document.getElementById('time-filter').addEventListener('change', () => {
-            this.refreshFireData();
-        });
-
-        document.getElementById('source-filter').addEventListener('change', () => {
-            this.refreshFireData();
-        });
+        const timeFilter = document.getElementById('time-filter');
+        if (timeFilter) {
+            timeFilter.addEventListener('change', () => {
+                this.refreshFireData();
+            });
+        }
 
         // Historical data controls
-        document.getElementById('filter-historical').addEventListener('click', () => {
-            this.filterHistoricalData();
-        });
+        const filterHistoricalBtn = document.getElementById('filter-historical');
+        if (filterHistoricalBtn) {
+            filterHistoricalBtn.addEventListener('click', () => {
+                this.filterHistoricalData();
+            });
+        }
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
@@ -131,7 +136,7 @@ class GreeceFierAlert {
         this.showLoading('Loading fire data...');
 
         try {
-            const source = document.getElementById('source-filter').value;
+            const source = 'MODIS_NRT'; // Always use MODIS real-time data
             const days = document.getElementById('time-filter').value;
             const confidence = document.getElementById('confidence-filter').value;
             
@@ -441,8 +446,6 @@ class GreeceFierAlert {
         // Load tab-specific data
         if (tabName === 'historical') {
             this.loadHistoricalData();
-        } else if (tabName === 'analytics') {
-            this.loadAnalytics();
         }
     }
 
@@ -505,95 +508,7 @@ class GreeceFierAlert {
         }
     }
 
-    async loadAnalytics() {
-        try {
-            const stats = await window.fireDB.getFireStats();
-            this.createCharts(stats);
-        } catch (error) {
-            console.error('Failed to load analytics:', error);
-        }
-    }
 
-    createCharts(stats) {
-        // Monthly fires chart
-        this.createMonthlyChart(stats.byMonth);
-        
-        // Confidence distribution chart
-        this.createConfidenceChart({
-            high: stats.highConfidence,
-            medium: stats.mediumConfidence,
-            low: stats.lowConfidence
-        });
-    }
-
-    createMonthlyChart(monthlyData) {
-        const canvas = document.getElementById('monthly-chart');
-        if (canvas.chart) {
-            canvas.chart.destroy();
-        }
-
-        const ctx = canvas.getContext('2d');
-        
-        const labels = Object.keys(monthlyData).sort();
-        const data = labels.map(month => monthlyData[month]);
-
-        canvas.chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Fires per Month',
-                    data: data,
-                    borderColor: '#ff6b6b',
-                    backgroundColor: 'rgba(255, 107, 107, 0.1)',
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Fire Activity by Month'
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
-
-    createConfidenceChart(confidenceData) {
-        const canvas = document.getElementById('confidence-chart');
-        if (canvas.chart) {
-            canvas.chart.destroy();
-        }
-
-        const ctx = canvas.getContext('2d');
-
-        canvas.chart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['High (80-100%)', 'Medium (50-79%)', 'Low (0-49%)'],
-                datasets: [{
-                    data: [confidenceData.high, confidenceData.medium, confidenceData.low],
-                    backgroundColor: ['#ff6b6b', '#ffa500', '#4ecdc4']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Fire Detection Confidence Distribution'
-                    }
-                }
-            }
-        });
-    }
 
     setupAutoRefresh() {
         // Clear existing interval
@@ -754,23 +669,23 @@ style.textContent = `
     }
 
     .accuracy-alert {
-        background: rgba(102, 126, 234, 0.1);
+        background: rgba(29, 155, 240, 0.1);
         padding: 1rem;
         border-radius: 8px;
         margin-top: 1rem;
-        border-left: 4px solid #667eea;
+        border-left: 4px solid #1d9bf0;
     }
 
     .accuracy-alert h5 {
         margin: 0 0 0.5rem 0;
-        color: #667eea;
+        color: #1d9bf0;
         font-size: 0.875rem;
     }
 
     .accuracy-alert p {
         margin: 0;
         font-size: 0.875rem;
-        color: #333;
+        color: #e7e9ea;
         line-height: 1.4;
     }
 `;
