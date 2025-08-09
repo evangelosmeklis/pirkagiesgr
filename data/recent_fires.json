@@ -1,0 +1,14 @@
+{
+  "fires": [],
+  "count": 0,
+  "dataset": "recent",
+  "last_updated": "2024-01-01T00:00:00.000Z",
+  "sources": ["MODIS_NRT", "VIIRS_SNPP_NRT"],
+  "geographic_bounds": {
+    "north": 41.75,
+    "south": 34.5,
+    "east": 29.65,
+    "west": 19.5
+  },
+  "_note": "This is sample data. Real data will be updated by GitHub Actions every 30 minutes."
+}

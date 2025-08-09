@@ -208,14 +208,17 @@ def data_availability():
 
 @app.route('/api/fires')
 def get_fires():
-    """Get fire data for Greece"""
+    """Get fire data for Greece from multiple sources"""
     if not fire_service:
         return jsonify({'error': 'NASA FIRMS API key not configured'}), 400
     
     # Get parameters from request
-    source = request.args.get('source', 'MODIS_NRT')
+    sources_param = request.args.get('sources', 'MODIS_NRT,VIIRS_SNPP_NRT')  # Default to both MODIS and VIIRS
     days_param = request.args.get('days', '1')
     confidence_filter = request.args.get('confidence', 'all')
+    
+    # Parse sources
+    sources = [s.strip() for s in sources_param.split(',')]
     
     # Handle fractional days (for "last hour" = 0.04 days)
     try:
@@ -226,23 +229,30 @@ def get_fires():
         return jsonify({'error': 'Invalid days parameter'}), 400
     
     # Validate parameters
-    if source not in DATA_SOURCES:
-        return jsonify({'error': f'Invalid data source. Available: {DATA_SOURCES}'}), 400
+    for source in sources:
+        if source not in DATA_SOURCES:
+            return jsonify({'error': f'Invalid data source: {source}. Available: {DATA_SOURCES}'}), 400
         
     if days < 0.01 or days > 10:
         return jsonify({'error': 'Days parameter must be between 0.01 and 10'}), 400
     
-    # Get fire data
-    fires = fire_service.get_country_fires(source, api_days)
+    # Get fire data from all sources
+    all_fires = []
+    for source in sources:
+        fires = fire_service.get_country_fires(source, api_days)
+        # Add source information to each fire
+        for fire in fires:
+            fire['data_source'] = source
+        all_fires.extend(fires)
     
     # Apply confidence filter
     if confidence_filter != 'all':
         if confidence_filter == 'high':
-            fires = [f for f in fires if f.get('confidence', 0) >= 80]
+            all_fires = [f for f in all_fires if f.get('confidence', 0) >= 80]
         elif confidence_filter == 'medium':
-            fires = [f for f in fires if 50 <= f.get('confidence', 0) < 80]
+            all_fires = [f for f in all_fires if 50 <= f.get('confidence', 0) < 80]
         elif confidence_filter == 'low':
-            fires = [f for f in fires if f.get('confidence', 0) < 50]
+            all_fires = [f for f in all_fires if f.get('confidence', 0) < 50]
     
     # Filter to ensure fires are within Greece bounds and time period
     greece_bounds = {
@@ -258,7 +268,7 @@ def get_fires():
     cutoff_time = now - timedelta(days=days)
     
     filtered_fires = []
-    for fire in fires:
+    for fire in all_fires:
         lat = float(fire.get('latitude', 0))
         lon = float(fire.get('longitude', 0))
         
@@ -282,7 +292,7 @@ def get_fires():
     return jsonify({
         'fires': filtered_fires,
         'count': len(filtered_fires),
-        'source': source,
+        'sources': sources,
         'days': days,
         'confidence_filter': confidence_filter,
         'timestamp': datetime.now().isoformat()

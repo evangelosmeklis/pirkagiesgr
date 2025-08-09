@@ -73,10 +73,10 @@
                     </div>
                 </div>
                 <div class="header-controls">
-                    <button class="btn btn-refresh" id="refresh-btn">
-                        <i class="fas fa-sync-alt"></i>
-                        Refresh
-                    </button>
+                    <div class="auto-refresh-indicator">
+                        <i class="fas fa-clock"></i>
+                        <span id="next-refresh">Auto-refresh in 30:00</span>
+                    </div>
                 </div>
             </div>
         </header>
@@ -121,9 +121,8 @@
                             <label>🎯 Detection Confidence:</label>
                             <select id="confidence-filter" title="Filter by detection confidence level">
                                 <option value="all">All Detections</option>
-                                <option value="high">🔥 High Fire (>80%)</option>
-                                <option value="medium">⚠️ Medium Warning (50-80%)</option>
-                                <option value="low">⭐ Low Detection (<50%)</option>
+                                <option value="high">🔥🟠 Good Detections (≥50%)</option>
+                                <option value="low">⚠️ Low Confidence (<50%)</option>
                             </select>
                         </div>
                         <div class="control-group">
@@ -137,9 +136,9 @@
                         </div>
                         <div class="data-source-info">
                             <div class="source-badge">
-                                🛰️ MODIS Real-time Data
+                                🛰️ MODIS & VIIRS Real-time Data
                             </div>
-                            <p class="source-description">Satellite thermal anomaly detection from NASA Terra & Aqua satellites. Different emojis show detection confidence levels.</p>
+                            <p class="source-description">Combined satellite thermal detection from NASA Terra, Aqua & Suomi NPP satellites. Different emojis distinguish data sources and confidence levels.</p>
                         </div>
                     </div>
 
@@ -158,18 +157,20 @@
 
                     <!-- Legend -->
                     <div class="map-legend">
-                        <h4>Detection Confidence</h4>
-                        <div class="legend-item">
-                            <div class="legend-marker high-confidence">🔥</div>
-                            <span>High Fire (80-100%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-marker medium-confidence">⚠️</div>
-                            <span>Medium Warning (50-79%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-marker low-confidence">⭐</div>
-                            <span>Low Detection (0-49%)</span>
+                        <h4>Fire Detection Legend</h4>
+                        <div class="legend-section">
+                            <div class="legend-item">
+                                <div class="legend-marker">🔥</div>
+                                <span>MODIS Fire Detection (≥50% confidence)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-marker">🟠</div>
+                                <span>VIIRS Thermal Detection (≥50% confidence)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-marker">⚠️</div>
+                                <span>Low Confidence Detection (<50%)</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -363,7 +364,7 @@
 
     <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="api-service.js"></script>
     <script src="database.js"></script>
     <script src="weather.js"></script>
     <script src="app.js"></script>

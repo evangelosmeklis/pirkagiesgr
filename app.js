@@ -7,6 +7,7 @@ class GreeceFierAlert {
         this.refreshInterval = null;
         this.currentTab = 'live';
         this.geocodeCache = new Map(); // Cache for location names
+        this.apiService = new APIService(); // Frontend API service
         
         // Greece bounds
         this.greeceBounds = {
@@ -22,6 +23,7 @@ class GreeceFierAlert {
 
     async init() {
         try {
+            this.apiService.init(); // Initialize API service
             this.setupEventListeners();
             this.initializeMap();
             await this.loadSettings();
@@ -45,10 +47,7 @@ class GreeceFierAlert {
 
 
 
-        // Refresh button
-        document.getElementById('refresh-btn').addEventListener('click', () => {
-            this.refreshFireData();
-        });
+        // Auto-refresh is handled in setupAutoRefresh method
 
         // Fire info panel
         document.getElementById('close-panel').addEventListener('click', () => {
@@ -138,38 +137,27 @@ class GreeceFierAlert {
         this.showLoading('Loading fire data...');
 
         try {
-            const source = 'MODIS_NRT'; // Always use MODIS real-time data
-            const days = document.getElementById('time-filter').value;
+            const sources = ['MODIS_NRT', 'VIIRS_SNPP_NRT']; // Use both MODIS and VIIRS data
+            const days = parseFloat(document.getElementById('time-filter').value);
             const confidence = document.getElementById('confidence-filter').value;
             
-            // Call our backend API instead of NASA directly
-            const url = `/api/fires?source=${source}&days=${days}&confidence=${confidence}`;
-            
-            const response = await fetch(url);
-            
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || `API Error: ${response.status}`);
-            }
-
-            const data = await response.json();
+            // Use frontend API service for direct calls to NASA FIRMS
+            const data = await this.apiService.getFireData(sources, days, confidence);
             this.activeFires = data.fires || [];
 
-            // Store fires in database
-            await window.fireDB.bulkAddFires(this.activeFires);
+            // Store fires in database if available
+            if (window.fireDB) {
+                await window.fireDB.bulkAddFires(this.activeFires);
+            }
 
             this.displayFireMarkers();
             this.updateStats();
             
-            console.log(`Loaded ${this.activeFires.length} fires from ${data.source}`);
-            this.showNotification(`Loaded ${this.activeFires.length} fires from ${data.source}`);
+            console.log(`Loaded ${this.activeFires.length} fires from ${data.sources.join(', ')}`);
+            this.showNotification(`Loaded ${this.activeFires.length} fires from ${data.sources.join(', ')}`);
         } catch (error) {
             console.error('Failed to load fire data:', error);
-            if (error.message.includes('NASA FIRMS API key not configured')) {
-                this.showError('NASA FIRMS API key not configured on server. Please check config.env file.');
-            } else {
-                this.showError('Failed to load fire data: ' + error.message);
-            }
+            this.showError('Failed to load fire data: ' + error.message);
         } finally {
             this.hideLoading();
         }
@@ -227,22 +215,36 @@ class GreeceFierAlert {
 
     createFireMarker(fire) {
         const confidence = fire.confidence;
+        const dataSource = fire.data_source || fire.satellite || 'MODIS_NRT';
         let emoji = '🔥';
         let size = 30;
         
-        // Different emojis based on confidence and intensity
-        if (confidence >= 80 && fire.frp > 20) {
-            emoji = '🔥'; // High intensity fire
-            size = 35;
-        } else if (confidence >= 80) {
-            emoji = '🔥'; // High confidence fire
-            size = 30;
-        } else if (confidence >= 50) {
-            emoji = '⚠️'; // Medium confidence warning
-            size = 25;
+        // Different emojis based on data source and confidence
+        const isViirs = dataSource.includes('VIIRS');
+        
+        // Simple 3-emoji system as requested:
+        // 1. 🔥 Fire emoji for MODIS fires (≥50% confidence)
+        // 2. ⚠️ Warning emoji for low confidence fires from both sources (<50%)
+        // 3. 🟠 Orange emoji only for VIIRS (≥50% confidence)
+        
+        if (isViirs) {
+            // VIIRS data
+            if (confidence >= 50) {
+                emoji = '🟠'; // VIIRS-specific emoji for all good detections
+                size = confidence >= 80 ? 30 : 25;
+            } else {
+                emoji = '⚠️'; // Warning for low confidence VIIRS
+                size = 20;
+            }
         } else {
-            emoji = '⭐'; // Low confidence detection
-            size = 20;
+            // MODIS data
+            if (confidence >= 50) {
+                emoji = '🔥'; // Fire emoji for live MODIS fires
+                size = confidence >= 80 ? 30 : 25;
+            } else {
+                emoji = '⚠️'; // Warning for low confidence MODIS
+                size = 20;
+            }
         }
 
         const markerIcon = L.divIcon({
@@ -299,10 +301,9 @@ class GreeceFierAlert {
             const fire = marker.fireData;
             let show = true;
 
-            // Apply confidence filter
+            // Apply confidence filter (simplified system)
             if (confidenceFilter !== 'all') {
-                if (confidenceFilter === 'high' && fire.confidence < 80) show = false;
-                else if (confidenceFilter === 'medium' && (fire.confidence < 50 || fire.confidence >= 80)) show = false;
+                if (confidenceFilter === 'high' && fire.confidence < 50) show = false;
                 else if (confidenceFilter === 'low' && fire.confidence >= 50) show = false;
             }
 
@@ -326,7 +327,7 @@ class GreeceFierAlert {
 
         // Get location name and update the display
         try {
-            const locationName = await this.getLocationName(fire.latitude, fire.longitude);
+            const locationName = await this.getLocationName(fire.latitude, fire.longitude, fire);
             const updatedInfo = this.generateBasicFireInfo(fire, locationName);
             content.innerHTML = updatedInfo;
         } catch (error) {
@@ -341,7 +342,7 @@ class GreeceFierAlert {
             );
             
             if (weatherData) {
-                const locationName = await this.getLocationName(fire.latitude, fire.longitude);
+                const locationName = await this.getLocationName(fire.latitude, fire.longitude, fire);
                 const updatedInfo = this.generateBasicFireInfo(fire, locationName);
                 const weatherHTML = window.weatherService.generateWeatherHTML(
                     weatherData, 
@@ -358,7 +359,15 @@ class GreeceFierAlert {
     generateBasicFireInfo(fire, locationName = null) {
         const confidenceClass = this.getConfidenceClass(fire.confidence);
         const detectionTime = this.formatFireTime(fire.acq_date, fire.acq_time);
-        const location = locationName || `${fire.latitude.toFixed(4)}°N, ${fire.longitude.toFixed(4)}°E`;
+        const coordinates = `${fire.latitude.toFixed(4)}°N, ${fire.longitude.toFixed(4)}°E`;
+        
+        // Format location to show both place name and coordinates
+        let location;
+        if (locationName && locationName !== coordinates) {
+            location = `${locationName}<br><small style="color: #8b98a5;">${coordinates}</small>`;
+        } else {
+            location = coordinates;
+        }
         
         return `
             <div class="fire-details">
@@ -385,6 +394,11 @@ class GreeceFierAlert {
                 <div class="fire-detail">
                     <label>Fire Radiative Power:</label>
                     <span>${fire.frp.toFixed(1)} MW</span>
+                </div>
+                
+                <div class="fire-detail">
+                    <label>Data Source:</label>
+                    <span>${fire.data_source || fire.satellite || 'Unknown'}</span>
                 </div>
                 
                 <div class="fire-detail">
@@ -488,9 +502,8 @@ class GreeceFierAlert {
             // Show loading state
             this.showLoading();
             
-            // Get 7 days of historical data from API
-            const response = await fetch('http://localhost:5000/api/fires?source=MODIS_NRT&days=7&confidence=all');
-            const data = await response.json();
+            // Get 7 days of historical data from API (both MODIS and VIIRS)
+            const data = await this.apiService.getFireData(['MODIS_NRT', 'VIIRS_SNPP_NRT'], 7, 'all');
             
             if (data.fires) {
                 // Add location names for historical fires
@@ -543,7 +556,16 @@ class GreeceFierAlert {
 
         sortedFires.forEach(fire => {
             const row = document.createElement('tr');
-            const location = fire.locationName || `${fire.latitude.toFixed(4)}°N, ${fire.longitude.toFixed(4)}°E`;
+            const coordinates = `${fire.latitude.toFixed(4)}°N, ${fire.longitude.toFixed(4)}°E`;
+            
+            // Format location to show both place name and coordinates
+            let location;
+            if (fire.locationName && fire.locationName !== coordinates) {
+                location = `${fire.locationName}<br><small style="color: #8b98a5; font-size: 0.8em;">${coordinates}</small>`;
+            } else {
+                location = coordinates;
+            }
+            
             const detectionTime = this.formatFireTime(fire.acq_date, fire.acq_time);
             
             row.innerHTML = `
@@ -592,9 +614,8 @@ class GreeceFierAlert {
             // Show loading state
             this.showLoading();
             
-            // Get data and filter by date range
-            const response = await fetch('http://localhost:5000/api/fires?source=MODIS_NRT&days=7&confidence=all');
-            const data = await response.json();
+            // Get data and filter by date range (both MODIS and VIIRS)
+            const data = await this.apiService.getFireData(['MODIS_NRT', 'VIIRS_SNPP_NRT'], 7, 'all');
             
             if (data.fires) {
                 // Filter fires by date range
@@ -620,21 +641,53 @@ class GreeceFierAlert {
 
 
     setupAutoRefresh() {
-        // Clear existing interval
+        // Clear existing intervals
         if (this.refreshInterval) {
             clearInterval(this.refreshInterval);
         }
+        if (this.countdownInterval) {
+            clearInterval(this.countdownInterval);
+        }
 
-        const intervalMinutes = parseInt(localStorage.getItem('refresh_interval') || '10');
+        // 30 minutes auto-refresh (prevent abuse)
+        const intervalMinutes = 30;
         const intervalMs = intervalMinutes * 60 * 1000;
+        let timeRemaining = intervalMs;
 
+        // Set up the refresh interval
         this.refreshInterval = setInterval(() => {
             if (this.currentTab === 'live') {
                 this.refreshFireData();
+                timeRemaining = intervalMs; // Reset countdown
             }
         }, intervalMs);
 
+        // Set up the countdown display
+        this.countdownInterval = setInterval(() => {
+            timeRemaining -= 1000;
+            
+            if (timeRemaining <= 0) {
+                timeRemaining = intervalMs;
+            }
+            
+            this.updateCountdownDisplay(timeRemaining);
+        }, 1000);
+
+        // Initial countdown display
+        this.updateCountdownDisplay(timeRemaining);
+        
         console.log(`Auto-refresh set to ${intervalMinutes} minutes`);
+    }
+
+    updateCountdownDisplay(timeRemaining) {
+        const nextRefreshElement = document.getElementById('next-refresh');
+        if (nextRefreshElement) {
+            const minutes = Math.floor(timeRemaining / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            
+            const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            nextRefreshElement.textContent = `Auto-refresh in ${formattedTime}`;
+        }
     }
 
     async refreshFireData() {
@@ -738,7 +791,12 @@ class GreeceFierAlert {
         });
     }
 
-    async getLocationName(lat, lon) {
+    async getLocationName(lat, lon, fire = null) {
+        // If fire object has location_name, use it
+        if (fire && fire.location_name) {
+            return fire.location_name;
+        }
+        
         // Create cache key
         const cacheKey = `${lat.toFixed(4)},${lon.toFixed(4)}`;
         
@@ -747,21 +805,36 @@ class GreeceFierAlert {
             return this.geocodeCache.get(cacheKey);
         }
         
+        // Fallback to coordinates
+        const fallback = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+        this.geocodeCache.set(cacheKey, fallback);
+        return fallback;
+    }
+
+    isFireOlderThanOneHour(fire) {
         try {
-            const response = await fetch(`http://localhost:5000/api/geocode?lat=${lat}&lon=${lon}`);
-            const data = await response.json();
+            // Parse the fire detection time
+            const fireDate = fire.acq_date; // YYYY-MM-DD
+            const fireTime = fire.acq_time.toString().padStart(4, '0'); // HHMM
+            const hours = fireTime.substring(0, 2);
+            const minutes = fireTime.substring(2, 4);
             
-            const locationName = data.location || `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+            // Create UTC date object for fire detection
+            const fireDateTime = new Date(`${fireDate}T${hours}:${minutes}:00Z`);
             
-            // Cache the result
-            this.geocodeCache.set(cacheKey, locationName);
+            // Current time
+            const now = new Date();
             
-            return locationName;
+            // Calculate time difference in milliseconds
+            const timeDiff = now - fireDateTime;
+            
+            // Convert to hours (1 hour = 3600000 milliseconds)
+            const hoursDiff = timeDiff / (1000 * 60 * 60);
+            
+            return hoursDiff > 1;
         } catch (error) {
-            console.error('Geocoding error:', error);
-            const fallback = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-            this.geocodeCache.set(cacheKey, fallback);
-            return fallback;
+            console.warn('Error calculating fire age:', error);
+            return false; // Default to treating as live fire
         }
     }
 }

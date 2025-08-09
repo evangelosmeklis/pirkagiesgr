@@ -25,14 +25,8 @@ class WeatherService {
         }
 
         try {
-            const response = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
-            
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || `Weather API error: ${response.status}`);
-            }
-            
-            const data = await response.json();
+            // Use the global API service for weather data
+            const data = await window.app.apiService.getWeatherData(lat, lon);
             
             // Cache the result
             this.cache.set(cacheKey, {
@@ -56,14 +50,8 @@ class WeatherService {
         }
 
         try {
-            const response = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
-            
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || `Weather API error: ${response.status}`);
-            }
-            
-            const data = await response.json();
+            // Use the global API service for weather data
+            const data = await window.app.apiService.getWeatherData(lat, lon);
             
             // Cache the result
             this.cache.set(cacheKey, {
