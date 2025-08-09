@@ -1,4 +1,4 @@
-// Main application logic for Greece Fire Alert
+// Main application logic for PirkagiesGr
 class GreeceFierAlert {
     constructor() {
         this.map = null;
@@ -92,23 +92,10 @@ class GreeceFierAlert {
             minZoom: 5
         });
 
-        // Add beautiful tile layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
+        // Add satellite imagery as default and only layer
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Satellite imagery © Esri, NASA FIRMS fire data'
         }).addTo(this.map);
-
-        // Add satellite imagery option
-        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Tiles © Esri'
-        });
-
-        // Layer control
-        const baseMaps = {
-            "Street Map": this.map._layers[Object.keys(this.map._layers)[0]],
-            "Satellite": satelliteLayer
-        };
-
-        L.control.layers(baseMaps).addTo(this.map);
 
         // Restrict view to Greece area
         this.map.setMaxBounds([
@@ -233,20 +220,27 @@ class GreeceFierAlert {
 
     createFireMarker(fire) {
         const confidence = fire.confidence;
-        let confidenceClass = 'low-confidence';
+        let emoji = '🔥';
+        let size = 30;
         
-        if (confidence >= 80) {
-            confidenceClass = 'high-confidence';
+        // Different fire emojis based on confidence and intensity
+        if (confidence >= 80 && fire.frp > 20) {
+            emoji = '🔥'; // High intensity
+            size = 35;
+        } else if (confidence >= 80) {
+            emoji = '🔥'; // High confidence
+            size = 30;
         } else if (confidence >= 50) {
-            confidenceClass = 'medium-confidence';
+            emoji = '🟠'; // Medium confidence
+            size = 25;
+        } else {
+            emoji = '🟡'; // Low confidence
+            size = 20;
         }
 
-        // Custom HTML marker
-        const size = Math.max(8, Math.min(20, fire.frp / 5)); // Size based on Fire Radiative Power
-        
         const markerIcon = L.divIcon({
-            className: `fire-marker ${confidenceClass}`,
-            html: '',
+            className: 'fire-emoji-marker',
+            html: `<span style="font-size: ${size}px; cursor: pointer; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">${emoji}</span>`,
             iconSize: [size, size],
             iconAnchor: [size/2, size/2]
         });
@@ -262,11 +256,19 @@ class GreeceFierAlert {
 
         // Add hover effect
         marker.on('mouseover', function() {
-            this.getElement().style.transform = 'scale(1.3)';
+            const element = this.getElement();
+            if (element) {
+                element.style.transform = 'scale(1.2)';
+                element.style.zIndex = '1000';
+            }
         });
 
         marker.on('mouseout', function() {
-            this.getElement().style.transform = 'scale(1)';
+            const element = this.getElement();
+            if (element) {
+                element.style.transform = 'scale(1)';
+                element.style.zIndex = '';
+            }
         });
 
         // Store fire data with marker

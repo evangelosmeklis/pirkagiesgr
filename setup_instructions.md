@@ -1,4 +1,4 @@
-# Setup Instructions for Greece Fire Alert
+# Setup Instructions for PirkagiesGr
 
 ## 🔑 API Key Configuration
 

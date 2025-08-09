@@ -1,199 +1,96 @@
-# 🔥 Greece Fire Alert
+# 🔥 PirkagiesGr
 
-A real-time fire monitoring system for Greece using NASA FIRMS satellite data with weather integration and historical tracking.
+Real-time wildfire monitoring for Greece using NASA satellite data.
 
-![Greece Fire Alert](https://img.shields.io/badge/Status-Active-brightgreen) ![Version](https://img.shields.io/badge/Version-1.0.0-blue)
-
-## ✨ Features
-
-### 🗺️ **Interactive Fire Map**
-- Real-time fire detection data from NASA FIRMS
-- Beautiful, responsive map interface with satellite imagery
-- Color-coded fire markers based on confidence levels
-- Hover and click interactions for detailed fire information
-- Multiple data sources (MODIS, VIIRS satellites)
-
-### 🌤️ **Weather Integration**
-- Current weather conditions at fire locations
-- 24-hour weather forecast
-- Fire risk assessment based on weather conditions
-- Wind speed and direction information crucial for fire spread
-
-### 📊 **Historical Data & Analytics**
-- Local database storage for historical fire data
-- Interactive charts and analytics dashboard
-- Date range filtering and search capabilities
-- Monthly fire activity trends
-
-### 🎨 **Modern UI/UX**
-- Vibrant, gradient-based color scheme
-- Glassmorphism design elements
-- Responsive design for all devices
-- Dark mode support
-- Accessibility-compliant interface
+![PirkagiesGr](https://img.shields.io/badge/Status-Active-brightgreen) ![Version](https://img.shields.io/badge/Version-2.0.0-blue)
 
 ## 🚀 Quick Start
 
-### 1. **Get API Keys**
+### 1. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
 
-#### NASA FIRMS API Key (Required)
-1. Visit [NASA FIRMS API Registration](https://firms.modaps.eosdis.nasa.gov/api/map_key)
-2. Fill out the registration form (it's free!)
-3. Check your email for the API key
+### 2. Configure API Keys
+Edit `config.env` and add your API keys:
+```bash
+NASA_FIRMS_MAP_KEY=your_nasa_api_key_here
+OPENWEATHER_API_KEY=your_weather_api_key_here
+```
 
-#### OpenWeather API Key (Optional, for weather data)
-1. Visit [OpenWeatherMap](https://openweathermap.org/api)
-2. Sign up for a free account
-3. Generate an API key from your dashboard
+**Get API Keys:**
+- NASA FIRMS: [https://firms.modaps.eosdis.nasa.gov/api/map_key](https://firms.modaps.eosdis.nasa.gov/api/map_key) (Free)
+- OpenWeather: [https://openweathermap.org/api](https://openweathermap.org/api) (Free)
 
-### 2. **Setup the Application**
+### 3. Run the Application
+```bash
+python backend.py
+```
 
-1. Clone or download this repository
-2. Open `index.html` in your web browser
-3. Click the settings button (⚙️) in the top right
-4. Enter your API keys:
-   - **NASA FIRMS API Key**: Required for fire data
-   - **OpenWeather API Key**: Optional for weather information
-5. Save settings and enjoy!
+Visit: **http://localhost:5000**
 
-### 3. **Using the Application**
+## ✨ Features
 
-#### **Live Fire Map**
-- View real-time fire detections across Greece
-- Click on fire markers for detailed information
-- Use filters to adjust confidence levels and time periods
-- Toggle between street map and satellite imagery
+- 🛰️ **Real-time satellite fire detection** from NASA FIRMS
+- 🗺️ **Interactive satellite map** with fire emoji markers
+- 🌤️ **Weather data** and fire risk assessment
+- 📊 **Historical fire analytics** with local database
+- 📱 **Twitter-inspired UI** - dark theme, responsive design
+- ⚠️ **Emergency information** and safety disclaimers
 
-#### **Historical Fires**
-- Browse previously detected fires stored locally
-- Filter by date ranges
-- View statistics and trends
-- Export data for analysis
+## 🛰️ Data Sources
 
-#### **Analytics Dashboard**
-- Monthly fire activity charts
-- Confidence level distribution
-- Fire intensity trends
+- **NASA FIRMS**: Satellite fire detection (MODIS, VIIRS)
+- **OpenWeatherMap**: Weather conditions and forecasts
+- **Esri**: Satellite base map imagery
 
-## 🛠️ Technical Details
+## 🔥 Fire Detection
 
-### **APIs Used**
-- **NASA FIRMS**: Real-time fire detection data
-  - Endpoint: `https://firms.modaps.eosdis.nasa.gov/api/country/csv/{MAP_KEY}/{source}/GRC/{days}`
-  - Sources: MODIS_NRT, VIIRS_SNPP_NRT, VIIRS_NOAA20_NRT
-  - Country Code: GRC (Greece)
+- 🔥 **High Confidence (80-100%)**: Confirmed active fires
+- 🟠 **Medium Confidence (50-79%)**: Likely fires
+- 🟡 **Low Confidence (0-49%)**: Possible fires
 
-- **OpenWeatherMap**: Weather data for fire locations
-  - Current weather and 24-hour forecasts
-  - Fire risk assessment based on conditions
+## ⚠️ Important Disclaimer
 
-### **Data Storage**
-- **IndexedDB**: Local browser database for historical fires
-- Automatic data persistence
-- Efficient querying and filtering
-- Data export capabilities
+**This application is for informational purposes only.**
 
-### **Technologies**
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Mapping**: Leaflet.js with OpenStreetMap tiles
-- **Charts**: Chart.js for analytics
-- **Icons**: Font Awesome
-- **Fonts**: Inter (Google Fonts)
-
-## 📊 Fire Detection Accuracy
-
-### **Confidence Levels**
-- 🔴 **High (80-100%)**: Confirmed active fires
-- 🟠 **Medium (50-79%)**: Likely fires, may need verification
-- 🔵 **Low (0-49%)**: Possible fires, could be other heat sources
-
-### **Data Sources Comparison**
-- **MODIS**: Terra and Aqua satellites, 1km resolution
-- **VIIRS**: Suomi-NPP and NOAA-20, 375m resolution
-- **Real-time**: Data available within 3 hours of satellite overpass
-
-### **Limitations**
-- Small fires (<1000m²) may not be detected
-- Cloud cover can obstruct satellite detection
-- Some industrial heat sources may cause false positives
-- Smoke without active flames may not be detected
-
-## 🔧 Configuration Options
-
-### **Auto-refresh Settings**
-- 5, 10, 15, or 30-minute intervals
-- Automatic data updates when on live map tab
-- Manual refresh option always available
-
-### **Data Filters**
-- **Time Period**: 1, 3, or 7 days of historical data
-- **Confidence Level**: Filter by detection confidence
-- **Data Source**: Choose specific satellite instruments
-
-### **Map Controls**
-- Zoom level restrictions to Greece area
-- Layer switching (street/satellite)
-- Scale indicator
-- Responsive design for mobile devices
-
-## 🎯 Fire Risk Assessment
-
-The application calculates fire risk levels based on:
-- **Temperature**: Higher temperatures increase risk
-- **Humidity**: Lower humidity increases risk  
-- **Wind Speed**: Higher wind speeds increase risk
-- **Cloud Cover**: Clear skies can increase risk
-
-**Risk Levels:**
-- 🔴 **Extreme**: Very high fire danger
-- 🟠 **High**: High fire danger
-- 🟡 **Moderate**: Moderate fire danger
-- 🟢 **Low**: Low fire danger
-
-## 📱 Mobile Support
-
-- Responsive design for all screen sizes
-- Touch-friendly interface
-- Optimized map controls for mobile
-- Readable text and comfortable tap targets
-
-## 🔒 Privacy & Data
-
-- All data stored locally in your browser
-- No personal information collected
-- API keys stored securely in localStorage
-- Historical data managed by browser IndexedDB
-
-## 🚨 Emergency Information
-
-**This application is for informational purposes only. In case of fire emergency:**
-
+🚨 **Emergency Numbers:**
 - **Greece Fire Service**: 199
 - **European Emergency**: 112
-- **Local Authorities**: Contact your municipality
 
 Always follow official evacuation orders and safety guidelines.
 
-## 🤝 Contributing
+## 📁 Project Structure
 
-Feel free to contribute to this project:
-1. Report bugs or suggest features
-2. Improve the documentation
-3. Submit pull requests
-4. Share with fire monitoring organizations
+```
+grfirealert/
+├── backend.py          # Flask server with NASA FIRMS integration
+├── config.env          # API key configuration
+├── requirements.txt    # Python dependencies
+├── index.html          # Frontend application
+├── styles.css          # Twitter-inspired dark theme
+├── app.js             # Application logic
+├── database.js        # Historical data storage
+├── weather.js         # Weather integration
+├── README.md          # This file
+└── INFORMATION.md     # Detailed technical information
+```
 
-## 📄 License
+## 🔧 Technical Details
 
-This project is open-source and available under the MIT License.
+- **Backend**: Python Flask with pandas for NASA FIRMS data processing
+- **Frontend**: Vanilla JavaScript with Leaflet.js mapping
+- **Database**: Browser IndexedDB for historical fire storage
+- **Security**: Server-side API key management
 
-## 🙏 Acknowledgments
+## 📚 More Information
 
-- **NASA FIRMS**: For providing free fire detection data
-- **OpenWeatherMap**: For weather API services
-- **OpenStreetMap**: For map tile services
-- **Leaflet.js**: For excellent mapping library
-- **Chart.js**: For beautiful chart components
+For detailed technical information, fire detection methodology, and scientific background, see [INFORMATION.md](INFORMATION.md).
+
+## 🙏 Attribution
+
+Fire data courtesy of **NASA FIRMS**. Weather data courtesy of **OpenWeatherMap**. Satellite imagery courtesy of **Esri**.
 
 ---
 
-**Built with ❤️ for fire safety and community awareness in Greece**
+**For informational purposes only. Always follow official emergency guidance.**

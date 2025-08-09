@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Greece Fire Alert - Real-time Fire Monitoring</title>
+    <title>PirkagiesGr - Real-time Fire Monitoring</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
             <div class="header-content">
                 <div class="logo">
                     <i class="fas fa-fire"></i>
-                    <h1>Greece Fire Alert</h1>
+                    <h1>PirkagiesGr</h1>
                 </div>
                 <div class="header-stats">
                     <div class="stat-item">
@@ -51,12 +51,24 @@
                 <i class="fas fa-chart-line"></i>
                 Analytics
             </button>
+            <button class="tab-btn" data-tab="about">
+                <i class="fas fa-info-circle"></i>
+                About
+            </button>
         </nav>
 
         <!-- Main Content -->
         <main class="main-content">
             <!-- Live Fire Map Tab -->
             <div class="tab-content active" id="live-tab">
+                <!-- Disclaimer Banner -->
+                <div class="disclaimer-banner">
+                    <div class="disclaimer-content">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span><strong>For informational purposes only.</strong> Fire data provided by NASA FIRMS. In case of emergency, contact local authorities (Greece: 199, EU: 112).</span>
+                    </div>
+                </div>
+                
                 <div class="map-container">
                     <div id="map"></div>
                     
@@ -185,6 +197,109 @@
                         </div>
                         <div class="chart-container">
                             <canvas id="confidence-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Tab -->
+            <div class="tab-content" id="about-tab">
+                <div class="about-container">
+                    <div class="about-content">
+                        <h1>🔥 PirkagiesGr</h1>
+                        <p class="about-subtitle">Real-time wildfire monitoring for Greece using NASA satellite data</p>
+                        
+                        <div class="about-section">
+                            <h2>⚠️ Important Disclaimer</h2>
+                            <div class="disclaimer-card">
+                                <p><strong>This application is for informational purposes only.</strong></p>
+                                <ul>
+                                    <li>Fire detection data may have delays or inaccuracies</li>
+                                    <li>Small fires may not be detected by satellites</li>
+                                    <li>Weather conditions can affect detection accuracy</li>
+                                    <li>Always follow official evacuation orders and safety guidelines</li>
+                                </ul>
+                                <div class="emergency-numbers">
+                                    <h3>🚨 Emergency Contacts</h3>
+                                    <p><strong>Greece Fire Service:</strong> 199</p>
+                                    <p><strong>European Emergency:</strong> 112</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="about-section">
+                            <h2>🛰️ Data Sources & Attribution</h2>
+                            <div class="attribution-card">
+                                <div class="source-item">
+                                    <h3>NASA FIRMS</h3>
+                                    <p>Fire detection data provided by NASA's Fire Information for Resource Management System (FIRMS)</p>
+                                    <a href="https://firms.modaps.eosdis.nasa.gov/" target="_blank" rel="noopener">Visit NASA FIRMS</a>
+                                </div>
+                                
+                                <div class="source-item">
+                                    <h3>Satellite Data</h3>
+                                    <p>MODIS and VIIRS instruments on Terra, Aqua, NOAA-20, and NOAA-21 satellites</p>
+                                </div>
+                                
+                                <div class="source-item">
+                                    <h3>Weather Data</h3>
+                                    <p>Weather information provided by OpenWeatherMap API</p>
+                                    <a href="https://openweathermap.org/" target="_blank" rel="noopener">OpenWeatherMap</a>
+                                </div>
+
+                                <div class="source-item">
+                                    <h3>Satellite Imagery</h3>
+                                    <p>Satellite base map provided by Esri</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="about-section">
+                            <h2>📊 Fire Detection Technology</h2>
+                            <div class="tech-card">
+                                <h3>Confidence Levels</h3>
+                                <div class="confidence-levels">
+                                    <div class="confidence-item">
+                                        <span class="emoji">🔥</span>
+                                        <div>
+                                            <strong>High (80-100%)</strong>
+                                            <p>Confirmed active fires with strong thermal signatures</p>
+                                        </div>
+                                    </div>
+                                    <div class="confidence-item">
+                                        <span class="emoji">🟠</span>
+                                        <div>
+                                            <strong>Medium (50-79%)</strong>
+                                            <p>Likely fires that may require ground verification</p>
+                                        </div>
+                                    </div>
+                                    <div class="confidence-item">
+                                        <span class="emoji">🟡</span>
+                                        <div>
+                                            <strong>Low (0-49%)</strong>
+                                            <p>Possible fires, could be other heat sources</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="about-section">
+                            <h2>🔧 Technical Information</h2>
+                            <div class="tech-details">
+                                <p><strong>Data Update Frequency:</strong> Every 3-6 hours (depending on satellite overpass)</p>
+                                <p><strong>Detection Resolution:</strong> 375m - 1km depending on sensor</p>
+                                <p><strong>Geographic Coverage:</strong> Greece (Hellenic Republic)</p>
+                                <p><strong>Database:</strong> Local browser storage for historical analysis</p>
+                            </div>
+                        </div>
+
+                        <div class="about-section">
+                            <h2>📄 Legal</h2>
+                            <div class="legal-text">
+                                <p>This application is provided "as is" without warranty of any kind. The developers are not responsible for any decisions made based on the information provided.</p>
+                                <p>Fire data courtesy of NASA FIRMS. Weather data courtesy of OpenWeatherMap. Satellite imagery courtesy of Esri.</p>
+                            </div>
                         </div>
                     </div>
                 </div>

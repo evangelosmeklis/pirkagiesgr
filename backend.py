@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Greece Fire Alert Backend Server
+PirkagiesGr Backend Server
 Handles NASA FIRMS API calls securely with API keys stored in environment variables
 """
 
@@ -322,7 +322,7 @@ def check_configuration():
     return issues
 
 if __name__ == '__main__':
-    print("🔥 Starting Greece Fire Alert Backend Server...")
+    print("🔥 Starting PirkagiesGr Backend Server...")
     
     # Check configuration
     config_issues = check_configuration()
