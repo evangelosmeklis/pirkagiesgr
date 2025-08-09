@@ -102,22 +102,32 @@ class FireDataFetcher:
     def fetch_all_fire_data(self):
         """Fetch fire data from all sources"""
         sources = ['MODIS_NRT', 'VIIRS_SNPP_NRT']
-        all_fires = []
         
+        # Fetch different time periods for different datasets
+        print("📡 Fetching recent data (last 24 hours)...")
+        recent_fires = []
         for source in sources:
-            fires = self.fetch_fires_from_source(source, days=1)  # Get last 24 hours
-            all_fires.extend(fires)
+            fires = self.fetch_fires_from_source(source, days=1)  # Last 24 hours for live/recent
+            recent_fires.extend(fires)
+        
+        print("📡 Fetching historical data (last 7 days)...")
+        historical_fires = []
+        for source in sources:
+            fires = self.fetch_fires_from_source(source, days=7)  # Last 7 days for historical
+            historical_fires.extend(fires)
         
         # Filter geographically
-        all_fires = self.filter_fires_geographically(all_fires)
+        recent_fires = self.filter_fires_geographically(recent_fires)
+        historical_fires = self.filter_fires_geographically(historical_fires)
         
-        print(f"🔥 Total fires after geographic filtering: {len(all_fires)}")
+        print(f"🔥 Recent fires (24h) after geographic filtering: {len(recent_fires)}")
+        print(f"🔥 Historical fires (7d) after geographic filtering: {len(historical_fires)}")
         
         # Create different time period datasets
         datasets = {
-            'live': self.filter_fires_by_time(all_fires, 1),  # Last hour
-            'recent': self.filter_fires_by_time(all_fires, 24),  # Last 24 hours
-            'historical': all_fires  # All available
+            'live': self.filter_fires_by_time(recent_fires, 1),  # Last hour from recent data
+            'recent': recent_fires,  # Last 24 hours
+            'historical': historical_fires  # Last 7 days
         }
         
         return datasets

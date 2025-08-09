@@ -35,7 +35,11 @@ jobs:
       env:
         NASA_FIRMS_MAP_KEY: ${{ secrets.NASA_FIRMS_MAP_KEY }}
         OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
-      run: python scripts/fetch_fire_data.py
+      run: |
+        echo "🚀 Starting fire data fetch at $(date)"
+        timeout 10m python scripts/fetch_fire_data.py
+        echo "✅ Fire data fetch completed at $(date)"
+      timeout-minutes: 12
     
     - name: Configure Git
       run: |
