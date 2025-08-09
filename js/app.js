@@ -158,7 +158,7 @@ class GreeceFierAlert {
             }
 
             this.displayFireMarkers();
-            this.updateStats();
+            this.updateStats(data.timestamp);
             
             console.log(`Loaded ${this.activeFires.length} fires from ${data.sources.join(', ')}`);
             this.showNotification(`Loaded ${this.activeFires.length} fires from ${data.sources.join(', ')}`);
@@ -495,12 +495,48 @@ class GreeceFierAlert {
         }
     }
 
-    updateStats() {
+    updateStats(dataTimestamp = null) {
         const activeFiresCount = this.activeFires.length;
-        const lastUpdate = new Date().toLocaleTimeString();
+        
+        // Use the actual data fetch timestamp, not current time
+        let lastUpdateText = '--:--';
+        if (dataTimestamp) {
+            const dataTime = new Date(dataTimestamp);
+            
+            // Format in Greek timezone with proper DST handling
+            const greekTime = dataTime.toLocaleTimeString('el-GR', { 
+                hour12: false, 
+                timeZone: 'Europe/Athens',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Determine if it's daylight saving time
+            const isDST = this.isDaylightSavingTime(dataTime);
+            const timezoneLabel = isDST ? 'EEST' : 'EET';
+            
+            lastUpdateText = `${greekTime} ${timezoneLabel}`;
+        }
         
         document.getElementById('active-fires').textContent = activeFiresCount;
-        document.getElementById('last-update').textContent = lastUpdate;
+        document.getElementById('last-update').textContent = lastUpdateText;
+    }
+
+    // Helper function to determine if a date is in daylight saving time for Greece
+    isDaylightSavingTime(date) {
+        // Greece observes DST from last Sunday in March to last Sunday in October
+        const year = date.getFullYear();
+        
+        // Get last Sunday in March
+        const marchLastSunday = new Date(year, 2, 31); // March 31
+        marchLastSunday.setDate(31 - marchLastSunday.getDay());
+        
+        // Get last Sunday in October  
+        const octoberLastSunday = new Date(year, 9, 31); // October 31
+        octoberLastSunday.setDate(31 - octoberLastSunday.getDay());
+        
+        // Check if date is within DST period
+        return date >= marchLastSunday && date < octoberLastSunday;
     }
 
     switchTab(tabName) {
