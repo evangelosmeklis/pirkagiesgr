@@ -251,12 +251,12 @@ class GreeceFierAlert {
         // Simple 3-emoji system as requested:
         // 1. 🔥 Fire emoji for MODIS fires (≥50% confidence)
         // 2. ⚠️ Warning emoji for low confidence fires from both sources (<50%)
-        // 3. 🟠 Orange emoji only for VIIRS (≥50% confidence)
+        // 3. 🔶 Yellow diamond for VIIRS (≥50% confidence)
         
         if (isViirs) {
             // VIIRS data
             if (confidence >= 50) {
-                emoji = '🟠'; // VIIRS-specific emoji for all good detections
+                emoji = '🔶'; // VIIRS-specific emoji for all good detections
                 size = confidence >= 80 ? 30 : 25;
             } else {
                 emoji = '⚠️'; // Warning for low confidence VIIRS

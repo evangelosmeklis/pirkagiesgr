@@ -111,18 +111,18 @@
             </button>
         </nav>
 
+        <!-- Disclaimer Banner -->
+        <div class="disclaimer-banner">
+            <div class="disclaimer-content">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span data-i18n="disclaimer-banner"><strong>Μόνο για ενημερωτικούς σκοπούς.</strong> Δεδομένα πυρκαγιών από το NASA FIRMS (ενημερώνονται κάθε 3 ώρες παγκοσμίως). Σε περίπτωση έκτακτης ανάγκης, επικοινωνήστε με τοπικές αρχές (Ελλάδα: 199, ΕΕ: 112).</span>
+            </div>
+        </div>
+
         <!-- Main Content -->
         <main class="main-content">
             <!-- Live Fire Map Tab -->
             <div class="tab-content active" id="live-tab">
-                <!-- Disclaimer Banner -->
-                <div class="disclaimer-banner">
-                    <div class="disclaimer-content">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <span data-i18n="disclaimer-banner"><strong>Μόνο για ενημερωτικούς σκοπούς.</strong> Δεδομένα πυρκαγιών από το NASA FIRMS. Σε περίπτωση έκτακτης ανάγκης, επικοινωνήστε με τοπικές αρχές (Ελλάδα: 199, ΕΕ: 112).</span>
-                    </div>
-                </div>
-                
                 <div class="map-container">
                     <div id="map"></div>
                     
@@ -139,7 +139,7 @@
                             <label data-i18n="detection-confidence">🎯 Βεβαιότητα Ανίχνευσης:</label>
                             <select id="confidence-filter" title="Filter by detection confidence level">
                                 <option value="all" data-i18n="all-detections">Όλες οι Ανιχνεύσεις</option>
-                                <option value="high" data-i18n="good-detections">🔥🟠 Καλές Ανιχνεύσεις (≥50%)</option>
+                                <option value="high" data-i18n="good-detections">🔥🔶 Καλές Ανιχνεύσεις (≥50%)</option>
                                 <option value="low" data-i18n="low-confidence">⚠️ Χαμηλή Βεβαιότητα (<50%)</option>
                             </select>
                         </div>
@@ -183,7 +183,7 @@
                                 <span data-i18n="modis-fire-detection">Ανίχνευση Πυρκαγιάς MODIS (≥50% βεβαιότητα)</span>
                             </div>
                             <div class="legend-item">
-                                <div class="legend-marker">🟠</div>
+                                <div class="legend-marker">🔶</div>
                                 <span data-i18n="viirs-thermal-detection">Θερμική Ανίχνευση VIIRS (≥50% βεβαιότητα)</span>
                             </div>
                             <div class="legend-item">
@@ -334,7 +334,7 @@
                                         </div>
                                     </div>
                                     <div class="confidence-item">
-                                        <span class="emoji">🟠</span>
+                                        <span class="emoji">🔶</span>
                                         <div>
                                             <strong data-i18n="medium-confidence">Μεσαία (50-79%)</strong>
                                             <p data-i18n="medium-confidence-desc">Πιθανές πυρκαγιές που μπορεί να χρειάζονται επαλήθευση από το έδαφος</p>

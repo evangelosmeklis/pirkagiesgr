@@ -20,13 +20,13 @@ class LanguageManager {
                 'about': 'Σχετικά',
                 
                 // Disclaimer banner
-                'disclaimer-banner': '<strong>Μόνο για ενημερωτικούς σκοπούς.</strong> Δεδομένα πυρκαγιών από το NASA FIRMS. Σε περίπτωση έκτακτης ανάγκης, επικοινωνήστε με τοπικές αρχές (Ελλάδα: 199, ΕΕ: 112).',
+                'disclaimer-banner': '<strong>Μόνο για ενημερωτικούς σκοπούς.</strong> Δεδομένα πυρκαγιών από το NASA FIRMS (ενημερώνονται κάθε 3 ώρες παγκοσμίως). Σε περίπτωση έκτακτης ανάγκης, επικοινωνήστε με τοπικές αρχές (Ελλάδα: 199, ΕΕ: 112).',
                 
                 // Map controls
                 'fire-controls': '🔥 Έλεγχος Πυρκαγιών',
                 'detection-confidence': '🎯 Βεβαιότητα Ανίχνευσης:',
                 'all-detections': 'Όλες οι Ανιχνεύσεις',
-                'good-detections': '🔥🟠 Καλές Ανιχνεύσεις (≥50%)',
+                'good-detections': '🔥🔶 Καλές Ανιχνεύσεις (≥50%)',
                 'low-confidence': '⚠️ Χαμηλή Βεβαιότητα (<50%)',
                 'time-period': '⏱️ Χρονική Περίοδος:',
                 'last-hour': 'Τελευταία Ώρα',
@@ -166,13 +166,13 @@ class LanguageManager {
                 'about': 'About',
                 
                 // Disclaimer banner
-                'disclaimer-banner': '<strong>For informational purposes only.</strong> Fire data provided by NASA FIRMS. In case of emergency, contact local authorities (Greece: 199, EU: 112).',
+                'disclaimer-banner': '<strong>For informational purposes only.</strong> Fire data provided by NASA FIRMS (updated every 3 hours globally). In case of emergency, contact local authorities (Greece: 199, EU: 112).',
                 
                 // Map controls
                 'fire-controls': '🔥 Fire Controls',
                 'detection-confidence': '🎯 Detection Confidence:',
                 'all-detections': 'All Detections',
-                'good-detections': '🔥🟠 Good Detections (≥50%)',
+                'good-detections': '🔥🔶 Good Detections (≥50%)',
                 'low-confidence': '⚠️ Low Confidence (<50%)',
                 'time-period': '⏱️ Time Period:',
                 'last-hour': 'Last Hour',
