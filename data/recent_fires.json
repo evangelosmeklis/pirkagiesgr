@@ -2,6 +2,66 @@
   "fires": [
     {
       "country_id": "GRC",
+      "latitude": 41.39501,
+      "longitude": 26.54905,
+      "brightness": 343.42,
+      "scan": 2.1,
+      "track": 1.41,
+      "acq_date": "2025-08-10",
+      "acq_time": 1202,
+      "satellite": "Aqua",
+      "instrument": "MODIS",
+      "confidence": 91,
+      "version": "6.1NRT",
+      "bright_t31": 309.92,
+      "frp": 104.25,
+      "daynight": "D",
+      "data_source": "MODIS_NRT",
+      "id": "41.39501_26.54905_2025-08-10_1202",
+      "fetch_timestamp": "2025-08-10T13:28:00.857408+00:00"
+    },
+    {
+      "country_id": "GRC",
+      "latitude": 41.39749,
+      "longitude": 26.54063,
+      "brightness": 335.25,
+      "scan": 2.1,
+      "track": 1.41,
+      "acq_date": "2025-08-10",
+      "acq_time": 1202,
+      "satellite": "Aqua",
+      "instrument": "MODIS",
+      "confidence": 85,
+      "version": "6.1NRT",
+      "bright_t31": 309.89,
+      "frp": 64.55,
+      "daynight": "D",
+      "data_source": "MODIS_NRT",
+      "id": "41.39749_26.54063_2025-08-10_1202",
+      "fetch_timestamp": "2025-08-10T13:28:00.857422+00:00"
+    },
+    {
+      "country_id": "GRC",
+      "latitude": 41.4028,
+      "longitude": 26.564,
+      "brightness": 323.58,
+      "scan": 2.09,
+      "track": 1.41,
+      "acq_date": "2025-08-10",
+      "acq_time": 1202,
+      "satellite": "Aqua",
+      "instrument": "MODIS",
+      "confidence": 71,
+      "version": "6.1NRT",
+      "bright_t31": 309.11,
+      "frp": 21.97,
+      "daynight": "D",
+      "data_source": "MODIS_NRT",
+      "id": "41.4028_26.564_2025-08-10_1202",
+      "fetch_timestamp": "2025-08-10T13:28:00.857427+00:00"
+    },
+    {
+      "country_id": "GRC",
       "latitude": 39.16776,
       "longitude": 22.84276,
       "bright_ti4": 307.7,
@@ -18,7 +78,7 @@
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
       "id": "39.16776_22.84276_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T12:36:19.268029+00:00"
+      "fetch_timestamp": "2025-08-10T13:28:00.996214+00:00"
     },
     {
       "country_id": "GRC",
@@ -38,7 +98,7 @@
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
       "id": "39.35578_22.98284_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T12:36:19.268048+00:00"
+      "fetch_timestamp": "2025-08-10T13:28:00.996225+00:00"
     },
     {
       "country_id": "GRC",
@@ -58,7 +118,7 @@
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
       "id": "39.48292_22.50938_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T12:36:19.268053+00:00"
+      "fetch_timestamp": "2025-08-10T13:28:00.996230+00:00"
     },
     {
       "country_id": "GRC",
@@ -78,7 +138,7 @@
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
       "id": "39.48655_22.51064_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T12:36:19.268056+00:00"
+      "fetch_timestamp": "2025-08-10T13:28:00.996234+00:00"
     },
     {
       "country_id": "GRC",
@@ -98,12 +158,12 @@
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
       "id": "39.72336_19.68428_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T12:36:19.268059+00:00"
+      "fetch_timestamp": "2025-08-10T13:28:00.996237+00:00"
     }
   ],
-  "count": 5,
+  "count": 8,
   "dataset": "recent",
-  "last_updated": "2025-08-10T12:36:19.691275+00:00",
+  "last_updated": "2025-08-10T13:28:01.302783+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT"
