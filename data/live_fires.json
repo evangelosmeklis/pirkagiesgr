@@ -18,7 +18,7 @@
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
       "id": "39.16776_22.84276_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T05:46:23.297920+00:00"
+      "fetch_timestamp": "2025-08-10T06:26:45.637326+00:00"
     },
     {
       "country_id": "GRC",
@@ -38,7 +38,7 @@
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
       "id": "39.35578_22.98284_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T05:46:23.297936+00:00"
+      "fetch_timestamp": "2025-08-10T06:26:45.637344+00:00"
     },
     {
       "country_id": "GRC",
@@ -58,7 +58,7 @@
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
       "id": "39.48292_22.50938_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T05:46:23.297940+00:00"
+      "fetch_timestamp": "2025-08-10T06:26:45.637348+00:00"
     },
     {
       "country_id": "GRC",
@@ -78,7 +78,7 @@
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
       "id": "39.48655_22.51064_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T05:46:23.297944+00:00"
+      "fetch_timestamp": "2025-08-10T06:26:45.637351+00:00"
     },
     {
       "country_id": "GRC",
@@ -98,12 +98,12 @@
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
       "id": "39.72336_19.68428_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T05:46:23.297947+00:00"
+      "fetch_timestamp": "2025-08-10T06:26:45.637355+00:00"
     }
   ],
   "count": 5,
   "dataset": "live",
-  "last_updated": "2025-08-10T05:46:23.896436+00:00",
+  "last_updated": "2025-08-10T06:26:45.990257+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT"
