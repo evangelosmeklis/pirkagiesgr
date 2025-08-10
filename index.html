@@ -139,7 +139,7 @@
                             <label data-i18n="detection-confidence">🎯 Βεβαιότητα Ανίχνευσης:</label>
                             <select id="confidence-filter" title="Filter by detection confidence level">
                                 <option value="all" data-i18n="all-detections">Όλες οι Ανιχνεύσεις</option>
-                                <option value="high" data-i18n="good-detections">🔥🔶 Καλές Ανιχνεύσεις (≥50%)</option>
+                                <option value="high" data-i18n="good-detections">🔥🟡 Καλές Ανιχνεύσεις (≥50%)</option>
                                 <option value="low" data-i18n="low-confidence">⚠️ Χαμηλή Βεβαιότητα (<50%)</option>
                             </select>
                         </div>
@@ -184,11 +184,15 @@
                         </div>
                         <div class="legend-section">
                             <div class="legend-item">
-                                <div class="legend-marker">🔥</div>
+                                <div class="legend-marker">
+                                    <img src="./media/fire_red.png" alt="MODIS" style="width: 18px; height: 18px;">
+                                </div>
                                 <span data-i18n="modis-fire-detection">Ανίχνευση Πυρκαγιάς MODIS (≥50% βεβαιότητα)</span>
                             </div>
                             <div class="legend-item">
-                                <div class="legend-marker">🔶</div>
+                                <div class="legend-marker">
+                                    <img src="./media/fire_yellow.png" alt="VIIRS" style="width: 18px; height: 18px;">
+                                </div>
                                 <span data-i18n="viirs-thermal-detection">Θερμική Ανίχνευση VIIRS (≥50% βεβαιότητα)</span>
                             </div>
                             <div class="legend-item">

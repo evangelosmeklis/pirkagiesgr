@@ -253,41 +253,62 @@ class GreeceFierAlert {
         let emoji = '🔥';
         let size = 30;
         
-        // Different emojis based on data source and confidence
+        // Different icons based on data source and confidence
         const isViirs = dataSource.includes('VIIRS');
+        let iconUrl, iconClass;
         
-        // Simple 3-emoji system as requested:
-        // 1. 🔥 Fire emoji for MODIS fires (≥50% confidence)
-        // 2. ⚠️ Warning emoji for low confidence fires from both sources (<50%)
-        // 3. 🔶 Yellow diamond for VIIRS (≥50% confidence)
+        // Icon system:
+        // 1. Red fire PNG for MODIS fires (≥50% confidence)
+        // 2. Warning emoji for low confidence fires from both sources (<50%)
+        // 3. Yellow fire PNG for VIIRS (≥50% confidence)
         
         if (isViirs) {
             // VIIRS data
             if (confidence >= 50) {
-                emoji = '🔶'; // VIIRS-specific emoji for all good detections
-                size = confidence >= 80 ? 30 : 25;
+                iconUrl = './media/fire_yellow.png'; // Yellow fire for VIIRS
+                iconClass = 'fire-viirs-icon';
+                size = confidence >= 80 ? 32 : 28;
             } else {
-                emoji = '⚠️'; // Warning for low confidence VIIRS
+                // Use emoji for low confidence
+                emoji = '⚠️';
+                iconClass = 'fire-low-confidence';
                 size = 20;
             }
         } else {
             // MODIS data
             if (confidence >= 50) {
-                emoji = '🔥'; // Fire emoji for live MODIS fires
-                size = confidence >= 80 ? 30 : 25;
+                iconUrl = './media/fire_red.png'; // Red fire for MODIS
+                iconClass = 'fire-modis-icon';
+                size = confidence >= 80 ? 32 : 28;
             } else {
-                emoji = '⚠️'; // Warning for low confidence MODIS
+                // Use emoji for low confidence
+                emoji = '⚠️';
+                iconClass = 'fire-low-confidence';
                 size = 20;
             }
         }
 
-        const markerIcon = L.divIcon({
-            className: 'fire-emoji-marker',
-            html: `<span style="font-size: ${size}px; cursor: pointer; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); display: block; background: transparent;">${emoji}</span>`,
-            iconSize: [size, size],
-            iconAnchor: [size/2, size/2],
-            popupAnchor: [0, -size/2]
-        });
+        let markerIcon;
+        
+        if (iconUrl) {
+            // Use PNG icon for high confidence fires
+            markerIcon = L.icon({
+                iconUrl: iconUrl,
+                iconSize: [size, size],
+                iconAnchor: [size/2, size/2],
+                popupAnchor: [0, -size/2],
+                className: iconClass
+            });
+        } else {
+            // Use emoji for low confidence fires
+            markerIcon = L.divIcon({
+                className: 'fire-emoji-marker',
+                html: `<span style="font-size: ${size}px; cursor: pointer; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); display: block; background: transparent;">${emoji}</span>`,
+                iconSize: [size, size],
+                iconAnchor: [size/2, size/2],
+                popupAnchor: [0, -size/2]
+            });
+        }
 
         const marker = L.marker([fire.latitude, fire.longitude], {
             icon: markerIcon
