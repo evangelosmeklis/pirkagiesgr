@@ -69,12 +69,35 @@ class APIService {
             const data = await this.loadStaticData(datasetName);
             let fires = data.fires || [];
             
+            // Normalize confidence values first
+            fires = fires.map(fire => {
+                const normalizedFire = { ...fire };
+                
+                // Handle VIIRS confidence letters
+                if (typeof fire.confidence === 'string') {
+                    const confStr = fire.confidence.toLowerCase();
+                    if (confStr === 'n') {
+                        normalizedFire.confidence = 80; // Nominal - high confidence
+                    } else if (confStr === 'l') {
+                        normalizedFire.confidence = 30; // Low confidence
+                    } else if (confStr === 'h') {
+                        normalizedFire.confidence = 100; // High confidence
+                    } else {
+                        // Try to parse as number if it's a string number
+                        const numValue = parseFloat(fire.confidence);
+                        normalizedFire.confidence = isNaN(numValue) ? 50 : numValue;
+                    }
+                }
+                
+                return normalizedFire;
+            });
+            
             // Apply confidence filter
             if (confidence !== 'all') {
                 if (confidence === 'high') {
-                    fires = fires.filter(f => f.confidence >= 50);
+                    fires = fires.filter(f => (f.confidence || 0) >= 50);
                 } else if (confidence === 'low') {
-                    fires = fires.filter(f => f.confidence < 50);
+                    fires = fires.filter(f => (f.confidence || 0) < 50);
                 }
             }
             
@@ -83,6 +106,8 @@ class APIService {
                 fires = fires.filter(f => sources.includes(f.data_source));
             }
             
+            console.log(`📊 API Service: Loaded ${fires.length} fires from ${datasetName} dataset`);
+            
             return {
                 fires: fires,
                 count: fires.length,
@@ -90,7 +115,8 @@ class APIService {
                 days: days,
                 confidence_filter: confidence,
                 timestamp: data.last_updated || new Date().toISOString(),
-                data_source: 'static_files'
+                data_source: 'static_files',
+                dataset_used: datasetName
             };
             
         } catch (error) {
@@ -103,7 +129,8 @@ class APIService {
                 days: days,
                 confidence_filter: confidence,
                 timestamp: new Date().toISOString(),
-                error: error.message
+                error: error.message,
+                dataset_used: 'error'
             };
         }
     }

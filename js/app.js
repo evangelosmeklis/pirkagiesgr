@@ -24,8 +24,10 @@ class GreeceFierAlert {
     async init() {
         try {
             this.apiService.init(); // Initialize API service
+            this.languageManager = new LanguageManager(); // Initialize language management
             this.setupEventListeners();
             this.initializeMap();
+            this.setupMobileLayout(); // Setup mobile-specific UI
             await this.loadSettings();
             await this.loadFireData();
             this.setupUpdateScheduleDisplay();
@@ -42,7 +44,11 @@ class GreeceFierAlert {
         // Tab navigation
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                this.switchTab(e.target.dataset.tab);
+                // Use currentTarget to always get the button element, not the clicked child element
+                const tabName = e.currentTarget.dataset.tab;
+                if (tabName) {
+                    this.switchTab(tabName);
+                }
             });
         });
 
@@ -101,6 +107,11 @@ class GreeceFierAlert {
                 e.preventDefault();
                 this.refreshFireData();
             }
+        });
+        
+        // Listen for language changes
+        document.addEventListener('languageChanged', (e) => {
+            this.onLanguageChanged(e.detail.language);
         });
     }
 
@@ -180,9 +191,21 @@ class GreeceFierAlert {
                     const value = values[index].trim();
                     
                     // Parse numeric values
-                    if (['latitude', 'longitude', 'brightness', 'scan', 'track', 'frp', 'confidence'].includes(header)) {
+                    if (['latitude', 'longitude', 'brightness', 'scan', 'track', 'frp'].includes(header)) {
                         const numValue = parseFloat(value);
                         fire[header] = isNaN(numValue) ? null : numValue;
+                    } else if (header === 'confidence') {
+                        // Handle both numeric and letter confidence values
+                        if (value === 'n' || value === 'N') {
+                            fire[header] = 80; // Nominal - high confidence
+                        } else if (value === 'l' || value === 'L') {
+                            fire[header] = 30; // Low confidence
+                        } else if (value === 'h' || value === 'H') {
+                            fire[header] = 100; // High confidence
+                        } else {
+                            const numValue = parseFloat(value);
+                            fire[header] = isNaN(numValue) ? null : numValue;
+                        }
                     } else if (['acq_time'].includes(header)) {
                         fire[header] = parseInt(value) || 0;
                     } else {
@@ -262,8 +285,15 @@ class GreeceFierAlert {
             icon: markerIcon
         });
 
-        // Add click event
-        marker.on('click', () => {
+        // Add click/touch events for mobile compatibility
+        marker.on('click', (e) => {
+            e.originalEvent.preventDefault();
+            this.showFireInfo(fire);
+        });
+        
+        // Add touchend event for better mobile support
+        marker.on('touchend', (e) => {
+            e.originalEvent.preventDefault();
             this.showFireInfo(fire);
         });
 
@@ -372,50 +402,52 @@ class GreeceFierAlert {
             location = coordinates;
         }
         
+        const t = this.languageManager ? this.languageManager.t.bind(this.languageManager) : (key) => key;
+        
         return `
             <div class="fire-details">
                 <div class="fire-detail">
-                    <label>Location:</label>
+                    <label>${t('location')}</label>
                     <span>${location}</span>
                 </div>
                 
                 <div class="fire-detail">
-                    <label>Detection Time:</label>
+                    <label>${t('detection-time')}</label>
                     <span>${detectionTime}</span>
                 </div>
                 
                 <div class="fire-detail">
-                    <label>Confidence Level:</label>
+                    <label>${t('confidence-level')}</label>
                     <span class="confidence-badge confidence-${confidenceClass}">${fire.confidence !== null && fire.confidence !== undefined ? Math.round(fire.confidence) : 'Unknown'}%</span>
                 </div>
                 
                 <div class="fire-detail">
-                    <label>Brightness Temperature:</label>
+                    <label>${t('brightness-temperature')}</label>
                     <span>${(fire.brightness || 0).toFixed(1)}K</span>
                 </div>
                 
                 <div class="fire-detail">
-                    <label>Fire Radiative Power:</label>
+                    <label>${t('fire-radiative-power')}</label>
                     <span>${(fire.frp || 0).toFixed(1)} MW</span>
                 </div>
                 
                 <div class="fire-detail">
-                    <label>Data Source:</label>
+                    <label>${t('data-source')}</label>
                     <span>${fire.data_source || fire.satellite || 'Unknown'}</span>
                 </div>
                 
                 <div class="fire-detail">
-                    <label>Satellite:</label>
+                    <label>${t('satellite')}</label>
                     <span>${fire.satellite} (${fire.instrument})</span>
                 </div>
                 
                 <div class="fire-detail">
-                    <label>Data Version:</label>
+                    <label>${t('data-version')}</label>
                     <span>${fire.version}</span>
                 </div>
 
                 <div class="accuracy-alert">
-                    <h5>Accuracy Information</h5>
+                    <h5>${t('accuracy-information')}</h5>
                     <p>${this.getAccuracyAlert(fire)}</p>
                 </div>
             </div>
@@ -448,22 +480,31 @@ class GreeceFierAlert {
             hour12: false
         };
         
-        const greeceDateTime = utcDateTime.toLocaleString('en-GB', options);
+        const locale = this.languageManager && this.languageManager.currentLanguage === 'el' ? 'el-GR' : 'en-GB';
+        const greeceDateTime = utcDateTime.toLocaleString(locale, options);
+        const timeLabel = this.languageManager ? this.languageManager.t('greece-time') : 'Greece Time';
         
         // Format as: DD/MM/YYYY, HH:MM:SS (Greece Time)
-        return `${greeceDateTime} (Greece Time)`;
+        return `${greeceDateTime} (${timeLabel})`;
     }
 
     getAccuracyAlert(fire) {
         const confidence = fire.confidence;
         const frp = fire.frp;
+        const t = this.languageManager ? this.languageManager.t.bind(this.languageManager) : (key) => key;
         
         if (confidence >= 80 && frp > 10) {
-            return "⭐ High confidence detection with strong fire signal. This is likely an active fire.";
+            return this.languageManager && this.languageManager.currentLanguage === 'el' 
+                ? "⭐ Ανίχνευση υψηλής βεβαιότητας με ισχυρό σήμα φωτιάς. Αυτή είναι πιθανώς μια ενεργή πυρκαγιά."
+                : "⭐ High confidence detection with strong fire signal. This is likely an active fire.";
         } else if (confidence >= 50) {
-            return "⚠️ Medium confidence detection. May be an active fire or hot surface. Ground verification recommended.";
+            return this.languageManager && this.languageManager.currentLanguage === 'el'
+                ? "⚠️ Ανίχνευση μεσαίας βεβαιότητας. Μπορεί να είναι ενεργή πυρκαγιά ή καυτή επιφάνεια. Συνιστάται επαλήθευση από το έδαφος."
+                : "⚠️ Medium confidence detection. May be an active fire or hot surface. Ground verification recommended.";
         } else {
-            return "❓ Low confidence detection. Could be a fire, but may also be hot industrial activity, gas flares, or sensor noise.";
+            return this.languageManager && this.languageManager.currentLanguage === 'el'
+                ? "❓ Ανίχνευση χαμηλής βεβαιότητας. Θα μπορούσε να είναι φωτιά, αλλά μπορεί επίσης να είναι καυτή βιομηχανική δραστηριότητα, φλόγες αερίου ή θόρυβος αισθητήρα."
+                : "❓ Low confidence detection. Could be a fire, but may also be hot industrial activity, gas flares, or sensor noise.";
         }
     }
 
@@ -491,17 +532,114 @@ class GreeceFierAlert {
         }
     }
 
+    setupMobileLayout() {
+        // Check if we're on a mobile device
+        const isMobile = window.innerWidth <= 768;
+        
+        if (isMobile) {
+            // Start with controls collapsed on mobile
+            const mapControls = document.querySelector('.map-controls');
+            if (mapControls) {
+                mapControls.classList.add('collapsed');
+            }
+            
+            // Set initial toggle icon state
+            const toggleIcon = document.querySelector('#controls-toggle i');
+            if (toggleIcon) {
+                toggleIcon.className = 'fas fa-chevron-up';
+            }
+        }
+        
+        // Listen for orientation changes and resize events
+        window.addEventListener('resize', () => {
+            this.handleResponsiveChanges();
+        });
+        
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                this.handleResponsiveChanges();
+            }, 100);
+        });
+    }
+    
+    handleResponsiveChanges() {
+        const isMobile = window.innerWidth <= 768;
+        const mapControls = document.querySelector('.map-controls');
+        
+        if (isMobile && mapControls && !mapControls.classList.contains('collapsed')) {
+            // Auto-collapse controls when switching to mobile view
+            mapControls.classList.add('collapsed');
+            const toggleIcon = document.querySelector('#controls-toggle i');
+            if (toggleIcon) {
+                toggleIcon.className = 'fas fa-chevron-up';
+            }
+        }
+    }
+    
+    onLanguageChanged(language) {
+        // Update any dynamic content that might not be caught by data-i18n
+        console.log(`🔄 Updating dynamic content for language: ${language}`);
+        
+        // Update fire info panel placeholder text
+        const panelContent = document.getElementById('panel-content');
+        if (panelContent && panelContent.children.length === 1 && panelContent.textContent.includes('Click on a fire')) {
+            const t = this.languageManager.t.bind(this.languageManager);
+            panelContent.innerHTML = `<p>${t('click-fire-marker')}</p>`;
+        }
+        
+        // Update update schedule display
+        this.updateScheduleText();
+        
+        // If historical tab is active, refresh the table headers and stats
+        if (this.currentTab === 'historical') {
+            this.refreshHistoricalLabels();
+        }
+    }
+    
+    updateScheduleText() {
+        const updateElement = document.getElementById('next-update');
+        if (updateElement && this.languageManager) {
+            const t = this.languageManager.t.bind(this.languageManager);
+            updateElement.textContent = t('next-update');
+        }
+    }
+    
+    refreshHistoricalLabels() {
+        // Refresh stats labels
+        const t = this.languageManager.t.bind(this.languageManager);
+        
+        // Update stat cards that might not be properly translated
+        const totalLabel = document.querySelector('#total-historical').nextElementSibling;
+        const avgDailyLabel = document.querySelector('#avg-daily').nextElementSibling;
+        const avgIntensityLabel = document.querySelector('#avg-intensity').nextElementSibling;
+        
+        if (totalLabel && totalLabel.dataset.i18n === 'total-fires') {
+            totalLabel.textContent = t('total-fires');
+        }
+        if (avgDailyLabel && avgDailyLabel.dataset.i18n === 'avg-daily') {
+            avgDailyLabel.textContent = t('avg-daily');
+        }
+        if (avgIntensityLabel && avgIntensityLabel.dataset.i18n === 'avg-intensity') {
+            avgIntensityLabel.textContent = t('avg-intensity');
+        }
+    }
+
     toggleMapControls() {
         const mapControls = document.querySelector('.map-controls');
         const toggleIcon = document.querySelector('#controls-toggle i');
         
         if (mapControls && toggleIcon) {
-            mapControls.classList.toggle('collapsed');
+            const isCurrentlyCollapsed = mapControls.classList.contains('collapsed');
             
-            // Update toggle icon
-            if (mapControls.classList.contains('collapsed')) {
+            if (isCurrentlyCollapsed) {
+                // Expanding controls
+                mapControls.classList.remove('collapsed');
+                mapControls.classList.add('user-expanded');
                 toggleIcon.className = 'fas fa-chevron-down';
             } else {
+                // Collapsing controls
+                mapControls.classList.add('collapsed');
+                mapControls.classList.remove('user-expanded');
                 toggleIcon.className = 'fas fa-chevron-up';
             }
         }
@@ -575,48 +713,127 @@ class GreeceFierAlert {
     async loadHistoricalData() {
         try {
             // Show loading state
-            this.showLoading();
+            this.showLoading('Loading historical fire data...');
             
             // Get 7 days of historical data from API (both MODIS and VIIRS)
             const data = await this.apiService.getFireData(['MODIS_NRT', 'VIIRS_SNPP_NRT'], 7, 'all');
             
-            if (data.fires) {
-                // Add location names for historical fires
-                const firesWithLocations = await this.addLocationNamesToFires(data.fires);
-                this.displayHistoricalFires(firesWithLocations);
-                this.updateHistoricalStats(firesWithLocations);
+            if (data.fires && Array.isArray(data.fires)) {
+                // Process confidence values for consistent display
+                const processedFires = data.fires.map(fire => {
+                    const processed = { ...fire };
+                    
+                    // Normalize confidence values
+                    if (typeof fire.confidence === 'string') {
+                        if (fire.confidence === 'n' || fire.confidence === 'N') {
+                            processed.confidence = 80;
+                        } else if (fire.confidence === 'l' || fire.confidence === 'L') {
+                            processed.confidence = 30;
+                        } else if (fire.confidence === 'h' || fire.confidence === 'H') {
+                            processed.confidence = 100;
+                        }
+                    }
+                    
+                    return processed;
+                });
+                
+                // Display fires immediately without waiting for location names
+                this.displayHistoricalFires(processedFires);
+                this.updateHistoricalStats(processedFires);
+                
+                console.log(`✅ Loaded ${processedFires.length} historical fires`);
+                
+                // Hide loading immediately after displaying data
+                this.hideLoading();
+                
+                // Add location names in the background (optional enhancement)
+                this.enhanceFiresWithLocations(processedFires);
+                
             } else {
-                throw new Error('No fire data received');
+                throw new Error('No fire data received or data is not in expected format');
             }
             
-            this.hideLoading();
         } catch (error) {
             console.error('Failed to load historical data:', error);
-            this.showError('Failed to load historical fire data. Please try again.');
+            this.showError(`Failed to load historical fire data: ${error.message}`);
             this.hideLoading();
         }
     }
 
-    async addLocationNamesToFires(fires) {
-        // Process fires in smaller batches to avoid overwhelming the API
-        const batchSize = 10;
-        const result = [];
-        
-        for (let i = 0; i < fires.length; i += batchSize) {
-            const batch = fires.slice(i, i + batchSize);
+    async enhanceFiresWithLocations(fires) {
+        // Background enhancement - don't block UI
+        try {
+            console.log('🔍 Enhancing fires with location names in background...');
+            const batchSize = 5; // Smaller batches for background processing
             
-            const batchPromises = batch.map(async (fire) => {
-                const locationName = await this.getLocationName(fire.latitude, fire.longitude);
-                return { ...fire, locationName };
-            });
-            
-            const batchResults = await Promise.all(batchPromises);
-            result.push(...batchResults);
-            
-            // Small delay between batches to be nice to the API
-            if (i + batchSize < fires.length) {
-                await new Promise(resolve => setTimeout(resolve, 100));
+            for (let i = 0; i < fires.length && i < 50; i += batchSize) { // Limit to first 50 for performance
+                const batch = fires.slice(i, i + batchSize);
+                
+                const batchPromises = batch.map(async (fire) => {
+                    try {
+                        const locationName = await this.getLocationName(fire.latitude, fire.longitude);
+                        return { ...fire, locationName };
+                    } catch (error) {
+                        console.warn(`Failed to get location for fire at ${fire.latitude}, ${fire.longitude}`);
+                        return fire; // Return fire without location name
+                    }
+                });
+                
+                const enhancedFires = await Promise.all(batchPromises);
+                // Update only these specific fires in the display
+                this.updateFiresInDisplay(enhancedFires);
+                
+                // Small delay between batches
+                await new Promise(resolve => setTimeout(resolve, 200));
             }
+        } catch (error) {
+            console.warn('Background location enhancement failed:', error);
+        }
+    }
+    
+    updateFiresInDisplay(enhancedFires) {
+        // Update the display with enhanced location names
+        enhancedFires.forEach(fire => {
+            if (fire.locationName) {
+                const fireId = `${fire.latitude}_${fire.longitude}_${fire.acq_date}`;
+                const rows = document.querySelectorAll('#historical-tbody tr');
+                rows.forEach(row => {
+                    const cells = row.cells;
+                    if (cells.length > 1) {
+                        const coordinates = `${(fire.latitude || 0).toFixed(4)}°N, ${(fire.longitude || 0).toFixed(4)}°E`;
+                        if (cells[1].innerHTML.includes(coordinates)) {
+                            cells[1].innerHTML = `${fire.locationName}<br><small style="color: #8b98a5; font-size: 0.8em;">${coordinates}</small>`;
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    async addLocationNamesToFires(fires) {
+        // This is now only used for small batches or when location names are essential
+        const result = [];
+        const maxFires = Math.min(fires.length, 20); // Limit for performance
+        
+        for (let i = 0; i < maxFires; i++) {
+            try {
+                const fire = fires[i];
+                const locationName = await this.getLocationName(fire.latitude, fire.longitude);
+                result.push({ ...fire, locationName });
+                
+                // Small delay to prevent API overload
+                if (i < maxFires - 1) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+            } catch (error) {
+                console.warn(`Failed to get location for fire ${i}:`, error);
+                result.push(fires[i]); // Add without location name
+            }
+        }
+        
+        // Add remaining fires without location names
+        if (fires.length > maxFires) {
+            result.push(...fires.slice(maxFires));
         }
         
         return result;
@@ -670,7 +887,8 @@ class GreeceFierAlert {
         const endDate = document.getElementById('end-date').value;
 
         if (!startDate || !endDate) {
-            this.showNotification('Please select both start and end dates', 'warning');
+            const message = this.languageManager ? this.languageManager.t('select-dates') : 'Please select both start and end dates';
+            this.showNotification(message, 'warning');
             return;
         }
 
@@ -681,34 +899,70 @@ class GreeceFierAlert {
         const selectedEnd = new Date(endDate);
 
         if (selectedStart < sevenDaysAgo) {
-            this.showNotification('Historical data is only available for the last 7 days', 'warning');
+            const message = this.languageManager ? this.languageManager.t('data-7-days-only') : 'Historical data is only available for the last 7 days';
+            this.showNotification(message, 'warning');
             return;
         }
 
         try {
             // Show loading state
-            this.showLoading();
+            this.showLoading('Filtering historical data...');
             
             // Get data and filter by date range (both MODIS and VIIRS)
             const data = await this.apiService.getFireData(['MODIS_NRT', 'VIIRS_SNPP_NRT'], 7, 'all');
             
-            if (data.fires) {
+            if (data.fires && Array.isArray(data.fires)) {
+                console.log(`🔍 Filtering ${data.fires.length} fires by date range: ${startDate} to ${endDate}`);
+                
                 // Filter fires by date range
                 const filteredFires = data.fires.filter(fire => {
                     const fireDate = new Date(fire.acq_date);
-                    return fireDate >= selectedStart && fireDate <= selectedEnd;
+                    const start = new Date(selectedStart.toDateString());
+                    const end = new Date(selectedEnd.toDateString());
+                    end.setHours(23, 59, 59, 999); // Include entire end date
+                    
+                    return fireDate >= start && fireDate <= end;
                 });
                 
-                // Add location names
-                const firesWithLocations = await this.addLocationNamesToFires(filteredFires);
-                this.displayHistoricalFires(firesWithLocations);
-                this.updateHistoricalStats(firesWithLocations);
+                console.log(`📊 Found ${filteredFires.length} fires in the selected date range`);
+                
+                // Process confidence values for consistent display
+                const processedFires = filteredFires.map(fire => {
+                    const processed = { ...fire };
+                    
+                    // Normalize confidence values
+                    if (typeof fire.confidence === 'string') {
+                        if (fire.confidence === 'n' || fire.confidence === 'N') {
+                            processed.confidence = 80;
+                        } else if (fire.confidence === 'l' || fire.confidence === 'L') {
+                            processed.confidence = 30;
+                        } else if (fire.confidence === 'h' || fire.confidence === 'H') {
+                            processed.confidence = 100;
+                        }
+                    }
+                    
+                    return processed;
+                });
+                
+                // Display fires immediately
+                this.displayHistoricalFires(processedFires);
+                this.updateHistoricalStats(processedFires);
+                
+                const message = this.languageManager 
+                    ? `${processedFires.length} ${this.languageManager.t('fires-found-range')}`
+                    : `Found ${processedFires.length} fires in selected date range`;
+                this.showNotification(message, 'success');
+                
+                // Enhance with location names in background
+                this.enhanceFiresWithLocations(processedFires);
+            } else {
+                throw new Error('No fire data available or invalid data format');
             }
             
             this.hideLoading();
         } catch (error) {
             console.error('Failed to filter historical data:', error);
-            this.showError('Failed to filter historical data. Please try again.');
+            this.showError(`Failed to filter historical data: ${error.message}`);
             this.hideLoading();
         }
     }
@@ -745,15 +999,17 @@ class GreeceFierAlert {
 
     async refreshFireData() {
         await this.loadFireData();
-        this.showNotification('Fire data refreshed successfully!');
+        const message = this.languageManager ? this.languageManager.t('fire-data-refreshed') : 'Fire data refreshed successfully!';
+        this.showNotification(message);
     }
 
 
 
-    showLoading(message = 'Loading...') {
+    showLoading(message = null) {
         const overlay = document.getElementById('loading-overlay');
         const text = overlay.querySelector('p');
-        text.textContent = message;
+        const defaultMessage = this.languageManager ? this.languageManager.t('loading') : 'Loading...';
+        text.textContent = message || defaultMessage;
         overlay.classList.add('active');
     }
 

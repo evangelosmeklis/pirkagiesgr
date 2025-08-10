@@ -94,6 +94,41 @@ body {
 .header-controls {
     display: flex;
     gap: 0.75rem;
+    align-items: center;
+}
+
+/* Language Switcher */
+.language-switcher {
+    display: flex;
+    gap: 0.25rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 0.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.lang-btn {
+    padding: 0.5rem 0.75rem;
+    border: none;
+    background: transparent;
+    color: #8b98a5;
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+    border-radius: 16px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.lang-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e7e9ea;
+}
+
+.lang-btn.active {
+    background: #1d9bf0;
+    color: white;
+    box-shadow: 0 2px 8px rgba(29, 155, 240, 0.3);
 }
 
 /* Beta Disclaimer Styles */
@@ -1365,6 +1400,16 @@ body {
         order: 3;
         width: 100%;
         justify-content: center;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .language-switcher {
+        order: 1;
+    }
+    
+    .update-schedule-indicator {
+        order: 2;
     }
     
     .update-schedule-indicator {
@@ -1392,17 +1437,35 @@ body {
         position: relative;
     }
     
+    /* Mobile-friendly map controls - move to bottom */
     .map-controls {
         position: fixed;
-        top: 10px;
-        right: 10px;
-        left: auto;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        right: auto;
+        top: auto;
         margin: 0;
-        width: auto;
-        min-width: 250px;
-        max-width: calc(100vw - 20px);
+        width: calc(100% - 20px);
+        max-width: 350px;
+        min-width: auto;
         padding: 0.75rem;
         z-index: 1001;
+    }
+    
+    /* Start collapsed by default on mobile */
+    .map-controls:not(.user-expanded) {
+        bottom: 10px;
+    }
+    
+    .map-controls:not(.user-expanded) .controls-content {
+        display: none;
+    }
+    
+    .map-controls:not(.user-expanded) .controls-header {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
     }
     
     .controls-toggle {
@@ -1410,9 +1473,17 @@ body {
     }
     
     .map-controls.collapsed {
-        min-width: auto;
+        bottom: 10px;
         width: auto;
-        padding: 0.75rem;
+        min-width: auto;
+        transform: translateX(-50%);
+        left: 50%;
+    }
+    
+    .map-controls.collapsed .controls-header {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
     }
     
     .controls-header {
@@ -1437,26 +1508,36 @@ body {
         font-size: 0.65rem;
     }
     
+    /* Mobile fire info panel - make it a bottom sheet */
     .fire-info-panel {
-        position: relative;
+        position: fixed;
         top: auto;
-        right: auto;
-        width: calc(100% - 2rem);
-        margin: 1rem;
-        transform: none;
-        max-height: none;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        margin: 0;
+        transform: translateY(100%);
+        max-height: 70vh;
+        border-radius: 16px 16px 0 0;
+        z-index: 1002;
     }
     
     .fire-info-panel.active {
-        transform: none;
+        transform: translateY(0);
     }
     
+    /* Mobile legend - move to top */
     .map-legend {
-        position: relative;
+        position: fixed;
+        top: 10px;
+        right: 10px;
         bottom: auto;
         left: auto;
-        margin: 1rem;
-        width: calc(100% - 2rem);
+        margin: 0;
+        width: auto;
+        max-width: calc(100vw - 20px);
+        opacity: 0.9;
     }
     
     .historical-container,
@@ -1521,14 +1602,28 @@ body {
     }
     
     .tab-btn {
-        padding: 0.75rem 1rem;
-        font-size: 0.875rem;
-    }
-    
-    .tab-btn {
         padding: 0.75rem 0.5rem;
         font-size: 0.8rem;
         min-width: 0;
+    }
+    
+    /* Smaller controls on very small screens */
+    .map-controls {
+        max-width: calc(100% - 10px);
+        padding: 0.5rem;
+    }
+    
+    .controls-header h3 {
+        font-size: 0.8rem;
+    }
+    
+    .control-group select {
+        font-size: 0.7rem;
+        padding: 0.4rem;
+    }
+    
+    .fire-info-panel {
+        max-height: 80vh;
     }
     
     .historical-stats {

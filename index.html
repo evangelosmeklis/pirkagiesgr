@@ -61,22 +61,22 @@
             <div class="header-content">
                 <div class="logo">
                     <i class="fas fa-fire"></i>
-                    <h1>PirkagiesGr</h1>
+                    <h1 data-i18n="site-title">PirkagiesGr</h1>
                 </div>
                 <div class="header-stats">
                     <div class="stat-item">
                         <span class="stat-number" id="active-fires">0</span>
-                        <span class="stat-label">Active Fires</span>
+                        <span class="stat-label" data-i18n="active-fires">Ενεργές Πυρκαγιές</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-number" id="last-update">--:--</span>
-                        <span class="stat-label">Data Fetched</span>
+                        <span class="stat-label" data-i18n="data-fetched">Δεδομένα Ενημ.</span>
                     </div>
                 </div>
                 <div class="header-controls">
                     <div class="update-schedule-indicator">
                         <i class="fas fa-sync-alt"></i>
-                        <span id="next-update">Data updates every 30 minutes</span>
+                        <span id="next-update" data-i18n="next-update">Δεδομένα ενημερώνονται κάθε 30 λεπτά</span>
                     </div>
                 </div>
             </div>
@@ -87,7 +87,7 @@
             <div class="beta-content">
                 <i class="fas fa-exclamation-triangle beta-icon"></i>
                 <span class="beta-text">
-                    <strong>🚧 BETA VERSION</strong> - This site is in active development and may show incorrect or incomplete fire information. Always verify with official sources and local authorities for emergency situations.
+                    <strong data-i18n="beta-version">🚧 ΕΚΔΟΣΗ BETA</strong> - <span data-i18n="beta-text">Αυτός ο ιστότοπος είναι σε ενεργή ανάπτυξη και μπορεί να εμφανίσει λανθασμένες ή ελλιπείς πληροφορίες πυρκαγιών. Πάντα επαληθεύετε με επίσημες πηγές και τοπικές αρχές για καταστάσεις έκτακτης ανάγκης.</span>
                 </span>
                 <button class="beta-close" id="beta-close" title="Dismiss">
                     <i class="fas fa-times"></i>
@@ -99,15 +99,15 @@
         <nav class="nav-tabs">
             <button class="tab-btn active" data-tab="live">
                 <i class="fas fa-map-marked-alt"></i>
-                Live Fire Map
+                <span data-i18n="live-map">Ζωντανός Χάρτης Πυρκαγιών</span>
             </button>
             <button class="tab-btn" data-tab="historical">
                 <i class="fas fa-history"></i>
-                Last 7 Days Fires
+                <span data-i18n="last-7-days">Πυρκαγιές Τελευταίων 7 Ημερών</span>
             </button>
             <button class="tab-btn" data-tab="about">
                 <i class="fas fa-info-circle"></i>
-                About
+                <span data-i18n="about">Σχετικά</span>
             </button>
         </nav>
 
@@ -119,7 +119,7 @@
                 <div class="disclaimer-banner">
                     <div class="disclaimer-content">
                         <i class="fas fa-exclamation-triangle"></i>
-                        <span><strong>For informational purposes only.</strong> Fire data provided by NASA FIRMS. In case of emergency, contact local authorities (Greece: 199, EU: 112).</span>
+                        <span data-i18n="disclaimer-banner"><strong>Μόνο για ενημερωτικούς σκοπούς.</strong> Δεδομένα πυρκαγιών από το NASA FIRMS. Σε περίπτωση έκτακτης ανάγκης, επικοινωνήστε με τοπικές αρχές (Ελλάδα: 199, ΕΕ: 112).</span>
                     </div>
                 </div>
                 
@@ -129,34 +129,34 @@
                     <!-- Map Controls -->
                     <div class="map-controls">
                         <div class="controls-header">
-                            <h3>🔥 Fire Controls</h3>
+                            <h3 data-i18n="fire-controls">🔥 Έλεγχος Πυρκαγιών</h3>
                             <button class="controls-toggle" id="controls-toggle" title="Toggle controls">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
                         </div>
                         <div class="controls-content">
                         <div class="control-group">
-                            <label>🎯 Detection Confidence:</label>
+                            <label data-i18n="detection-confidence">🎯 Βεβαιότητα Ανίχνευσης:</label>
                             <select id="confidence-filter" title="Filter by detection confidence level">
-                                <option value="all">All Detections</option>
-                                <option value="high">🔥🟠 Good Detections (≥50%)</option>
-                                <option value="low">⚠️ Low Confidence (<50%)</option>
+                                <option value="all" data-i18n="all-detections">Όλες οι Ανιχνεύσεις</option>
+                                <option value="high" data-i18n="good-detections">🔥🟠 Καλές Ανιχνεύσεις (≥50%)</option>
+                                <option value="low" data-i18n="low-confidence">⚠️ Χαμηλή Βεβαιότητα (<50%)</option>
                             </select>
                         </div>
                         <div class="control-group">
-                            <label>⏱️ Time Period:</label>
+                            <label data-i18n="time-period">⏱️ Χρονική Περίοδος:</label>
                             <select id="time-filter" title="Select time period">
-                                <option value="0.04">Last Hour</option>
-                                <option value="1" selected>Last 24 hours</option>
-                                <option value="3">Last 3 days</option>
-                                <option value="7">Last week</option>
+                                <option value="0.04" data-i18n="last-hour">Τελευταία Ώρα</option>
+                                <option value="1" selected data-i18n="last-24-hours">Τελευταίες 24 ώρες</option>
+                                <option value="3" data-i18n="last-3-days">Τελευταίες 3 ημέρες</option>
+                                <option value="7" data-i18n="last-week">Τελευταία εβδομάδα</option>
                             </select>
                         </div>
                         <div class="data-source-info">
-                            <div class="source-badge">
-                                🛰️ MODIS & VIIRS Real-time Data
+                            <div class="source-badge" data-i18n="satellite-data">
+                                🛰️ Δεδομένα MODIS & VIIRS σε πραγματικό χρόνο
                             </div>
-                            <p class="source-description">Combined satellite thermal detection from NASA Terra, Aqua & Suomi NPP satellites. Different emojis distinguish data sources and confidence levels.</p>
+                            <p class="source-description" data-i18n="satellite-description">Συνδυασμένη δορυφορική θερμική ανίχνευση από δορυφόρους NASA Terra, Aqua & Suomi NPP. Διαφορετικά εικονίδια διακρίνουν πηγές δεδομένων και επίπεδα βεβαιότητας.</p>
                         </div>
                         </div>
                     </div>
@@ -164,31 +164,31 @@
                     <!-- Fire Info Panel -->
                     <div class="fire-info-panel" id="fire-info-panel">
                         <div class="panel-header">
-                            <h3>Fire Information</h3>
+                            <h3 data-i18n="fire-information">Πληροφορίες Πυρκαγιάς</h3>
                             <button class="close-btn" id="close-panel" title="Close panel">
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
                         <div class="panel-content" id="panel-content">
-                            <p>Click on a fire marker to see details</p>
+                            <p data-i18n="click-fire-marker">Κάντε κλικ σε έναν δείκτη πυρκαγιάς για να δείτε λεπτομέρειες</p>
                         </div>
                     </div>
 
                     <!-- Legend -->
                     <div class="map-legend">
-                        <h4>Fire Detection Legend</h4>
+                        <h4 data-i18n="fire-detection-legend">Υπόμνημα Ανίχνευσης Πυρκαγιών</h4>
                         <div class="legend-section">
                             <div class="legend-item">
                                 <div class="legend-marker">🔥</div>
-                                <span>MODIS Fire Detection (≥50% confidence)</span>
+                                <span data-i18n="modis-fire-detection">Ανίχνευση Πυρκαγιάς MODIS (≥50% βεβαιότητα)</span>
                             </div>
                             <div class="legend-item">
                                 <div class="legend-marker">🟠</div>
-                                <span>VIIRS Thermal Detection (≥50% confidence)</span>
+                                <span data-i18n="viirs-thermal-detection">Θερμική Ανίχνευση VIIRS (≥50% βεβαιότητα)</span>
                             </div>
                             <div class="legend-item">
                                 <div class="legend-marker">⚠️</div>
-                                <span>Low Confidence Detection (<50%)</span>
+                                <span data-i18n="low-confidence-detection">Ανίχνευση Χαμηλής Βεβαιότητας (<50%)</span>
                             </div>
                         </div>
                     </div>
@@ -199,12 +199,12 @@
             <div class="tab-content" id="historical-tab">
                 <div class="historical-container">
                     <div class="historical-header">
-                        <h2>Historical Fire Data</h2>
-                        <p class="historical-disclaimer">📅 Historical data shows the last 7 days of fire detections from NASA MODIS satellites.</p>
+                        <h2 data-i18n="historical-fire-data">Ιστορικά Δεδομένα Πυρκαγιών</h2>
+                        <p class="historical-disclaimer" data-i18n="historical-disclaimer">📅 Τα ιστορικά δεδομένα δείχνουν τις τελευταίες 7 ημέρες ανιχνεύσεων πυρκαγιάς από δορυφόρους NASA MODIS.</p>
                         <div class="historical-controls">
-                            <input type="date" id="start-date" class="date-input" title="Start date">
-                            <input type="date" id="end-date" class="date-input" title="End date">
-                            <button class="btn btn-primary" id="filter-historical">Filter</button>
+                            <input type="date" id="start-date" class="date-input" data-i18n="start-date" title="Ημερομηνία Έναρξης">
+                            <input type="date" id="end-date" class="date-input" data-i18n="end-date" title="Ημερομηνία Λήξης">
+                            <button class="btn btn-primary" id="filter-historical" data-i18n="filter">Φίλτρο</button>
                         </div>
                     </div>
                     <div class="historical-stats">
@@ -212,21 +212,21 @@
                             <i class="fas fa-fire"></i>
                             <div class="stat-info">
                                 <span class="stat-value" id="total-historical">0</span>
-                                <span class="stat-title">Total Fires</span>
+                                <span class="stat-title" data-i18n="total-fires">Συνολικές Πυρκαγιές</span>
                             </div>
                         </div>
                         <div class="stat-card">
                             <i class="fas fa-calendar-day"></i>
                             <div class="stat-info">
                                 <span class="stat-value" id="avg-daily">0</span>
-                                <span class="stat-title">Avg Daily</span>
+                                <span class="stat-title" data-i18n="avg-daily">Μέσος Ημερήσιος</span>
                             </div>
                         </div>
                         <div class="stat-card">
                             <i class="fas fa-thermometer-three-quarters"></i>
                             <div class="stat-info">
                                 <span class="stat-value" id="avg-intensity">0</span>
-                                <span class="stat-title">Avg Intensity</span>
+                                <span class="stat-title" data-i18n="avg-intensity">Μέση Ένταση</span>
                             </div>
                         </div>
                     </div>
@@ -234,12 +234,12 @@
                         <table class="historical-table" id="historical-table">
                             <thead>
                                 <tr>
-                                    <th>Detection Time (Greece)</th>
-                                    <th>Location</th>
-                                    <th>Confidence</th>
-                                    <th>Brightness</th>
+                                    <th data-i18n="detection-time-greece">Ώρα Ανίχνευσης (Ελλάδα)</th>
+                                    <th data-i18n="location">Τοποθεσία:</th>
+                                    <th data-i18n="confidence">Βεβαιότητα</th>
+                                    <th data-i18n="brightness">Φωτεινότητα</th>
                                     <th>FRP</th>
-                                    <th>Satellite</th>
+                                    <th data-i18n="satellite">Δορυφόρος:</th>
                                 </tr>
                             </thead>
                             <tbody id="historical-tbody">
@@ -256,95 +256,95 @@
             <div class="tab-content" id="about-tab">
                 <div class="about-container">
                     <div class="about-content">
-                        <h1>🔥 PirkagiesGr</h1>
-                        <p class="about-subtitle">Real-time wildfire monitoring for Greece using NASA satellite data</p>
+                        <h1 data-i18n="about-title">🔥 PirkagiesGr</h1>
+                        <p class="about-subtitle" data-i18n="about-subtitle">Παρακολούθηση δασικών πυρκαγιών σε πραγματικό χρόνο για την Ελλάδα χρησιμοποιώντας δορυφορικά δεδομένα της NASA</p>
                         
                         <div class="about-section beta-warning">
-                            <h2>🚧 Beta Version Notice</h2>
+                            <h2 data-i18n="beta-notice">🚧 Ειδοποίηση Έκδοσης Beta</h2>
                             <div class="disclaimer-card beta-card">
-                                <p><strong>This application is currently in BETA testing phase.</strong></p>
+                                <p data-i18n="beta-notice-text"><strong>Αυτή η εφαρμογή βρίσκεται αυτή τη στιγμή στη φάση δοκιμών BETA.</strong></p>
                                 <ul>
-                                    <li>Features may not work as expected or may be incomplete</li>
-                                    <li>Fire data accuracy is still being validated and improved</li>
-                                    <li>Website functionality is subject to frequent changes</li>
-                                    <li>Report any issues or bugs you encounter for improvement</li>
+                                    <li data-i18n="features-incomplete">Χαρακτηριστικά μπορεί να μην λειτουργούν όπως αναμένεται ή να είναι ελλιπή</li>
+                                    <li data-i18n="data-validation">Η ακρίβεια των δεδομένων πυρκαγιάς εξακολουθεί να επικυρώνεται και βελτιώνεται</li>
+                                    <li data-i18n="frequent-changes">Η λειτουργικότητα του ιστότοπου υπόκειται σε συχνές αλλαγές</li>
+                                    <li data-i18n="report-issues">Αναφέρετε τυχόν προβλήματα ή σφάλματα που αντιμετωπίζετε για βελτίωση</li>
                                 </ul>
-                                <p class="beta-note">
+                                <p class="beta-note" data-i18n="use-discretion">
                                     <i class="fas fa-info-circle"></i>
-                                    <strong>Use at your own discretion.</strong> Always verify fire information with official sources and local authorities.
+                                    <strong>Χρησιμοποιήστε με δική σας διακριτικότητα.</strong> Πάντα επαληθεύετε τις πληροφορίες πυρκαγιάς με επίσημες πηγές και τοπικές αρχές.
                                 </p>
                             </div>
                         </div>
                         
                         <div class="about-section">
-                            <h2>⚠️ Important Disclaimer</h2>
+                            <h2 data-i18n="important-disclaimer">⚠️ Σημαντική Αποποίηση Ευθυνών</h2>
                             <div class="disclaimer-card">
-                                <p><strong>This application is for informational purposes only.</strong></p>
+                                <p data-i18n="informational-only"><strong>Αυτή η εφαρμογή είναι μόνο για ενημερωτικούς σκοπούς.</strong></p>
                                 <ul>
-                                    <li>Fire detection data may have delays or inaccuracies</li>
-                                    <li>Small fires may not be detected by satellites</li>
-                                    <li>Weather conditions can affect detection accuracy</li>
-                                    <li>Always follow official evacuation orders and safety guidelines</li>
+                                    <li data-i18n="data-delays">Τα δεδομένα ανίχνευσης πυρκαγιάς μπορεί να έχουν καθυστερήσεις ή ανακρίβειες</li>
+                                    <li data-i18n="small-fires">Μικρές πυρκαγιές μπορεί να μην ανιχνεύονται από δορυφόρους</li>
+                                    <li data-i18n="weather-affects">Οι καιρικές συνθήκες μπορεί να επηρεάσουν την ακρίβεια ανίχνευσης</li>
+                                    <li data-i18n="follow-official">Πάντα ακολουθείτε επίσημες εντολές εκκένωσης και οδηγίες ασφάλειας</li>
                                 </ul>
                                 <div class="emergency-numbers">
-                                    <h3>🚨 Emergency Contacts</h3>
-                                    <p><strong>Greece Fire Service:</strong> 199</p>
-                                    <p><strong>European Emergency:</strong> 112</p>
+                                    <h3 data-i18n="emergency-contacts">🚨 Τηλέφωνα Έκτακτης Ανάγκης</h3>
+                                    <p data-i18n="greece-fire-service"><strong>Πυροσβεστική Υπηρεσία Ελλάδας:</strong> 199</p>
+                                    <p data-i18n="european-emergency"><strong>Ευρωπαϊκή Έκτακτη Ανάγκη:</strong> 112</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="about-section">
-                            <h2>🛰️ Data Sources & Attribution</h2>
+                            <h2 data-i18n="data-sources-attribution">🛰️ Πηγές Δεδομένων & Αναφορά</h2>
                             <div class="attribution-card">
                                 <div class="source-item">
-                                    <h3>NASA FIRMS</h3>
-                                    <p>Fire detection data provided by NASA's Fire Information for Resource Management System (FIRMS)</p>
-                                    <a href="https://firms.modaps.eosdis.nasa.gov/" target="_blank" rel="noopener">Visit NASA FIRMS</a>
+                                    <h3 data-i18n="nasa-firms">NASA FIRMS</h3>
+                                    <p data-i18n="nasa-firms-desc">Δεδομένα ανίχνευσης πυρκαγιάς παρέχονται από το Σύστημα Πληροφοριών Πυρκαγιάς για Διαχείριση Πόρων της NASA (FIRMS)</p>
+                                    <a href="https://firms.modaps.eosdis.nasa.gov/" target="_blank" rel="noopener" data-i18n="visit-nasa-firms">Επισκεφθείτε το NASA FIRMS</a>
                                 </div>
                                 
                                 <div class="source-item">
-                                    <h3>Satellite Data</h3>
-                                    <p>MODIS and VIIRS instruments on Terra, Aqua, NOAA-20, and NOAA-21 satellites</p>
+                                    <h3 data-i18n="satellite-data-title">Δορυφορικά Δεδομένα</h3>
+                                    <p data-i18n="satellite-data-desc">Όργανα MODIS και VIIRS στους δορυφόρους Terra, Aqua, NOAA-20 και NOAA-21</p>
                                 </div>
                                 
                                 <div class="source-item">
-                                    <h3>Weather Data</h3>
-                                    <p>Weather information provided by OpenWeatherMap API</p>
+                                    <h3 data-i18n="weather-data-title">Καιρικά Δεδομένα</h3>
+                                    <p data-i18n="weather-data-desc">Πληροφορίες καιρού παρέχονται από το OpenWeatherMap API</p>
                                     <a href="https://openweathermap.org/" target="_blank" rel="noopener">OpenWeatherMap</a>
                                 </div>
 
                                 <div class="source-item">
-                                    <h3>Satellite Imagery</h3>
-                                    <p>Satellite base map provided by Esri</p>
+                                    <h3 data-i18n="satellite-imagery-title">Δορυφορικές Εικόνες</h3>
+                                    <p data-i18n="satellite-imagery-desc">Δορυφορικός χάρτης βάσης παρέχεται από την Esri</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="about-section">
-                            <h2>📊 Fire Detection Technology</h2>
+                            <h2 data-i18n="fire-detection-tech">📊 Τεχνολογία Ανίχνευσης Πυρκαγιάς</h2>
                             <div class="tech-card">
-                                <h3>Confidence Levels</h3>
+                                <h3 data-i18n="confidence-levels">Επίπεδα Βεβαιότητας</h3>
                                 <div class="confidence-levels">
                                     <div class="confidence-item">
                                         <span class="emoji">🔥</span>
                                         <div>
-                                            <strong>High (80-100%)</strong>
-                                            <p>Confirmed active fires with strong thermal signatures</p>
+                                            <strong data-i18n="high-confidence">Υψηλή (80-100%)</strong>
+                                            <p data-i18n="high-confidence-desc">Επιβεβαιωμένες ενεργές πυρκαγιές με ισχυρές θερμικές υπογραφές</p>
                                         </div>
                                     </div>
                                     <div class="confidence-item">
                                         <span class="emoji">🟠</span>
                                         <div>
-                                            <strong>Medium (50-79%)</strong>
-                                            <p>Likely fires that may require ground verification</p>
+                                            <strong data-i18n="medium-confidence">Μεσαία (50-79%)</strong>
+                                            <p data-i18n="medium-confidence-desc">Πιθανές πυρκαγιές που μπορεί να χρειάζονται επαλήθευση από το έδαφος</p>
                                         </div>
                                     </div>
                                     <div class="confidence-item">
-                                        <span class="emoji">🟡</span>
+                                        <span class="emoji">⚠️</span>
                                         <div>
-                                            <strong>Low (0-49%)</strong>
-                                            <p>Possible fires, could be other heat sources</p>
+                                            <strong>Χαμηλή (0-49%)</strong>
+                                            <p data-i18n="low-confidence-desc">Πιθανές πυρκαγιές, θα μπορούσαν να είναι άλλες πηγές θερμότητας</p>
                                         </div>
                                     </div>
                                 </div>
@@ -395,7 +395,7 @@
         <div class="loading-overlay" id="loading-overlay">
             <div class="loading-spinner">
                 <i class="fas fa-fire"></i>
-                <p>Loading fire data...</p>
+                <p data-i18n="loading-fire-data">Φόρτωση δεδομένων πυρκαγιάς...</p>
             </div>
         </div>
 
@@ -403,12 +403,12 @@
         <div class="cookie-consent-banner" id="cookie-consent-banner">
             <div class="cookie-content">
                 <div class="cookie-text">
-                    <h3>🍪 Cookie Consent</h3>
-                    <p>We use Google Analytics to understand how visitors interact with our website. This helps us improve the user experience. You can choose to accept or reject analytics cookies.</p>
+                    <h3 data-i18n="cookie-consent">🍪 Συγκατάθεση Cookies</h3>
+                    <p data-i18n="cookie-text">Χρησιμοποιούμε το Google Analytics για να κατανοήσουμε πώς αλληλεπιδρούν οι επισκέπτες με τον ιστότοπό μας. Αυτό μας βοηθά να βελτιώσουμε την εμπειρία χρήστη. Μπορείτε να επιλέξετε να αποδεχτείτε ή να απορρίψετε τα cookies analytics.</p>
                 </div>
                 <div class="cookie-buttons">
-                    <button class="btn btn-reject" id="reject-cookies">Reject</button>
-                    <button class="btn btn-accept" id="accept-cookies">Accept</button>
+                    <button class="btn btn-reject" id="reject-cookies" data-i18n="reject">Απόρριψη</button>
+                    <button class="btn btn-accept" id="accept-cookies" data-i18n="accept">Αποδοχή</button>
                 </div>
             </div>
         </div>
@@ -418,6 +418,7 @@
 
     <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/language.js"></script>
     <script src="js/api-service.js"></script>
     <script src="js/app.js"></script>
 </body>
