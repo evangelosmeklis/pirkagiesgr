@@ -17,8 +17,9 @@
       "frp": 104.25,
       "daynight": "D",
       "data_source": "MODIS_NRT",
+      "country": "Greece",
       "id": "41.39501_26.54905_2025-08-10_1202",
-      "fetch_timestamp": "2025-08-10T13:28:00.857408+00:00"
+      "fetch_timestamp": "2025-08-10T13:47:20.816438+00:00"
     },
     {
       "country_id": "GRC",
@@ -37,8 +38,9 @@
       "frp": 64.55,
       "daynight": "D",
       "data_source": "MODIS_NRT",
+      "country": "Greece",
       "id": "41.39749_26.54063_2025-08-10_1202",
-      "fetch_timestamp": "2025-08-10T13:28:00.857422+00:00"
+      "fetch_timestamp": "2025-08-10T13:47:20.816455+00:00"
     },
     {
       "country_id": "GRC",
@@ -57,8 +59,9 @@
       "frp": 21.97,
       "daynight": "D",
       "data_source": "MODIS_NRT",
+      "country": "Greece",
       "id": "41.4028_26.564_2025-08-10_1202",
-      "fetch_timestamp": "2025-08-10T13:28:00.857427+00:00"
+      "fetch_timestamp": "2025-08-10T13:47:20.816459+00:00"
     },
     {
       "country_id": "GRC",
@@ -77,8 +80,9 @@
       "frp": 1.54,
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
+      "country": "Greece",
       "id": "39.16776_22.84276_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T13:28:00.996214+00:00"
+      "fetch_timestamp": "2025-08-10T13:47:21.232937+00:00"
     },
     {
       "country_id": "GRC",
@@ -97,8 +101,9 @@
       "frp": 1.54,
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
+      "country": "Greece",
       "id": "39.35578_22.98284_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T13:28:00.996225+00:00"
+      "fetch_timestamp": "2025-08-10T13:47:21.232950+00:00"
     },
     {
       "country_id": "GRC",
@@ -117,8 +122,9 @@
       "frp": 1.19,
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
+      "country": "Greece",
       "id": "39.48292_22.50938_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T13:28:00.996230+00:00"
+      "fetch_timestamp": "2025-08-10T13:47:21.232954+00:00"
     },
     {
       "country_id": "GRC",
@@ -137,8 +143,9 @@
       "frp": 1.19,
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
+      "country": "Greece",
       "id": "39.48655_22.51064_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T13:28:00.996234+00:00"
+      "fetch_timestamp": "2025-08-10T13:47:21.232957+00:00"
     },
     {
       "country_id": "GRC",
@@ -157,13 +164,14 @@
       "frp": 2.23,
       "daynight": "N",
       "data_source": "VIIRS_SNPP_NRT",
+      "country": "Greece",
       "id": "39.72336_19.68428_2025-08-10_45",
-      "fetch_timestamp": "2025-08-10T13:28:00.996237+00:00"
+      "fetch_timestamp": "2025-08-10T13:47:21.232960+00:00"
     }
   ],
   "count": 8,
   "dataset": "recent",
-  "last_updated": "2025-08-10T13:28:01.302783+00:00",
+  "last_updated": "2025-08-10T13:47:22.799758+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT"
@@ -171,7 +179,7 @@
   "geographic_bounds": {
     "north": 41.75,
     "south": 34.5,
-    "east": 29.65,
+    "east": 34.8,
     "west": 19.5
   }
 }
