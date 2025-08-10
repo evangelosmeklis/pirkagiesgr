@@ -712,13 +712,42 @@ body {
     opacity: 1;
 }
 
-.map-legend h4 {
+.legend-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.legend-header h4 {
     font-size: 0.75rem;
     font-weight: 600;
     color: #8b98a5;
-    margin-bottom: 0.75rem;
+    margin: 0;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+.legend-close {
+    background: none;
+    border: none;
+    color: #8b98a5;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    opacity: 0.7;
+}
+
+.legend-close:hover {
+    color: #e7e9ea;
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 1;
+}
+
+.map-legend.hidden {
+    display: none;
 }
 
 .legend-item {

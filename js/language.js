@@ -71,7 +71,7 @@ class LanguageManager {
                 
                 // About Tab
                 'about-title': '🔥 PirkagiesGr',
-                'about-subtitle': 'Παρακολούθηση δασικών πυρκαγιών σε πραγματικό χρόνο για την Ελλάδα χρησιμοποιώντας δορυφορικά δεδομένα της NASA',
+                'about-subtitle': 'Παρακολούθηση δασικών πυρκαγιών σε πραγματικό χρόνο για την Ελλάδα και την Κύπρο χρησιμοποιώντας δορυφορικά δεδομένα της NASA',
                 'beta-notice': '🚧 Ειδοποίηση Έκδοσης Beta',
                 'beta-notice-text': 'Αυτή η εφαρμογή βρίσκεται αυτή τη στιγμή στη φάση δοκιμών BETA.',
                 'features-incomplete': 'Χαρακτηριστικά μπορεί να μην λειτουργούν όπως αναμένεται ή να είναι ελλιπή',
@@ -124,7 +124,7 @@ class LanguageManager {
                 'nasa-update-freq': '<strong>Συχνότητα Ενημέρωσης Δεδομένων NASA:</strong> Κάθε 3-6 ώρες (ανάλογα με τη διέλευση δορυφόρου)',
                 'our-fetch-freq': '<strong>Η Συχνότητά μας Λήψης:</strong> Κάθε 30 λεπτά μέσω GitHub Actions',
                 'detection-resolution': '<strong>Ανάλυση Ανίχνευσης:</strong> 375m - 1km ανάλογα με τον αισθητήρα',
-                'geographic-coverage': '<strong>Γεωγραφική Κάλυψη:</strong> Ελλάδα (Ελληνική Δημοκρατία)',
+                'geographic-coverage': '<strong>Γεωγραφική Κάλυψη:</strong> Ελλάδα και Κύπρος',
                 'data-storage': '<strong>Αποθήκευση Δεδομένων:</strong> Στατικά αρχεία JSON που ενημερώνονται αυτόματα',
                 
                 // Legal
@@ -217,7 +217,7 @@ class LanguageManager {
                 
                 // About Tab
                 'about-title': '🔥 PirkagiesGr',
-                'about-subtitle': 'Real-time wildfire monitoring for Greece using NASA satellite data',
+                'about-subtitle': 'Real-time wildfire monitoring for Greece and Cyprus using NASA satellite data',
                 'beta-notice': '🚧 Beta Version Notice',
                 'beta-notice-text': 'This application is currently in BETA testing phase.',
                 'features-incomplete': 'Features may not work as expected or may be incomplete',

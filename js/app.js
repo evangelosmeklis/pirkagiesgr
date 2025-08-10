@@ -9,11 +9,11 @@ class GreeceFierAlert {
         this.geocodeCache = new Map(); // Cache for location names
         this.apiService = new APIService(); // Frontend API service
         
-        // Greece bounds
+        // Greece and Cyprus bounds
         this.greeceBounds = {
             north: 41.75,
             south: 34.5,
-            east: 29.65,
+            east: 34.8, // Extended to include Cyprus (was 29.65)
             west: 19.5
         };
 
@@ -74,6 +74,14 @@ class GreeceFierAlert {
         document.getElementById('close-panel').addEventListener('click', () => {
             this.hideFireInfoPanel();
         });
+
+        // Legend close button
+        const legendClose = document.getElementById('legend-close');
+        if (legendClose) {
+            legendClose.addEventListener('click', () => {
+                this.hideLegend();
+            });
+        }
 
         // Map controls
         const confidenceFilter = document.getElementById('confidence-filter');
@@ -510,6 +518,13 @@ class GreeceFierAlert {
 
     hideFireInfoPanel() {
         document.getElementById('fire-info-panel').classList.remove('active');
+    }
+
+    hideLegend() {
+        const legend = document.querySelector('.map-legend');
+        if (legend) {
+            legend.classList.add('hidden');
+        }
     }
 
     closeBetaDisclaimer() {

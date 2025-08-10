@@ -19,11 +19,11 @@ class FireDataFetcher:
         if not self.nasa_api_key:
             raise ValueError("NASA_FIRMS_MAP_KEY environment variable not set")
         
-        # Greece bounds
+        # Greece and Cyprus bounds
         self.greece_bounds = {
             'north': 41.75,
             'south': 34.5,
-            'east': 29.65,
+            'east': 34.8,  # Extended to include Cyprus
             'west': 19.5
         }
         
@@ -34,40 +34,48 @@ class FireDataFetcher:
         print(f"🗝️ NASA API Key: {'✅ Set' if self.nasa_api_key else '❌ Missing'}")
     
     def fetch_fires_from_source(self, source, days=1):
-        """Fetch fire data from a specific NASA FIRMS source"""
-        try:
-            url = f'https://firms.modaps.eosdis.nasa.gov/api/country/csv/{self.nasa_api_key}/{source}/GRC/{days}'
-            print(f"📡 Fetching {source} data for last {days} days...")
-            
-            response = requests.get(url, timeout=30)
-            response.raise_for_status()
-            
-            # Parse CSV
-            from io import StringIO
-            df = pd.read_csv(StringIO(response.text))
-            
-            if df.empty:
-                print(f"ℹ️ No {source} data found")
-                return []
-            
-            # Convert to list of dictionaries
-            fires = df.to_dict('records')
-            
-            # Add metadata
-            for fire in fires:
-                fire['data_source'] = source
-                fire['id'] = f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}"
-                fire['fetch_timestamp'] = datetime.now(timezone.utc).isoformat()
-            
-            print(f"✅ Fetched {len(fires)} fires from {source}")
-            return fires
-            
-        except Exception as e:
-            print(f"❌ Failed to fetch {source}: {e}")
-            return []
+        """Fetch fire data from a specific NASA FIRMS source for both Greece and Cyprus"""
+        all_fires = []
+        countries = [('GRC', 'Greece'), ('CYP', 'Cyprus')]
+        
+        for country_code, country_name in countries:
+            try:
+                url = f'https://firms.modaps.eosdis.nasa.gov/api/country/csv/{self.nasa_api_key}/{source}/{country_code}/{days}'
+                print(f"📡 Fetching {source} data for {country_name} (last {days} days)...")
+                
+                response = requests.get(url, timeout=30)
+                response.raise_for_status()
+                
+                # Parse CSV
+                from io import StringIO
+                df = pd.read_csv(StringIO(response.text))
+                
+                if df.empty:
+                    print(f"ℹ️ No {source} data found for {country_name}")
+                    continue
+                
+                # Convert to list of dictionaries
+                fires = df.to_dict('records')
+                
+                # Add metadata
+                for fire in fires:
+                    fire['data_source'] = source
+                    fire['country'] = country_name
+                    fire['id'] = f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}"
+                    fire['fetch_timestamp'] = datetime.now(timezone.utc).isoformat()
+                
+                all_fires.extend(fires)
+                print(f"✅ Fetched {len(fires)} fires from {source} in {country_name}")
+                
+            except Exception as e:
+                print(f"❌ Failed to fetch {source} for {country_name}: {e}")
+                continue
+        
+        print(f"🔥 Total {len(all_fires)} fires from {source} (Greece + Cyprus)")
+        return all_fires
     
     def filter_fires_geographically(self, fires):
-        """Filter fires to Greece bounds"""
+        """Filter fires to Greece and Cyprus bounds"""
         filtered = []
         
         for fire in fires:
