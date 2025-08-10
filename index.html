@@ -1,15 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el" prefix="og: http://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PirkagiesGr - Real-time Fire Monitoring for Greece & Cyprus</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23000%22 rx=%2220%22/><text x=%2250%22 y=%2265%22 font-size=%2260%22 text-anchor=%22middle%22>🔥</text></svg>">
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>Φωτιές Ελλάδα Τώρα | Ζωντανός Χάρτης Πυρκαγιών | PirkagiesGr</title>
+    <meta name="title" content="Φωτιές Ελλάδα Τώρα | Ζωντανός Χάρτης Πυρκαγιών | PirkagiesGr">
+    <meta name="description" content="Παρακολουθήστε φωτιές και πυρκαγιές στην Ελλάδα σε πραγματικό χρόνο. Ζωντανός χάρτης με δορυφορικά δεδομένα NASA. Fires Greece live map, Greek wildfires monitoring.">
+    <meta name="keywords" content="φωτιές ελλάδα, πυρκαγιές ελλάδα, φωτιά τώρα, φωτιες, πυρκαγιες, fires greece, greek fires, wildfire greece, δασικές πυρκαγιές, πυρκαγιά χάρτης, fire map greece, live fire monitoring">
+    <meta name="author" content="PirkagiesGr">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="language" content="Greek">
+    <meta name="geo.region" content="GR">
+    <meta name="geo.placename" content="Greece">
+    <meta name="geo.position" content="39.074208;21.824312">
+    <meta name="ICBM" content="39.074208, 21.824312">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://pirkagies.gr/">
+    
+    <!-- Alternate Language Links -->
+    <link rel="alternate" hreflang="el" href="https://pirkagies.gr/">
+    <link rel="alternate" hreflang="en" href="https://pirkagies.gr/">
+    <link rel="alternate" hreflang="x-default" href="https://pirkagies.gr/">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Φωτιές Ελλάδα Τώρα | Ζωντανός Χάρτης Πυρκαγιών">
+    <meta property="og:description" content="Παρακολουθήστε φωτιές και πυρκαγιές στην Ελλάδα σε πραγματικό χρόνο με δορυφορικά δεδομένα NASA. Ζωντανός χάρτης πυρκαγιών για την Ελλάδα.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pirkagies.gr/">
+    <meta property="og:site_name" content="PirkagiesGr">
+    <meta property="og:locale" content="el_GR">
+    <meta property="og:locale:alternate" content="en_US">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Φωτιές Ελλάδα Τώρα | Ζωντανός Χάρτης Πυρκαγιών">
+    <meta name="twitter:description" content="Παρακολουθήστε φωτιές και πυρκαγιές στην Ελλάδα σε πραγματικό χρόνο. Ζωντανός χάρτης με δορυφορικά δεδομένα NASA.">
+    
+    <!-- App-specific Meta Tags -->
+    <meta name="application-name" content="PirkagiesGr">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Φωτιές Ελλάδα">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style">
+    <link rel="preload" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" as="style">
+    <link rel="preload" href="styles.css" as="style">
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23000%22 rx=%2220%22/><text x=%2250%22 y=%2265%22 font-size=%2260%22 text-anchor=%22middle%22>🔥</text></svg>">
+    <link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+    <link rel="icon" type="image/png" sizes="16x16" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiUGlya2FnaWVzR3IiLCJzaG9ydF9uYW1lIjoiUGlya2FnaWVzIiwiaWNvbnMiOlt7InNyYyI6ImRhdGE6aW1hZ2Uvc3ZnK3htbCwlM0NzdmcgeG1sbnM9JTI3aHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmclMjcgdmlld0JveD0lMjcwIDAgMTAwIDEwMCUyNyUzRSUzQ3RleHQgeT0lMjcuOWVtJTI3IGZvbnQtc2l6ZT0lMjc5MCUyNyUzRSVGMCU5RiU5NCU5OSU5MSuzdGV4dCUzRSUzQy9zdmclM0UiLCJzaXplcyI6ImFueSIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dLCJ0aGVtZV9jb2xvciI6IiMxYTFhMWEiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzFhMWExYSIsImRpc3BsYXkiOiJzdGFuZGFsb25lIn0=">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Additional SEO and Performance Meta Tags -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-TileColor" content="#1a1a1a">
+    <meta name="msapplication-config" content="browserconfig.xml">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: https: http: blob:; img-src 'self' data: https: http: blob:;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    
+    <!-- Preconnect to external domains for better performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    
+    <!-- DNS Prefetch for map tiles -->
+    <link rel="dns-prefetch" href="//server.arcgisonline.com">
+    <link rel="dns-prefetch" href="//services.arcgisonline.com">
+    
     
     <!-- Google Analytics (conditional loading based on consent) -->
     <script>
@@ -53,6 +128,103 @@
         };
     </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPTFP0E6Z9"></script>
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://pirkagies.gr/#website",
+          "url": "https://pirkagies.gr/",
+          "name": "Φωτιές Ελλάδα Τώρα | Ζωντανός Χάρτης Πυρκαγιών",
+          "alternateName": "PirkagiesGr",
+          "description": "Παρακολουθήστε φωτιές και πυρκαγιές στην Ελλάδα σε πραγματικό χρόνο με δορυφορικά δεδομένα NASA. Ζωντανός χάρτης πυρκαγιών για την Ελλάδα.",
+          "inLanguage": ["el-GR", "en-US"],
+          "publisher": {
+            "@id": "https://pirkagies.gr/#organization"
+          },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://pirkagies.gr/?s={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://pirkagies.gr/#organization",
+          "name": "PirkagiesGr",
+          "url": "https://pirkagies.gr/",
+          "description": "Real-time wildfire monitoring service for Greece using NASA satellite data",
+          "foundingDate": "2024",
+          "areaServed": {
+            "@type": "Country",
+            "name": "Greece",
+            "alternateName": "Ελλάδα"
+          },
+          "serviceType": "Emergency Information Service",
+          "knowsAbout": [
+            "Wildfire monitoring",
+            "Forest fires Greece",
+            "Emergency services",
+            "Satellite data analysis",
+            "NASA FIRMS data",
+            "Fire detection",
+            "Φωτιές Ελλάδα",
+            "Πυρκαγιές Ελλάδα",
+            "Δασικές πυρκαγιές"
+          ]
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://pirkagies.gr/#webpage",
+          "url": "https://pirkagies.gr/",
+          "name": "Φωτιές Ελλάδα Τώρα | Ζωντανός Χάρτης Πυρκαγιών | PirkagiesGr",
+          "description": "Παρακολουθήστε φωτιές και πυρκαγιές στην Ελλάδα σε πραγματικό χρόνο. Ζωντανός χάρτης με δορυφορικά δεδομένα NASA. Fires Greece live map, Greek wildfires monitoring.",
+          "inLanguage": "el-GR",
+          "isPartOf": {
+            "@id": "https://pirkagies.gr/#website"
+          },
+          "about": {
+            "@type": "Thing",
+            "name": "Wildfire monitoring in Greece",
+            "alternateName": ["Φωτιές Ελλάδα", "Πυρκαγιές Ελλάδα", "Greek fires", "Fires Greece"]
+          },
+          "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Αρχική",
+                "item": "https://pirkagies.gr/"
+              }
+            ]
+          },
+          "mainEntity": {
+            "@type": "Dataset",
+            "name": "Greece Wildfire Detection Data",
+            "description": "Real-time satellite fire detection data for Greece from NASA FIRMS",
+            "creator": {
+              "@type": "Organization",
+              "name": "NASA FIRMS"
+            },
+            "spatialCoverage": {
+              "@type": "Place",
+              "name": "Greece",
+              "geo": {
+                "@type": "GeoShape",
+                "box": "34.8 19.0 41.8 28.2"
+              }
+            },
+            "temporalCoverage": "2024/..",
+            "keywords": ["wildfire", "satellite data", "emergency monitoring", "Greece", "MODIS", "VIIRS"]
+          }
+        }
+      ]
+    }
+    </script>
 </head>
 <body>
     <div class="app-container">
@@ -60,8 +232,8 @@
         <header class="header">
             <div class="header-content">
                 <div class="logo">
-                    <i class="fas fa-fire"></i>
-                    <h1 data-i18n="site-title">PirkagiesGr</h1>
+                    <i class="fas fa-fire" aria-hidden="true"></i>
+                    <h1 data-i18n="site-title">PirkagiesGr - Φωτιές Ελλάδα Τώρα</h1>
                 </div>
                 <div class="header-stats">
                     <div class="stat-item">
@@ -185,13 +357,13 @@
                         <div class="legend-section">
                             <div class="legend-item">
                                 <div class="legend-marker">
-                                    <img src="./media/fire_red.png" alt="MODIS" style="width: 18px; height: 18px;">
+                                    <img src="./media/fire_red.png" alt="Εικονίδιο MODIS πυρκαγιάς - ανίχνευση πυρκαγιάς με υψηλή βεβαιότητα από δορυφόρο MODIS" style="width: 18px; height: 18px;">
                                 </div>
                                 <span data-i18n="modis-fire-detection">Ανίχνευση Πυρκαγιάς MODIS (≥50% βεβαιότητα)</span>
                             </div>
                             <div class="legend-item">
                                 <div class="legend-marker">
-                                    <img src="./media/fire_yellow.png" alt="VIIRS" style="width: 18px; height: 18px;">
+                                    <img src="./media/fire_yellow.png" alt="Εικονίδιο VIIRS θερμικής ανίχνευσης - ανίχνευση πυρκαγιάς με υψηλή βεβαιότητα από δορυφόρο VIIRS" style="width: 18px; height: 18px;">
                                 </div>
                                 <span data-i18n="viirs-thermal-detection">Θερμική Ανίχνευση VIIRS (≥50% βεβαιότητα)</span>
                             </div>

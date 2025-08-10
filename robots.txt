@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+# Allow all search engines to crawl the site
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Sitemap location
+Sitemap: https://pirkagies.gr/sitemap.xml
+
+# Allow crawling of important files
+Allow: /index.html
+Allow: /data/
+Allow: /js/
+Allow: /media/
+Allow: /styles.css
+
+# Crawl delay (optional - helps prevent overloading)
+Crawl-delay: 1

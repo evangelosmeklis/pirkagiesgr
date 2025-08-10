@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    
+    <!-- Main page -->
+    <url>
+        <loc>https://pirkagies.gr/</loc>
+        <lastmod>2024-01-15T00:00:00Z</lastmod>
+        <changefreq>hourly</changefreq>
+        <priority>1.0</priority>
+        <xhtml:link rel="alternate" hreflang="el" href="https://pirkagies.gr/" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://pirkagies.gr/" />
+    </url>
+    
+    <!-- Live fires section -->
+    <url>
+        <loc>https://pirkagies.gr/#live</loc>
+        <lastmod>2024-01-15T00:00:00Z</lastmod>
+        <changefreq>hourly</changefreq>
+        <priority>0.9</priority>
+        <xhtml:link rel="alternate" hreflang="el" href="https://pirkagies.gr/#live" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://pirkagies.gr/#live" />
+    </url>
+    
+    <!-- Historical fires section -->
+    <url>
+        <loc>https://pirkagies.gr/#historical</loc>
+        <lastmod>2024-01-15T00:00:00Z</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="el" href="https://pirkagies.gr/#historical" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://pirkagies.gr/#historical" />
+    </url>
+    
+    <!-- About section -->
+    <url>
+        <loc>https://pirkagies.gr/#about</loc>
+        <lastmod>2024-01-15T00:00:00Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+        <xhtml:link rel="alternate" hreflang="el" href="https://pirkagies.gr/#about" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://pirkagies.gr/#about" />
+    </url>
+    
+    <!-- Data files for search engines to understand content structure -->
+    <url>
+        <loc>https://pirkagies.gr/data/live_fires.json</loc>
+        <lastmod>2024-01-15T00:00:00Z</lastmod>
+        <changefreq>hourly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://pirkagies.gr/data/recent_fires.json</loc>
+        <lastmod>2024-01-15T00:00:00Z</lastmod>
+        <changefreq>hourly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+</urlset>
