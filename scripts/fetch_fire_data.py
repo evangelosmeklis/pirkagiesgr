@@ -40,7 +40,6 @@ class FireDataFetcher:
         
         # Primary and fallback NASA FIRMS URLs
         base_urls = [
-            'https://firms.modaps.eosdis.nasa.gov',
             'https://firms2.modaps.eosdis.nasa.gov'
         ]
         
