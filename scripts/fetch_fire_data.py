@@ -34,41 +34,62 @@ class FireDataFetcher:
         print(f"🗝️ NASA API Key: {'✅ Set' if self.nasa_api_key else '❌ Missing'}")
     
     def fetch_fires_from_source(self, source, days=1):
-        """Fetch fire data from a specific NASA FIRMS source for both Greece and Cyprus"""
+        """Fetch fire data from a specific NASA FIRMS source for both Greece and Cyprus with URL fallback"""
         all_fires = []
         countries = [('GRC', 'Greece'), ('CYP', 'Cyprus')]
         
+        # Primary and fallback NASA FIRMS URLs
+        base_urls = [
+            'https://firms.modaps.eosdis.nasa.gov',
+            'https://firms2.modaps.eosdis.nasa.gov'
+        ]
+        
         for country_code, country_name in countries:
-            try:
-                url = f'https://firms.modaps.eosdis.nasa.gov/api/country/csv/{self.nasa_api_key}/{source}/{country_code}/{days}'
-                print(f"📡 Fetching {source} data for {country_name} (last {days} days)...")
-                
-                response = requests.get(url, timeout=600)  # 10 minutes timeout for high traffic situations
-                response.raise_for_status()
-                
-                # Parse CSV
-                from io import StringIO
-                df = pd.read_csv(StringIO(response.text))
-                
-                if df.empty:
-                    print(f"ℹ️ No {source} data found for {country_name}")
-                    continue
-                
-                # Convert to list of dictionaries
-                fires = df.to_dict('records')
-                
-                # Add metadata
-                for fire in fires:
-                    fire['data_source'] = source
-                    fire['country'] = country_name
-                    fire['id'] = f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}"
-                    fire['fetch_timestamp'] = datetime.now(timezone.utc).isoformat()
-                
-                all_fires.extend(fires)
-                print(f"✅ Fetched {len(fires)} fires from {source} in {country_name}")
-                
-            except Exception as e:
-                print(f"❌ Failed to fetch {source} for {country_name}: {e}")
+            success = False
+            last_error = None
+            
+            # Try each URL until one works
+            for url_index, base_url in enumerate(base_urls):
+                try:
+                    url = f'{base_url}/api/country/csv/{self.nasa_api_key}/{source}/{country_code}/{days}'
+                    url_label = "primary" if url_index == 0 else "fallback"
+                    
+                    print(f"📡 Fetching {source} data for {country_name} (last {days} days) using {url_label} URL...")
+                    
+                    response = requests.get(url, timeout=600)  # 10 minutes timeout for high traffic situations
+                    response.raise_for_status()
+                    
+                    # Parse CSV
+                    from io import StringIO
+                    df = pd.read_csv(StringIO(response.text))
+                    
+                    if df.empty:
+                        print(f"ℹ️ No {source} data found for {country_name} using {url_label} URL")
+                    else:
+                        # Convert to list of dictionaries
+                        fires = df.to_dict('records')
+                        
+                        # Add metadata
+                        for fire in fires:
+                            fire['data_source'] = source
+                            fire['country'] = country_name
+                            fire['id'] = f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}"
+                            fire['fetch_timestamp'] = datetime.now(timezone.utc).isoformat()
+                        
+                        all_fires.extend(fires)
+                        print(f"✅ Fetched {len(fires)} fires from {source} in {country_name} using {url_label} URL")
+                    
+                    success = True
+                    break  # Success - don't try other URLs
+                    
+                except Exception as e:
+                    last_error = e
+                    print(f"❌ Failed to fetch {source} for {country_name} using {url_label} URL: {e}")
+                    continue  # Try next URL
+            
+            # If no URL worked, log the final error
+            if not success:
+                print(f"❌ Failed to fetch {source} for {country_name} from all URLs. Last error: {last_error}")
                 continue
         
         print(f"🔥 Total {len(all_fires)} fires from {source} (Greece + Cyprus)")
@@ -127,40 +148,81 @@ class FireDataFetcher:
         
         return existing_datasets
     
+    def merge_historical_data(self, new_recent_fires, existing_historical_fires):
+        """Merge new 24h data with existing historical data, maintaining 7-day rolling window"""
+        from datetime import datetime, timedelta
+        
+        print("🔄 Merging new data with existing historical data (rolling 7-day window)...")
+        
+        # Convert existing historical data to a dictionary keyed by fire ID for deduplication
+        existing_fires_dict = {}
+        for fire in existing_historical_fires:
+            fire_id = fire.get('id', f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}")
+            existing_fires_dict[fire_id] = fire
+        
+        # Add new recent fires to the mix (they become part of historical data)
+        new_fires_added = 0
+        for fire in new_recent_fires:
+            fire_id = fire.get('id', f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}")
+            if fire_id not in existing_fires_dict:
+                existing_fires_dict[fire_id] = fire
+                new_fires_added += 1
+        
+        print(f"➕ Added {new_fires_added} new fires to historical data")
+        
+        # Filter out fires older than 7 days
+        cutoff_date = datetime.now() - timedelta(days=7)
+        filtered_fires = []
+        removed_count = 0
+        
+        for fire in existing_fires_dict.values():
+            try:
+                fire_date = datetime.strptime(fire.get('acq_date', ''), '%Y-%m-%d')
+                if fire_date >= cutoff_date:
+                    filtered_fires.append(fire)
+                else:
+                    removed_count += 1
+            except (ValueError, TypeError):
+                # If we can't parse the date, keep the fire (safer approach)
+                filtered_fires.append(fire)
+        
+        print(f"🗑️ Removed {removed_count} fires older than 7 days")
+        print(f"📊 Historical dataset now contains {len(filtered_fires)} fires")
+        
+        return filtered_fires
+
     def fetch_all_fire_data(self):
-        """Fetch fire data from all sources"""
-        sources = ['MODIS_NRT', 'VIIRS_SNPP_NRT']
+        """Fetch fire data using incremental approach for historical data with all available satellites"""
+        # All available NASA FIRMS satellite sources for comprehensive coverage
+        sources = [
+            'MODIS_NRT',         # MODIS/Aqua and MODIS/Terra combined
+            'VIIRS_SNPP_NRT',    # VIIRS S-NPP (Suomi NPP)
+            'VIIRS_NOAA20_NRT',  # VIIRS NOAA-20 (JPSS-1)
+            'VIIRS_NOAA21_NRT'   # VIIRS NOAA-21 (JPSS-2)
+        ]
+        
+        print(f"🛰️ Using {len(sources)} satellite sources: {', '.join(sources)}")
         
         # Load existing data as fallback
         existing_datasets = self.load_existing_data()
         
         # Track if we successfully fetched any new data
         successful_fetches = 0
-        total_expected_fetches = len(sources) * 2  # 2 time periods per source
+        total_expected_fetches = len(sources)  # Only fetching 24h data now for efficiency
         
-        # Fetch different time periods for different datasets
-        print("📡 Fetching recent data (last 24 hours)...")
+        # Fetch recent data (24 hours) - this is our primary fetch for incremental updates
+        print("📡 Fetching recent data (last 24 hours) from all satellites...")
         recent_fires = []
         for source in sources:
-            fires = self.fetch_fires_from_source(source, days=1)  # Last 24 hours for live/recent
+            fires = self.fetch_fires_from_source(source, days=1)  # Last 24 hours only
             if fires:  # Only count as successful if we got data
                 successful_fetches += 1
             recent_fires.extend(fires)
         
-        print("📡 Fetching historical data (last 7 days)...")
-        historical_fires = []
-        for source in sources:
-            fires = self.fetch_fires_from_source(source, days=7)  # Last 7 days for historical
-            if fires:  # Only count as successful if we got data
-                successful_fetches += 1
-            historical_fires.extend(fires)
-        
         # Filter geographically
         recent_fires = self.filter_fires_geographically(recent_fires)
-        historical_fires = self.filter_fires_geographically(historical_fires)
         
         print(f"🔥 Recent fires (24h) after geographic filtering: {len(recent_fires)}")
-        print(f"🔥 Historical fires (7d) after geographic filtering: {len(historical_fires)}")
         
         # Check if we got any new data - if not, use existing data
         if successful_fetches == 0:
@@ -173,11 +235,14 @@ class FireDataFetcher:
             # Mark this as using fallback data
             self.using_fallback_data = True
         else:
+            # Create historical dataset by merging new data with existing historical data
+            historical_fires = self.merge_historical_data(recent_fires, existing_datasets.get('historical', []))
+            
             # Create different time period datasets with new data
             datasets = {
                 'live': self.filter_fires_by_time(recent_fires, 1),  # Last hour from recent data
                 'recent': recent_fires,  # Last 24 hours
-                'historical': historical_fires  # Last 7 days
+                'historical': historical_fires  # Rolling 7-day window
             }
             self.using_fallback_data = False
         
@@ -193,7 +258,7 @@ class FireDataFetcher:
                 'count': len(fires),
                 'dataset': dataset_name,
                 'last_updated': timestamp,
-                'sources': ['MODIS_NRT', 'VIIRS_SNPP_NRT'],
+                'sources': ['MODIS_NRT', 'VIIRS_SNPP_NRT', 'VIIRS_NOAA20_NRT', 'VIIRS_NOAA21_NRT'],
                 'geographic_bounds': self.greece_bounds,
                 'using_fallback_data': getattr(self, 'using_fallback_data', False)
             }
