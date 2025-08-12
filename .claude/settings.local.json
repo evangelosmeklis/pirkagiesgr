@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(dir)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(python3:*)",
+      "Bash(rm:*)",
+      "Bash(git rebase:*)"
     ],
     "deny": []
   }

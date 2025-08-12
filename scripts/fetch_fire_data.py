@@ -107,21 +107,52 @@ class FireDataFetcher:
         
         return filtered
     
+    def load_existing_data(self):
+        """Load existing fire data files if they exist"""
+        existing_datasets = {}
+        
+        for dataset_name in ['live', 'recent', 'historical']:
+            filename = f'data/{dataset_name}_fires.json'
+            try:
+                with open(filename, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    existing_datasets[dataset_name] = data.get('fires', [])
+                    print(f"📄 Loaded existing {dataset_name} data: {len(existing_datasets[dataset_name])} fires")
+            except FileNotFoundError:
+                existing_datasets[dataset_name] = []
+                print(f"📄 No existing {dataset_name} data found")
+            except Exception as e:
+                print(f"⚠️ Failed to load existing {dataset_name} data: {e}")
+                existing_datasets[dataset_name] = []
+        
+        return existing_datasets
+    
     def fetch_all_fire_data(self):
         """Fetch fire data from all sources"""
         sources = ['MODIS_NRT', 'VIIRS_SNPP_NRT']
+        
+        # Load existing data as fallback
+        existing_datasets = self.load_existing_data()
+        
+        # Track if we successfully fetched any new data
+        successful_fetches = 0
+        total_expected_fetches = len(sources) * 2  # 2 time periods per source
         
         # Fetch different time periods for different datasets
         print("📡 Fetching recent data (last 24 hours)...")
         recent_fires = []
         for source in sources:
             fires = self.fetch_fires_from_source(source, days=1)  # Last 24 hours for live/recent
+            if fires:  # Only count as successful if we got data
+                successful_fetches += 1
             recent_fires.extend(fires)
         
         print("📡 Fetching historical data (last 7 days)...")
         historical_fires = []
         for source in sources:
             fires = self.fetch_fires_from_source(source, days=7)  # Last 7 days for historical
+            if fires:  # Only count as successful if we got data
+                successful_fetches += 1
             historical_fires.extend(fires)
         
         # Filter geographically
@@ -131,12 +162,24 @@ class FireDataFetcher:
         print(f"🔥 Recent fires (24h) after geographic filtering: {len(recent_fires)}")
         print(f"🔥 Historical fires (7d) after geographic filtering: {len(historical_fires)}")
         
-        # Create different time period datasets
-        datasets = {
-            'live': self.filter_fires_by_time(recent_fires, 1),  # Last hour from recent data
-            'recent': recent_fires,  # Last 24 hours
-            'historical': historical_fires  # Last 7 days
-        }
+        # Check if we got any new data - if not, use existing data
+        if successful_fetches == 0:
+            print("⚠️ No new data fetched from NASA API - using existing data as fallback")
+            datasets = {
+                'live': existing_datasets.get('live', []),
+                'recent': existing_datasets.get('recent', []),
+                'historical': existing_datasets.get('historical', [])
+            }
+            # Mark this as using fallback data
+            self.using_fallback_data = True
+        else:
+            # Create different time period datasets with new data
+            datasets = {
+                'live': self.filter_fires_by_time(recent_fires, 1),  # Last hour from recent data
+                'recent': recent_fires,  # Last 24 hours
+                'historical': historical_fires  # Last 7 days
+            }
+            self.using_fallback_data = False
         
         return datasets
     
@@ -151,7 +194,8 @@ class FireDataFetcher:
                 'dataset': dataset_name,
                 'last_updated': timestamp,
                 'sources': ['MODIS_NRT', 'VIIRS_SNPP_NRT'],
-                'geographic_bounds': self.greece_bounds
+                'geographic_bounds': self.greece_bounds,
+                'using_fallback_data': getattr(self, 'using_fallback_data', False)
             }
             
             filename = f'data/{dataset_name}_fires.json'
@@ -161,11 +205,17 @@ class FireDataFetcher:
             print(f"💾 Saved {len(fires)} fires to {filename}")
         
         # Create a status file
+        status_type = 'fallback' if getattr(self, 'using_fallback_data', False) else 'success'
         status = {
             'last_update': timestamp,
             'datasets': {name: len(fires) for name, fires in datasets.items()},
-            'status': 'success'
+            'status': status_type,
+            'using_fallback_data': getattr(self, 'using_fallback_data', False),
+            'nasa_api_available': not getattr(self, 'using_fallback_data', False)
         }
+        
+        if getattr(self, 'using_fallback_data', False):
+            status['message'] = 'NASA FIRMS API temporarily unavailable - displaying last known fire data'
         
         with open('data/status.json', 'w') as f:
             json.dump(status, f, indent=2)
@@ -178,21 +228,36 @@ def main():
         datasets = fetcher.fetch_all_fire_data()
         fetcher.save_data(datasets)
         
-        print("\n🎉 Fire data update completed successfully!")
+        if getattr(fetcher, 'using_fallback_data', False):
+            print("\n⚠️ Fire data update completed using fallback data due to NASA API issues!")
+        else:
+            print("\n🎉 Fire data update completed successfully!")
         
     except Exception as e:
         print(f"\n❌ Error updating fire data: {e}")
         
-        # Create error status file
-        error_status = {
-            'last_update': datetime.now(timezone.utc).isoformat(),
-            'status': 'error',
-            'error': str(e)
-        }
-        
-        os.makedirs('data', exist_ok=True)
-        with open('data/status.json', 'w') as f:
-            json.dump(error_status, f, indent=2)
+        # Try to load existing data as last resort
+        try:
+            print("🔄 Attempting to preserve existing data...")
+            os.makedirs('data', exist_ok=True)
+            
+            # Create error status file
+            error_status = {
+                'last_update': datetime.now(timezone.utc).isoformat(),
+                'status': 'error',
+                'error': str(e),
+                'using_fallback_data': True,
+                'nasa_api_available': False,
+                'message': 'Critical error occurred - existing data preserved if available'
+            }
+            
+            with open('data/status.json', 'w') as f:
+                json.dump(error_status, f, indent=2)
+            
+            print("⚠️ Error status saved - existing fire data files preserved")
+            
+        except Exception as preserve_error:
+            print(f"❌ Failed to preserve data: {preserve_error}")
         
         raise
 

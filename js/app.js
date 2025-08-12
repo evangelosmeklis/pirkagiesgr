@@ -167,6 +167,9 @@ class GreeceFierAlert {
         this.showLoading('Loading fire data...');
 
         try {
+            // Check data status first
+            const status = await this.apiService.getDataStatus();
+            
             const sources = ['MODIS_NRT', 'VIIRS_SNPP_NRT']; // Use both MODIS and VIIRS data
             let days = parseFloat(document.getElementById('time-filter').value);
             const confidence = document.getElementById('confidence-filter').value;
@@ -177,6 +180,15 @@ class GreeceFierAlert {
             // Use frontend API service for direct calls to NASA FIRMS
             const data = await this.apiService.getFireData(sources, adjustedDays, confidence);
             this.activeFires = data.fires || [];
+            
+            // Check if we're using fallback data and show warning
+            if (status && (status.using_fallback_data || status.status === 'fallback')) {
+                this.showNASAApiWarning(status.message || 'NASA FIRMS API temporarily unavailable - displaying last known fire data');
+            } else if (status && status.status === 'error') {
+                this.showNASAApiWarning(status.message || 'Fire data system error - existing data preserved if available');
+            } else {
+                this.hideNASAApiWarning();
+            }
             
             // Update the time range banner
             this.updateTimeRangeBanner(actualRange);
@@ -1403,6 +1415,104 @@ class GreeceFierAlert {
         } catch (error) {
             console.warn('Error calculating fire age:', error);
             return false; // Default to treating as live fire
+        }
+    }
+
+    showNASAApiWarning(message) {
+        // Remove existing warning if present
+        this.hideNASAApiWarning();
+        
+        // Create warning banner
+        const warningBanner = document.createElement('div');
+        warningBanner.id = 'nasa-api-warning';
+        warningBanner.className = 'nasa-api-warning';
+        warningBanner.innerHTML = `
+            <div class="nasa-warning-content">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span class="warning-text">${message}</span>
+                <button class="warning-close" onclick="this.parentElement.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        
+        // Add styles
+        if (!document.getElementById('nasa-warning-styles')) {
+            const style = document.createElement('style');
+            style.id = 'nasa-warning-styles';
+            style.textContent = `
+                .nasa-api-warning {
+                    background: linear-gradient(90deg, #ff6b35, #f39c12);
+                    color: white;
+                    padding: 0;
+                    position: relative;
+                    z-index: 1000;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                    animation: slideDown 0.3s ease-out;
+                }
+                .nasa-warning-content {
+                    display: flex;
+                    align-items: center;
+                    padding: 12px 20px;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    gap: 12px;
+                }
+                .nasa-api-warning i.fas {
+                    font-size: 18px;
+                    color: #fff;
+                    flex-shrink: 0;
+                }
+                .warning-text {
+                    flex: 1;
+                    font-weight: 500;
+                    font-size: 14px;
+                    line-height: 1.4;
+                }
+                .warning-close {
+                    background: none;
+                    border: none;
+                    color: white;
+                    cursor: pointer;
+                    padding: 4px;
+                    font-size: 16px;
+                    opacity: 0.8;
+                    transition: opacity 0.2s;
+                    flex-shrink: 0;
+                }
+                .warning-close:hover {
+                    opacity: 1;
+                }
+                @keyframes slideDown {
+                    from { transform: translateY(-100%); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
+                }
+                @media (max-width: 768px) {
+                    .nasa-warning-content {
+                        padding: 10px 15px;
+                        gap: 10px;
+                    }
+                    .warning-text {
+                        font-size: 13px;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Insert after header
+        const header = document.querySelector('.header');
+        if (header && header.nextSibling) {
+            header.parentNode.insertBefore(warningBanner, header.nextSibling);
+        } else {
+            document.body.insertBefore(warningBanner, document.body.firstChild);
+        }
+    }
+    
+    hideNASAApiWarning() {
+        const existingWarning = document.getElementById('nasa-api-warning');
+        if (existingWarning) {
+            existingWarning.remove();
         }
     }
 }
