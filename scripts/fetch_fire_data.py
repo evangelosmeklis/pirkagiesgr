@@ -43,7 +43,7 @@ class FireDataFetcher:
                 url = f'https://firms.modaps.eosdis.nasa.gov/api/country/csv/{self.nasa_api_key}/{source}/{country_code}/{days}'
                 print(f"📡 Fetching {source} data for {country_name} (last {days} days)...")
                 
-                response = requests.get(url, timeout=30)
+                response = requests.get(url, timeout=600)  # 10 minutes timeout for high traffic situations
                 response.raise_for_status()
                 
                 # Parse CSV
