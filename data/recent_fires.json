@@ -717,10 +717,12 @@
   ],
   "count": 34,
   "dataset": "recent",
-  "last_updated": "2025-08-12T20:52:57.574305+00:00",
+  "last_updated": "2025-08-12T21:37:54.449956+00:00",
   "sources": [
     "MODIS_NRT",
-    "VIIRS_SNPP_NRT"
+    "VIIRS_SNPP_NRT",
+    "VIIRS_NOAA20_NRT",
+    "VIIRS_NOAA21_NRT"
   ],
   "geographic_bounds": {
     "north": 41.75,
