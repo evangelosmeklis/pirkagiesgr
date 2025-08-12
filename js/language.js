@@ -147,7 +147,10 @@ class LanguageManager {
                 'select-dates': 'Παρακαλώ επιλέξτε ημερομηνίες έναρξης και λήξης',
                 'data-7-days-only': 'Ιστορικά δεδομένα διαθέσιμα μόνο για τις τελευταίες 7 ημέρες',
                 'fires-found-range': 'Βρέθηκαν φωτιές στο επιλεγμένο εύρος ημερομηνιών',
-                'fire-data-refreshed': 'Τα δεδομένα πυρκαγιάς ανανεώθηκαν επιτυχώς!'
+                'fire-data-refreshed': 'Τα δεδομένα πυρκαγιάς ανανεώθηκαν επιτυχώς!',
+                
+                // Time Range Banner
+                'showing-data-for': 'Εμφάνιση δεδομένων πυρκαγιάς για:'
             },
             'en': {
                 // Header
@@ -250,7 +253,10 @@ class LanguageManager {
                 'select-dates': 'Please select both start and end dates',
                 'data-7-days-only': 'Historical data is only available for the last 7 days',
                 'fires-found-range': 'fires found in selected date range',
-                'fire-data-refreshed': 'Fire data refreshed successfully!'
+                'fire-data-refreshed': 'Fire data refreshed successfully!',
+                
+                // Time Range Banner
+                'showing-data-for': 'Showing fire data for:'
             }
         };
         

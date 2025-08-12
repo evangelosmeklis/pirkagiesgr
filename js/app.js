@@ -8,6 +8,7 @@ class GreeceFierAlert {
         this.currentTab = 'live';
         this.geocodeCache = new Map(); // Cache for location names
         this.apiService = new APIService(); // Frontend API service
+        this.currentTimeRange = null; // Track current time range for banner
         
         // Greece and Cyprus bounds
         this.greeceBounds = {
@@ -24,7 +25,15 @@ class GreeceFierAlert {
     async init() {
         try {
             this.apiService.init(); // Initialize API service
-            this.languageManager = new LanguageManager(); // Initialize language management
+            
+            // Initialize language management if available
+            if (typeof LanguageManager !== 'undefined') {
+                this.languageManager = new LanguageManager();
+            } else {
+                console.warn('LanguageManager not available, continuing without language support');
+                this.languageManager = null;
+            }
+            
             this.setupEventListeners();
             this.initializeMap();
             this.setupMobileLayout(); // Setup mobile-specific UI
@@ -159,12 +168,18 @@ class GreeceFierAlert {
 
         try {
             const sources = ['MODIS_NRT', 'VIIRS_SNPP_NRT']; // Use both MODIS and VIIRS data
-            const days = parseFloat(document.getElementById('time-filter').value);
+            let days = parseFloat(document.getElementById('time-filter').value);
             const confidence = document.getElementById('confidence-filter').value;
             
+            // Implement cascading time range logic
+            const { adjustedDays, actualRange } = await this.cascadeTimeRange(sources, days, confidence);
+            
             // Use frontend API service for direct calls to NASA FIRMS
-            const data = await this.apiService.getFireData(sources, days, confidence);
+            const data = await this.apiService.getFireData(sources, adjustedDays, confidence);
             this.activeFires = data.fires || [];
+            
+            // Update the time range banner
+            this.updateTimeRangeBanner(actualRange);
 
             // Store fires in database if available
             if (window.fireDB) {
@@ -174,8 +189,8 @@ class GreeceFierAlert {
             this.displayFireMarkers();
             this.updateStats(data.timestamp);
             
-            console.log(`Loaded ${this.activeFires.length} fires from ${data.sources.join(', ')}`);
-            this.showNotification(`Loaded ${this.activeFires.length} fires from ${data.sources.join(', ')}`);
+            console.log(`Loaded ${this.activeFires.length} fires from ${data.sources.join(', ')} (${actualRange})`);
+            this.showNotification(`Loaded ${this.activeFires.length} fires from ${data.sources.join(', ')} (${actualRange})`);
         } catch (error) {
             console.error('Failed to load fire data:', error);
             this.showError('Failed to load fire data: ' + error.message);
@@ -623,6 +638,14 @@ class GreeceFierAlert {
             panelContent.innerHTML = `<p>${t('click-fire-marker')}</p>`;
         }
         
+        // Update time range banner text with debouncing to prevent rapid updates
+        if (this.currentTimeRange) {
+            clearTimeout(this.bannerUpdateTimeout);
+            this.bannerUpdateTimeout = setTimeout(() => {
+                this.updateTimeRangeBanner(this.currentTimeRange);
+            }, 100); // Small delay to prevent rapid updates
+        }
+        
         // Update update schedule display
         this.updateScheduleText();
         
@@ -751,8 +774,12 @@ class GreeceFierAlert {
             // Show loading state
             this.showLoading('Loading historical fire data...');
             
-            // Get 7 days of historical data from API (both MODIS and VIIRS)
-            const data = await this.apiService.getFireData(['MODIS_NRT', 'VIIRS_SNPP_NRT'], 7, 'all');
+            // Use cascading logic for historical data too
+            const sources = ['MODIS_NRT', 'VIIRS_SNPP_NRT'];
+            const { adjustedDays, actualRange } = await this.cascadeTimeRange(sources, 7, 'all');
+            
+            // Get historical data from API (both MODIS and VIIRS)
+            const data = await this.apiService.getFireData(sources, adjustedDays, 'all');
             
             if (data.fires && Array.isArray(data.fires)) {
                 // Process confidence values for consistent display
@@ -777,14 +804,13 @@ class GreeceFierAlert {
                 this.displayHistoricalFires(processedFires);
                 this.updateHistoricalStats(processedFires);
                 
-                console.log(`✅ Loaded ${processedFires.length} historical fires`);
+                console.log(`✅ Loaded ${processedFires.length} historical fires for: ${actualRange}`);
                 
                 // Hide loading immediately after displaying data
                 this.hideLoading();
                 
                 // Add location names in the background (optional enhancement)
                 this.enhanceFiresWithLocations(processedFires);
-                
             } else {
                 throw new Error('No fire data received or data is not in expected format');
             }
@@ -1203,6 +1229,156 @@ class GreeceFierAlert {
         return fallback;
     }
 
+    async cascadeTimeRange(sources, originalDays, confidence) {
+        // Try the original time range first
+        let data = await this.apiService.getFireData(sources, originalDays, confidence);
+        
+        if (data.fires && data.fires.length > 0) {
+            return {
+                adjustedDays: originalDays,
+                actualRange: this.getTimeRangeLabel(originalDays)
+            };
+        }
+        
+        // Define cascade sequence: 1h -> 24h -> 3d -> 7d
+        const cascadeSequence = [
+            { days: 0.04, label: 'Last Hour' },
+            { days: 1, label: 'Last 24 Hours' },
+            { days: 3, label: 'Last 3 Days' },
+            { days: 7, label: 'Last 7 Days' }
+        ];
+        
+        // Start from the next range after the original
+        let startIndex = cascadeSequence.findIndex(r => r.days === originalDays);
+        if (startIndex === -1) startIndex = 0;
+        
+        for (let i = startIndex + 1; i < cascadeSequence.length; i++) {
+            const range = cascadeSequence[i];
+            data = await this.apiService.getFireData(sources, range.days, confidence);
+            
+            if (data.fires && data.fires.length > 0) {
+                // Update the time filter dropdown to reflect the actual range used
+                document.getElementById('time-filter').value = range.days.toString();
+                
+                return {
+                    adjustedDays: range.days,
+                    actualRange: range.label
+                };
+            }
+        }
+        
+        // If no fires found in any range, return the last attempted range
+        const lastRange = cascadeSequence[cascadeSequence.length - 1];
+        document.getElementById('time-filter').value = lastRange.days.toString();
+        
+        return {
+            adjustedDays: lastRange.days,
+            actualRange: lastRange.label
+        };
+    }
+
+    getTimeRangeLabel(days) {
+        const t = this.languageManager ? this.languageManager.t.bind(this.languageManager) : (key) => {
+            // Fallback translations if LanguageManager is not available
+            const fallbacks = {
+                'last-hour': 'Last Hour',
+                'last-24-hours': 'Last 24 Hours', 
+                'last-3-days': 'Last 3 Days',
+                'last-week': 'Last 7 Days'
+            };
+            return fallbacks[key] || key;
+        };
+        
+        if (days <= 0.04) return t('last-hour');
+        if (days <= 1) return t('last-24-hours');
+        if (days <= 3) return t('last-3-days');
+        return t('last-week');
+    }
+
+    updateTimeRangeBanner(timeRange) {
+        this.currentTimeRange = timeRange;
+        
+        // Find or create the banner
+        let banner = document.getElementById('time-range-banner');
+        if (!banner) {
+            banner = this.createTimeRangeBanner();
+        }
+        
+        // Update banner content with translation - avoid layout shifts
+        const bannerText = banner.querySelector('.time-range-text');
+        if (bannerText) {
+            const t = this.languageManager ? this.languageManager.t.bind(this.languageManager) : (key) => key;
+            const showingText = this.languageManager ? t('showing-data-for') : 'Showing fire data for:';
+            
+            // Use a smooth transition by temporarily disabling transitions during text update
+            banner.style.transition = 'none';
+            bannerText.textContent = `${showingText} ${timeRange}`;
+            
+            // Force a reflow and re-enable transitions
+            banner.offsetHeight; // Trigger reflow
+            banner.style.transition = '';
+        }
+        
+        // Show the banner with proper transition
+        requestAnimationFrame(() => {
+            banner.classList.add('show');
+        });
+    }
+
+    createTimeRangeBanner() {
+        // Check if banner already exists to prevent duplication
+        let existingBanner = document.getElementById('time-range-banner');
+        if (existingBanner) {
+            return existingBanner;
+        }
+        
+        const banner = document.createElement('div');
+        banner.id = 'time-range-banner';
+        banner.className = 'time-range-banner';
+        
+        // Create the content with proper structure
+        const content = document.createElement('div');
+        content.className = 'time-range-content';
+        
+        const icon = document.createElement('i');
+        icon.className = 'fas fa-clock';
+        
+        const text = document.createElement('span');
+        text.className = 'time-range-text';
+        text.textContent = 'Loading...'; // Placeholder text
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'time-range-close';
+        closeBtn.title = 'Dismiss';
+        closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        closeBtn.onclick = () => banner.classList.remove('show');
+        
+        content.appendChild(icon);
+        content.appendChild(text);
+        content.appendChild(closeBtn);
+        banner.appendChild(content);
+        
+        // Insert after the disclaimer banner (the new location in the updated HTML)
+        const disclaimerBanner = document.querySelector('.disclaimer-banner');
+        if (disclaimerBanner) {
+            disclaimerBanner.parentNode.insertBefore(banner, disclaimerBanner.nextSibling);
+        } else {
+            // Fallback: insert after beta disclaimer
+            const betaDisclaimer = document.querySelector('.beta-disclaimer');
+            if (betaDisclaimer) {
+                betaDisclaimer.parentNode.insertBefore(banner, betaDisclaimer.nextSibling);
+            } else {
+                // Last fallback: insert at the beginning of main content
+                const mainContent = document.querySelector('.main-content');
+                if (mainContent) {
+                    mainContent.insertBefore(banner, mainContent.firstChild);
+                }
+            }
+        }
+        
+        return banner;
+    }
+
     isFireOlderThanOneHour(fire) {
         try {
             // Parse the fire detection time
@@ -1330,6 +1506,142 @@ style.textContent = `
         font-size: 0.875rem;
         color: #e7e9ea;
         line-height: 1.4;
+    }
+
+    /* Time Range Banner Styles */
+    .time-range-banner {
+        background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        color: white;
+        padding: 0;
+        margin: 0;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        border-left: 4px solid #2ecc71;
+        box-shadow: 0 2px 10px rgba(78, 205, 196, 0.2);
+        position: relative;
+        overflow: hidden;
+        min-height: 52px; /* Prevent collapse */
+        display: flex;
+        align-items: center;
+    }
+
+    .time-range-banner.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .time-range-content {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.875rem 1rem;
+        position: relative;
+        width: 100%;
+        min-height: 36px; /* Ensure consistent height */
+    }
+
+    .time-range-content i.fas.fa-clock {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.9);
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .time-range-text {
+        font-weight: 500;
+        font-size: 0.95rem;
+        flex-grow: 1;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0; /* Allow flexbox to shrink */
+    }
+
+    .time-range-close {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1rem;
+        cursor: pointer;
+        padding: 0.25rem;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+    }
+
+    .time-range-close:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: white;
+        transform: scale(1.1);
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 0.8;
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .time-range-banner {
+            margin: 0;
+            position: relative;
+            z-index: 1000;
+        }
+        
+        .time-range-content {
+            padding: 0.75rem 0.875rem;
+            gap: 0.5rem;
+            flex-wrap: nowrap;
+        }
+        
+        .time-range-text {
+            font-size: 0.875rem;
+            line-height: 1.4;
+            word-break: break-word;
+            white-space: normal; /* Allow wrapping on mobile */
+            overflow: visible;
+            text-overflow: unset;
+        }
+        
+        .time-range-close {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+        }
+    }
+    
+    /* Tablet adjustments */
+    @media (max-width: 1024px) and (min-width: 769px) {
+        .time-range-banner {
+            position: relative;
+            z-index: 999;
+        }
+        
+        .time-range-content {
+            padding: 0.8rem 1rem;
+        }
+        
+        .time-range-text {
+            font-size: 0.9rem;
+        }
+    }
+    
+    /* Ensure banner is always visible above other content */
+    .time-range-banner {
+        position: relative;
+        z-index: 998;
+        width: 100%;
+        box-sizing: border-box;
     }
 `;
 document.head.appendChild(style);
