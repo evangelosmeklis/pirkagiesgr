@@ -17,6 +17,7 @@ class LanguageManager {
                 // Navigation
                 'live-map': 'Ζωντανός Χάρτης Πυρκαγιών',
                 'about': 'Σχετικά',
+                'active-fire-list': 'Ενεργές Πυρκαγιές',
                 
                 // Disclaimer banner
                 'disclaimer-banner': '<strong>Μόνο για ενημερωτικούς σκοπούς.</strong> Δεδομένα πυρκαγιών από το NASA FIRMS (ενημερώνονται κάθε 3 ώρες παγκοσμίως). Σε περίπτωση έκτακτης ανάγκης, επικοινωνήστε με τοπικές αρχές (Ελλάδα: 199, ΕΕ: 112).',
@@ -150,8 +151,8 @@ class LanguageManager {
                 
                 // Navigation
                 'live-map': 'Live Fire Map',
-                'last-7-days': 'Last 7 Days Fires',
                 'about': 'About',
+                'active-fire-list': 'Active Fires',
                 
                 // Disclaimer banner
                 'disclaimer-banner': '<strong>For informational purposes only.</strong> Fire data provided by NASA FIRMS (updated every 3 hours globally). In case of emergency, contact local authorities (Greece: 199, EU: 112).',

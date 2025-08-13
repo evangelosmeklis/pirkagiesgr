@@ -295,6 +295,7 @@ class GreeceFierAlert {
         });
 
         this.filterFireMarkers();
+        this.populateFireList();
         
         // Only auto-fit bounds if there are a reasonable number of fires
         if (this.fireMarkers.length > 0 && this.fireMarkers.length <= 50) {
@@ -304,6 +305,124 @@ class GreeceFierAlert {
             // For many fires, just center on Greece without auto-zoom
             console.log(`🔥 ${this.fireMarkers.length} fires detected - map auto-zoom disabled for performance`);
         }
+    }
+
+    populateFireList() {
+        const fireList = document.getElementById('fire-list');
+        const fireCountBadge = document.getElementById('fire-count-badge');
+        
+        if (!fireList || !fireCountBadge) return;
+        
+        // Update fire count
+        fireCountBadge.textContent = this.activeFires.length;
+        
+        // Clear existing list
+        fireList.innerHTML = '';
+        
+        // Sort fires by intensity (FRP) descending, then by confidence
+        const sortedFires = [...this.activeFires].sort((a, b) => {
+            const aFrp = a.frp || 0;
+            const bFrp = b.frp || 0;
+            if (aFrp !== bFrp) return bFrp - aFrp;
+            
+            const aConf = typeof a.confidence === 'number' ? a.confidence : 50;
+            const bConf = typeof b.confidence === 'number' ? b.confidence : 50;
+            return bConf - aConf;
+        });
+        
+        // Create fire list items
+        sortedFires.forEach((fire, index) => {
+            const listItem = this.createFireListItem(fire, index);
+            fireList.appendChild(listItem);
+        });
+    }
+    
+    createFireListItem(fire, index) {
+        const item = document.createElement('div');
+        item.className = 'fire-list-item';
+        item.dataset.fireIndex = index;
+        
+        // Format location (use coordinates for now, can be enhanced with reverse geocoding)
+        const location = `${fire.latitude.toFixed(3)}°N, ${fire.longitude.toFixed(3)}°E`;
+        
+        // Format time
+        const time = this.formatFireTime(fire.acq_date, fire.acq_time);
+        
+        // Format confidence
+        const confidence = typeof fire.confidence === 'number' ? Math.round(fire.confidence) : 'Unknown';
+        const confidenceClass = this.getConfidenceClass(confidence);
+        
+        // Format FRP (Fire Radiative Power)
+        const frp = fire.frp ? `${fire.frp.toFixed(1)} MW` : 'N/A';
+        
+        // Get satellite source
+        const satellite = fire.satellite || fire.data_source || 'Unknown';
+        
+        item.innerHTML = `
+            <div class="fire-item-header">
+                <div class="fire-item-location">${location}</div>
+                <div class="fire-item-time">${time}</div>
+            </div>
+            <div class="fire-item-details">
+                <div class="fire-item-confidence">
+                    <span class="confidence-badge confidence-${confidenceClass}">${confidence}%</span>
+                </div>
+                <div class="fire-item-intensity">
+                    <i class="fas fa-bolt"></i> ${frp}
+                </div>
+                <div class="fire-item-satellite">${satellite}</div>
+            </div>
+        `;
+        
+        // Add click handler to zoom to fire
+        item.addEventListener('click', () => {
+            this.zoomToFire(fire, item);
+        });
+        
+        return item;
+    }
+    
+    zoomToFire(fire, listItem) {
+        // Clear previous selection
+        document.querySelectorAll('.fire-list-item.selected').forEach(item => {
+            item.classList.remove('selected');
+        });
+        
+        // Select this item
+        listItem.classList.add('selected');
+        
+        // Zoom to fire location
+        this.map.setView([fire.latitude, fire.longitude], 14, {
+            animate: true,
+            duration: 1
+        });
+        
+        // Find and highlight the corresponding marker
+        this.fireMarkers.forEach(marker => {
+            if (marker.fireData && 
+                Math.abs(marker.fireData.latitude - fire.latitude) < 0.0001 &&
+                Math.abs(marker.fireData.longitude - fire.longitude) < 0.0001) {
+                
+                // Temporarily highlight the marker
+                const originalIcon = marker.getIcon();
+                marker.setIcon(L.divIcon({
+                    html: '<span style="font-size: 28px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">🔥</span>',
+                    className: 'fire-emoji-marker highlighted',
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14]
+                }));
+                
+                // Reset icon after 2 seconds
+                setTimeout(() => {
+                    marker.setIcon(originalIcon);
+                }, 2000);
+                
+                // Open popup if it exists
+                if (marker.getPopup()) {
+                    marker.openPopup();
+                }
+            }
+        });
     }
 
     createFireMarker(fire) {
