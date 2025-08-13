@@ -133,7 +133,7 @@ class FireDataFetcher:
         """Load existing fire data files if they exist"""
         existing_datasets = {}
         
-        for dataset_name in ['live', 'recent', 'historical']:
+        for dataset_name in ['live', 'recent']:
             filename = f'data/{dataset_name}_fires.json'
             try:
                 with open(filename, 'r', encoding='utf-8') as f:
@@ -149,51 +149,9 @@ class FireDataFetcher:
         
         return existing_datasets
     
-    def merge_historical_data(self, new_recent_fires, existing_historical_fires):
-        """Merge new 24h data with existing historical data, maintaining 7-day rolling window"""
-        from datetime import datetime, timedelta
-        
-        print("🔄 Merging new data with existing historical data (rolling 7-day window)...")
-        
-        # Convert existing historical data to a dictionary keyed by fire ID for deduplication
-        existing_fires_dict = {}
-        for fire in existing_historical_fires:
-            fire_id = fire.get('id', f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}")
-            existing_fires_dict[fire_id] = fire
-        
-        # Add new recent fires to the mix (they become part of historical data)
-        new_fires_added = 0
-        for fire in new_recent_fires:
-            fire_id = fire.get('id', f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}")
-            if fire_id not in existing_fires_dict:
-                existing_fires_dict[fire_id] = fire
-                new_fires_added += 1
-        
-        print(f"➕ Added {new_fires_added} new fires to historical data")
-        
-        # Filter out fires older than 7 days
-        cutoff_date = datetime.now() - timedelta(days=7)
-        filtered_fires = []
-        removed_count = 0
-        
-        for fire in existing_fires_dict.values():
-            try:
-                fire_date = datetime.strptime(fire.get('acq_date', ''), '%Y-%m-%d')
-                if fire_date >= cutoff_date:
-                    filtered_fires.append(fire)
-                else:
-                    removed_count += 1
-            except (ValueError, TypeError):
-                # If we can't parse the date, keep the fire (safer approach)
-                filtered_fires.append(fire)
-        
-        print(f"🗑️ Removed {removed_count} fires older than 7 days")
-        print(f"📊 Historical dataset now contains {len(filtered_fires)} fires")
-        
-        return filtered_fires
 
     def fetch_all_fire_data(self):
-        """Fetch fire data using incremental approach for historical data with all available satellites"""
+        """Fetch fire data from all satellites for the last 24 hours only"""
         # All available NASA FIRMS satellite sources for comprehensive coverage
         sources = [
             'MODIS_NRT',         # MODIS/Aqua and MODIS/Terra combined
@@ -230,20 +188,15 @@ class FireDataFetcher:
             print("⚠️ No new data fetched from NASA API - using existing data as fallback")
             datasets = {
                 'live': existing_datasets.get('live', []),
-                'recent': existing_datasets.get('recent', []),
-                'historical': existing_datasets.get('historical', [])
+                'recent': existing_datasets.get('recent', [])
             }
             # Mark this as using fallback data
             self.using_fallback_data = True
         else:
-            # Create historical dataset by merging new data with existing historical data
-            historical_fires = self.merge_historical_data(recent_fires, existing_datasets.get('historical', []))
-            
-            # Create different time period datasets with new data
+            # Create different time period datasets with new data (24-hour only)
             datasets = {
                 'live': self.filter_fires_by_time(recent_fires, 1),  # Last hour from recent data
-                'recent': recent_fires,  # Last 24 hours
-                'historical': historical_fires  # Rolling 7-day window
+                'recent': recent_fires  # Last 24 hours
             }
             self.using_fallback_data = False
         
