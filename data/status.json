@@ -1,10 +1,10 @@
 {
-  "last_update": "2025-08-13T06:27:17.332892+00:00",
+  "last_update": "2025-08-13T07:54:12.552100+00:00",
   "datasets": {
-    "live": 34,
-    "recent": 34
+    "live": 1044,
+    "recent": 1044
   },
-  "status": "fallback",
-  "using_fallback_data": true,
-  "nasa_api_available": false
+  "status": "success",
+  "using_fallback_data": false,
+  "nasa_api_available": true
 }
