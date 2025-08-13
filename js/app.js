@@ -41,7 +41,6 @@ class GreeceFierAlert {
             await this.loadFireData();
             this.setupUpdateScheduleDisplay();
             this.setupCookieConsent();
-            this.checkBetaDisclaimer();
             this.hideLoading();
         } catch (error) {
             console.error('Failed to initialize application:', error);
@@ -61,13 +60,6 @@ class GreeceFierAlert {
             });
         });
 
-        // Beta disclaimer close button
-        const betaClose = document.getElementById('beta-close');
-        if (betaClose) {
-            betaClose.addEventListener('click', () => {
-                this.closeBetaDisclaimer();
-            });
-        }
 
         // Map controls toggle button (mobile)
         const controlsToggle = document.getElementById('controls-toggle');
@@ -615,25 +607,6 @@ class GreeceFierAlert {
         }
     }
 
-    closeBetaDisclaimer() {
-        const betaDisclaimer = document.querySelector('.beta-disclaimer');
-        if (betaDisclaimer) {
-            betaDisclaimer.classList.add('hidden');
-            // Remember user's choice to hide beta disclaimer
-            localStorage.setItem('beta_disclaimer_dismissed', 'true');
-        }
-    }
-
-    checkBetaDisclaimer() {
-        // Check if user has previously dismissed the beta disclaimer
-        const dismissed = localStorage.getItem('beta_disclaimer_dismissed');
-        if (dismissed === 'true') {
-            const betaDisclaimer = document.querySelector('.beta-disclaimer');
-            if (betaDisclaimer) {
-                betaDisclaimer.classList.add('hidden');
-            }
-        }
-    }
 
     setupMobileLayout() {
         // Check if we're on a mobile device
