@@ -1406,9 +1406,21 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    /* Hide banners on mobile to save space */
+    /* Hide ALL overlays and UI elements on mobile - keep only header and tabs */
     .beta-disclaimer,
-    .disclaimer-banner {
+    .disclaimer-banner,
+    .map-controls,
+    .map-legend,
+    .fire-info-panel {
+        display: none !important;
+    }
+    
+    /* Hide any blue banners or notifications */
+    .time-range-banner,
+    #time-range-banner,
+    .notification,
+    .banner,
+    .cookie-consent-banner {
         display: none !important;
     }
     
@@ -1451,6 +1463,23 @@ body {
     
     .header-stats .stat-item .stat-label {
         font-size: 0.75rem;
+    }
+    
+    /* Maximize map area on mobile */
+    .main-content {
+        flex: 1;
+        padding: 0;
+    }
+    
+    .map-container {
+        height: calc(100vh - 120px); /* Account for header and tabs */
+        margin: 0;
+        padding: 0;
+    }
+    
+    #map {
+        height: 100% !important;
+        border-radius: 0;
     }
     
     
