@@ -18,7 +18,16 @@ class APIService {
         }
         
         try {
-            const response = await fetch(`./data/${datasetName}_fires.json`);
+            // Add cache-busting parameter and headers to always get fresh data
+            const cacheBuster = Date.now();
+            const response = await fetch(`./data/${datasetName}_fires.json?v=${cacheBuster}`, {
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            });
             if (!response.ok) {
                 throw new Error(`Failed to load ${datasetName} data: ${response.status}`);
             }
@@ -43,7 +52,16 @@ class APIService {
     // Check data freshness
     async getDataStatus() {
         try {
-            const response = await fetch('./data/status.json');
+            // Add cache-busting parameter and headers for status.json too
+            const cacheBuster = Date.now();
+            const response = await fetch(`./data/status.json?v=${cacheBuster}`, {
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            });
             if (response.ok) {
                 return await response.json();
             }
