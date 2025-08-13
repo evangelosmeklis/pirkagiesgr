@@ -38,10 +38,10 @@ class FireDataFetcher:
         all_fires = []
         countries = [('GRC', 'Greece'), ('CYP', 'Cyprus')]
         
-        # Primary and fallback NASA FIRMS URLs (using the working format)
+        # Primary and fallback NASA FIRMS URLs
         base_urls = [
-            'https://firms.modaps.eosdis.nasa.gov/api/country/csv'
-            'https://firms2.modaps.eosdis.nasa.gov/api/country/csv'
+            'https://firms.modaps.eosdis.nasa.gov',
+            'https://firms2.modaps.eosdis.nasa.gov'
         ]
         
         for country_code, country_name in countries:
@@ -51,8 +51,8 @@ class FireDataFetcher:
             # Try each URL until one works
             for url_index, base_url in enumerate(base_urls):
                 try:
-                    # Use the correct NASA FIRMS API format: base/apikey/source/country/days
-                    url = f'{base_url}/{self.nasa_api_key}/{source}/{country_code}/{days}'
+                    # Use the correct NASA FIRMS API format: base/api/country/csv/apikey/source/country/days
+                    url = f'{base_url}/api/country/csv/{self.nasa_api_key}/{source}/{country_code}/{days}'
                     url_label = "primary" if url_index == 0 else "fallback"
                     
                     print(f"📡 Fetching {source} data for {country_name} (last {days} days) using {url_label} URL...")

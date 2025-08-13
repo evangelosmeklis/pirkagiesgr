@@ -273,10 +273,6 @@
                 <i class="fas fa-map-marked-alt"></i>
                 <span data-i18n="live-map">Ζωντανός Χάρτης Πυρκαγιών</span>
             </button>
-            <button class="tab-btn" data-tab="historical">
-                <i class="fas fa-history"></i>
-                <span data-i18n="last-7-days">Πυρκαγιές Τελευταίων 7 Ημερών</span>
-            </button>
             <button class="tab-btn" data-tab="about">
                 <i class="fas fa-info-circle"></i>
                 <span data-i18n="about">Σχετικά</span>
@@ -376,60 +372,6 @@
                 </div>
             </div>
 
-            <!-- Historical Fires Tab -->
-            <div class="tab-content" id="historical-tab">
-                <div class="historical-container">
-                    <div class="historical-header">
-                        <h2 data-i18n="historical-fire-data">Ιστορικά Δεδομένα Πυρκαγιών</h2>
-                        <p class="historical-disclaimer" data-i18n="historical-disclaimer">📅 Τα ιστορικά δεδομένα δείχνουν τις τελευταίες 7 ημέρες ανιχνεύσεων πυρκαγιάς από όλους τους διαθέσιμους δορυφόρους NASA (MODIS & VIIRS).</p>
-                        <div class="historical-controls">
-                            <input type="date" id="start-date" class="date-input" data-i18n="start-date" title="Ημερομηνία Έναρξης">
-                            <input type="date" id="end-date" class="date-input" data-i18n="end-date" title="Ημερομηνία Λήξης">
-                            <button class="btn btn-primary" id="filter-historical" data-i18n="filter">Φίλτρο</button>
-                        </div>
-                    </div>
-                    <div class="historical-stats">
-                        <div class="stat-card">
-                            <i class="fas fa-fire"></i>
-                            <div class="stat-info">
-                                <span class="stat-value" id="total-historical">0</span>
-                                <span class="stat-title" data-i18n="total-fires">Συνολικές Πυρκαγιές</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <i class="fas fa-calendar-day"></i>
-                            <div class="stat-info">
-                                <span class="stat-value" id="avg-daily">0</span>
-                                <span class="stat-title" data-i18n="avg-daily">Μέσος Ημερήσιος</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <i class="fas fa-thermometer-three-quarters"></i>
-                            <div class="stat-info">
-                                <span class="stat-value" id="avg-intensity">0</span>
-                                <span class="stat-title" data-i18n="avg-intensity">Μέση Ένταση</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="historical-table-container">
-                        <table class="historical-table" id="historical-table">
-                            <thead>
-                                <tr>
-                                    <th data-i18n="detection-time-greece">Ώρα Ανίχνευσης (Ελλάδα)</th>
-                                    <th data-i18n="location">Τοποθεσία:</th>
-                                    <th data-i18n="confidence">Βεβαιότητα</th>
-                                    <th data-i18n="brightness">Φωτεινότητα</th>
-                                    <th>FRP</th>
-                                    <th data-i18n="satellite">Δορυφόρος:</th>
-                                </tr>
-                            </thead>
-                            <tbody id="historical-tbody">
-                                <!-- Historical data will be populated here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
 
 
 

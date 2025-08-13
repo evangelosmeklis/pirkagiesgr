@@ -63,7 +63,7 @@ class APIService {
             } else if (days <= 1) {
                 datasetName = 'recent'; // Last 24 hours
             } else {
-                datasetName = 'historical'; // Longer periods
+                datasetName = 'recent'; // Use recent data for longer periods too
             }
             
             const data = await this.loadStaticData(datasetName);

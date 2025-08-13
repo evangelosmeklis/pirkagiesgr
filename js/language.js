@@ -16,7 +16,6 @@ class LanguageManager {
                 
                 // Navigation
                 'live-map': 'Ζωντανός Χάρτης Πυρκαγιών',
-                'last-7-days': 'Πυρκαγιές Τελευταίων 7 Ημερών',
                 'about': 'Σχετικά',
                 
                 // Disclaimer banner
@@ -56,18 +55,6 @@ class LanguageManager {
                 'viirs-thermal-detection': 'Θερμική Ανίχνευση VIIRS (≥50% βεβαιότητα)',
                 'low-confidence-detection': 'Ανίχνευση Χαμηλής Βεβαιότητας (<50%)',
                 
-                // Historical Tab
-                'historical-fire-data': 'Ιστορικά Δεδομένα Πυρκαγιών',
-                'historical-disclaimer': '📅 Τα ιστορικά δεδομένα δείχνουν τις τελευταίες 7 ημέρες ανιχνεύσεων πυρκαγιάς από δορυφόρους NASA MODIS.',
-                'start-date': 'Ημερομηνία Έναρξης',
-                'end-date': 'Ημερομηνία Λήξης',
-                'filter': 'Φίλτρο',
-                'total-fires': 'Συνολικές Πυρκαγιές',
-                'avg-daily': 'Μέσος Ημερήσιος',
-                'avg-intensity': 'Μέση Ένταση',
-                'detection-time-greece': 'Ώρα Ανίχνευσης (Ελλάδα)',
-                'confidence': 'Βεβαιότητα',
-                'brightness': 'Φωτεινότητα',
                 
                 // About Tab
                 'about-title': '🔥 PirkagiesGr',
@@ -141,8 +128,6 @@ class LanguageManager {
                 // Messages
                 'loading': 'Φόρτωση...',
                 'loading-fire-data': 'Φόρτωση δεδομένων πυρκαγιάς...',
-                'loading-historical': 'Φόρτωση ιστορικών δεδομένων πυρκαγιάς...',
-                'filtering-historical': 'Φιλτράρισμα ιστορικών δεδομένων...',
                 'failed-to-load': 'Απέτυχε η φόρτωση δεδομένων πυρκαγιάς',
                 'select-dates': 'Παρακαλώ επιλέξτε ημερομηνίες έναρξης και λήξης',
                 'data-7-days-only': 'Ιστορικά δεδομένα διαθέσιμα μόνο για τις τελευταίες 7 ημέρες',
@@ -205,18 +190,6 @@ class LanguageManager {
                 'viirs-thermal-detection': 'VIIRS Thermal Detection (≥50% confidence)',
                 'low-confidence-detection': 'Low Confidence Detection (<50%)',
                 
-                // Historical Tab
-                'historical-fire-data': 'Historical Fire Data',
-                'historical-disclaimer': '📅 Historical data shows the last 7 days of fire detections from NASA MODIS satellites.',
-                'start-date': 'Start Date',
-                'end-date': 'End Date',
-                'filter': 'Filter',
-                'total-fires': 'Total Fires',
-                'avg-daily': 'Avg Daily',
-                'avg-intensity': 'Avg Intensity',
-                'detection-time-greece': 'Detection Time (Greece)',
-                'confidence': 'Confidence',
-                'brightness': 'Brightness',
                 
                 // About Tab
                 'about-title': '🔥 PirkagiesGr',
@@ -247,8 +220,6 @@ class LanguageManager {
                 // Messages
                 'loading': 'Loading...',
                 'loading-fire-data': 'Loading fire data...',
-                'loading-historical': 'Loading historical fire data...',
-                'filtering-historical': 'Filtering historical data...',
                 'failed-to-load': 'Failed to load fire data',
                 'select-dates': 'Please select both start and end dates',
                 'data-7-days-only': 'Historical data is only available for the last 7 days',
