@@ -6,15 +6,14 @@ Real-time wildfire monitoring for Greece using NASA satellite data.
 
 ## 🚀 Quick Start
 
-1. **Visit**: [https://your-github-username.github.io/pirkagiesgr](https://your-github-username.github.io/pirkagiesgr)
-2. **View live fire data** updated every 30 minutes automatically
+1. **Visit**: [pirkagies.gr](https://pirkagies.gr)
+2. **View live fire data** updated every 10 minutes automatically
 3. **Click fire markers** for detailed information
 
 ## ✨ Features
 
 - 🛰️ Real-time NASA FIRMS satellite data
 - 🗺️ Interactive map with fire markers
-- 📊 7-day historical fire data
 - 📱 Responsive dark theme design
 - 🔄 Automatic updates via GitHub Actions
 
