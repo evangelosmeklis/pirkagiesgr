@@ -1406,49 +1406,54 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    /* Hide banners on mobile to save space */
+    .beta-disclaimer,
+    .disclaimer-banner {
+        display: none !important;
+    }
+    
+    /* Simplify header for mobile - keep only active fires count */
+    .header-stats .stat-item:not(:first-child) {
+        display: none;
+    }
+    
+    /* Hide header controls (update schedule) on mobile */
+    .header-controls {
+        display: none !important;
+    }
+    
+    /* Hide site title text, keep only icon and short name */
+    .logo h1 {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    
     .header {
         position: relative;
-        padding: 0.75rem 0;
+        padding: 0.5rem 0;
     }
     
     .header-content {
-        flex-direction: column;
-        gap: 0.75rem;
+        flex-direction: row;
+        gap: 0.5rem;
         padding: 0 1rem;
         align-items: center;
-    }
-    
-    .logo {
-        order: 1;
+        justify-content: space-between;
     }
     
     .header-stats {
-        order: 2;
-        gap: 1.5rem;
-        width: 100%;
-        justify-content: center;
+        gap: 1rem;
     }
     
-    .header-controls {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-        flex-direction: column;
-        gap: 0.5rem;
+    .header-stats .stat-item .stat-number {
+        font-size: 1.25rem;
     }
     
-    .language-switcher {
-        order: 1;
+    .header-stats .stat-item .stat-label {
+        font-size: 0.75rem;
     }
     
-    .update-schedule-indicator {
-        order: 2;
-    }
     
-    .update-schedule-indicator {
-        padding: 0.5rem 1rem;
-        font-size: 0.8rem;
-    }
     
     .nav-tabs {
         flex-wrap: nowrap;
