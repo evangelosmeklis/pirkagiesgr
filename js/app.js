@@ -319,15 +319,11 @@ class GreeceFierAlert {
         // Clear existing list
         fireList.innerHTML = '';
         
-        // Sort fires by intensity (FRP) descending, then by confidence
+        // Sort fires by detection time descending (newest first)
         const sortedFires = [...this.activeFires].sort((a, b) => {
-            const aFrp = a.frp || 0;
-            const bFrp = b.frp || 0;
-            if (aFrp !== bFrp) return bFrp - aFrp;
-            
-            const aConf = typeof a.confidence === 'number' ? a.confidence : 50;
-            const bConf = typeof b.confidence === 'number' ? b.confidence : 50;
-            return bConf - aConf;
+            const aDateTime = new Date(`${a.acq_date}T${a.acq_time.toString().padStart(4, '0').substring(0, 2)}:${a.acq_time.toString().padStart(4, '0').substring(2, 4)}:00Z`);
+            const bDateTime = new Date(`${b.acq_date}T${b.acq_time.toString().padStart(4, '0').substring(0, 2)}:${b.acq_time.toString().padStart(4, '0').substring(2, 4)}:00Z`);
+            return bDateTime - aDateTime;
         });
         
         // Create fire list items
