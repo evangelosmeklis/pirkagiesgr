@@ -163,7 +163,7 @@ class GreeceFierAlert {
             // Check data status first
             const status = await this.apiService.getDataStatus();
             
-            const sources = ['MODIS_NRT', 'VIIRS_SNPP_NRT']; // Use both MODIS and VIIRS data
+            const sources = ['MODIS_NRT', 'VIIRS_SNPP_NRT', 'VIIRS_NOAA20_NRT', 'VIIRS_NOAA21_NRT']; // Use all satellite sources
             let days = parseFloat(document.getElementById('time-filter').value);
             const confidence = document.getElementById('confidence-filter').value;
             
@@ -172,7 +172,10 @@ class GreeceFierAlert {
             
             // Use frontend API service for direct calls to NASA FIRMS
             const data = await this.apiService.getFireData(sources, adjustedDays, confidence);
-            this.activeFires = data.fires || [];
+            
+            // Deduplicate fires that might be detected by multiple satellites
+            const allFires = data.fires || [];
+            this.activeFires = this.deduplicateFires(allFires);
             
             // Check if we're using fallback data and show warning
             if (status && (status.using_fallback_data || status.status === 'fallback')) {
@@ -202,6 +205,47 @@ class GreeceFierAlert {
         } finally {
             this.hideLoading();
         }
+    }
+
+    deduplicateFires(fires) {
+        // Remove duplicate fires and cluster nearby detections into single fire events
+        // Large fires often appear as multiple detection points - group them together
+        const uniqueFires = [];
+        const threshold = 0.018; // Approximately 2km in degrees (0.018° ≈ 2km)
+        
+        fires.forEach(fire => {
+            let mergedWithExisting = false;
+            
+            for (let i = 0; i < uniqueFires.length; i++) {
+                const existingFire = uniqueFires[i];
+                const latDiff = Math.abs(fire.latitude - existingFire.latitude);
+                const lonDiff = Math.abs(fire.longitude - existingFire.longitude);
+                const dateSame = fire.acq_date === existingFire.acq_date;
+                
+                // If coordinates are very close and on the same date, merge into one fire event
+                if (dateSame && latDiff < threshold && lonDiff < threshold) {
+                    // Keep the fire with higher FRP (Fire Radiative Power) or confidence
+                    const currentFrp = fire.frp || 0;
+                    const existingFrp = existingFire.frp || 0;
+                    const currentConf = typeof fire.confidence === 'number' ? fire.confidence : 50;
+                    const existingConf = typeof existingFire.confidence === 'number' ? existingFire.confidence : 50;
+                    
+                    if (currentFrp > existingFrp || (currentFrp === existingFrp && currentConf > existingConf)) {
+                        // Replace with the more intense fire
+                        uniqueFires[i] = fire;
+                    }
+                    mergedWithExisting = true;
+                    break;
+                }
+            }
+            
+            if (!mergedWithExisting) {
+                uniqueFires.push(fire);
+            }
+        });
+        
+        console.log(`🔥 Deduplicated ${fires.length} fires down to ${uniqueFires.length} unique fires`);
+        return uniqueFires;
     }
 
     parseCSV(csvText) {
@@ -260,10 +304,13 @@ class GreeceFierAlert {
 
         this.filterFireMarkers();
         
-        // Fit map to show all fires if there are any
-        if (this.fireMarkers.length > 0) {
+        // Only auto-fit bounds if there are a reasonable number of fires
+        if (this.fireMarkers.length > 0 && this.fireMarkers.length <= 50) {
             const group = new L.featureGroup(this.fireMarkers);
             this.map.fitBounds(group.getBounds().pad(0.1));
+        } else if (this.fireMarkers.length > 50) {
+            // For many fires, just center on Greece without auto-zoom
+            console.log(`🔥 ${this.fireMarkers.length} fires detected - map auto-zoom disabled for performance`);
         }
     }
 
