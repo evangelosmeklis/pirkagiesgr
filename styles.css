@@ -1546,12 +1546,11 @@ body {
        screen and (max-device-width: 768px),
        screen and (max-width: 480px),
        screen and (max-device-width: 480px) {
-    /* FORCE HIDE ALL overlays and UI elements on mobile */
+    /* FORCE HIDE ALL overlays and UI elements on mobile (except fire-info-panel which works as bottom sheet) */
     .beta-disclaimer,
     .disclaimer-banner,
     .map-controls,
     .map-legend,
-    .fire-info-panel,
     .fire-list-sidebar,
     .time-range-banner,
     #time-range-banner,
@@ -1946,7 +1945,6 @@ body {
     body .disclaimer-banner,
     body .map-controls,
     body .map-legend,
-    body .fire-info-panel,
     body .time-range-banner,
     body #time-range-banner,
     body .notification,

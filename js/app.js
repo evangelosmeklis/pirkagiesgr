@@ -730,13 +730,12 @@ class GreeceFierAlert {
         if (isMobile) {
             console.log('🔧 Setting up mobile layout - hiding UI elements');
             
-            // FORCE HIDE ALL UI elements on mobile
+            // FORCE HIDE ALL UI elements on mobile (except fire-info-panel which works as bottom sheet)
             const elementsToHide = [
                 '.beta-disclaimer',
                 '.disclaimer-banner', 
                 '.map-controls',
                 '.map-legend',
-                '.fire-info-panel',
                 '.time-range-banner',
                 '#time-range-banner',
                 '.notification',
