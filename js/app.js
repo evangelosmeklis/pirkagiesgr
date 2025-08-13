@@ -593,17 +593,55 @@ class GreeceFierAlert {
         const isMobile = window.innerWidth <= 768;
         
         if (isMobile) {
-            // Start with controls collapsed on mobile
-            const mapControls = document.querySelector('.map-controls');
-            if (mapControls) {
-                mapControls.classList.add('collapsed');
-            }
+            console.log('🔧 Setting up mobile layout - hiding UI elements');
             
-            // Set initial toggle icon state
-            const toggleIcon = document.querySelector('#controls-toggle i');
-            if (toggleIcon) {
-                toggleIcon.className = 'fas fa-chevron-up';
-            }
+            // FORCE HIDE ALL UI elements on mobile
+            const elementsToHide = [
+                '.beta-disclaimer',
+                '.disclaimer-banner', 
+                '.map-controls',
+                '.map-legend',
+                '.fire-info-panel',
+                '.time-range-banner',
+                '#time-range-banner',
+                '.notification',
+                '.banner',
+                '.cookie-consent-banner',
+                '.loading-overlay'
+            ];
+            
+            elementsToHide.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(element => {
+                    element.style.display = 'none';
+                    element.style.visibility = 'hidden';
+                    element.style.opacity = '0';
+                    element.style.position = 'absolute';
+                    element.style.top = '-10000px';
+                    element.style.left = '-10000px';
+                    element.style.zIndex = '-999999';
+                });
+            });
+            
+            // Also hide any elements with these classes that get created later
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === 1) { // Element node
+                            elementsToHide.forEach(selector => {
+                                if (node.matches && node.matches(selector)) {
+                                    this.hideMobileElement(node);
+                                }
+                                // Also check children
+                                const children = node.querySelectorAll ? node.querySelectorAll(selector) : [];
+                                children.forEach(child => this.hideMobileElement(child));
+                            });
+                        }
+                    });
+                });
+            });
+            
+            observer.observe(document.body, { childList: true, subtree: true });
         }
         
         // Listen for orientation changes and resize events
@@ -618,8 +656,27 @@ class GreeceFierAlert {
         });
     }
     
+    hideMobileElement(element) {
+        // Helper method to completely hide elements on mobile
+        if (window.innerWidth <= 768) {
+            element.style.display = 'none';
+            element.style.visibility = 'hidden';
+            element.style.opacity = '0';
+            element.style.position = 'absolute';
+            element.style.top = '-10000px';
+            element.style.left = '-10000px';
+            element.style.zIndex = '-999999';
+        }
+    }
+    
     handleResponsiveChanges() {
         const isMobile = window.innerWidth <= 768;
+        
+        if (isMobile) {
+            // Re-apply mobile layout on orientation change
+            this.setupMobileLayout();
+        }
+        
         const mapControls = document.querySelector('.map-controls');
         
         if (isMobile && mapControls && !mapControls.classList.contains('collapsed')) {
