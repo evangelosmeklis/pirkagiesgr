@@ -65,6 +65,40 @@ class FireDataFetcher:
                     
                     if df.empty:
                         print(f"ℹ️ No {source} data found for {country_name} using {url_label} URL")
+                        
+                        # Fallback: area API ONLY for Greece (when country API returns no rows)
+                        if country_code == 'GRC':
+                            print(f"🔄 Trying area API fallback for Greece...")
+                            try:
+                                # Greece extremes (Wikipedia): West 19.3781E, South 35.8031N, East 29.6442E, North 42.0114N
+                                GRC_BBOX = '19.3781,35.8031,29.6442,42.0114'  # covers Othonoi..Gavdos..Strongyli (Kastellorizo)
+                                area_url = f'https://firms.modaps.eosdis.nasa.gov/api/area/csv/{self.nasa_api_key}/{source}/{GRC_BBOX}/{days}'
+                                
+                                area_response = requests.get(area_url, timeout=120)
+                                area_response.raise_for_status()
+                                
+                                # Parse CSV from area API
+                                area_df = pd.read_csv(StringIO(area_response.text))
+                                
+                                if not area_df.empty:
+                                    # Convert to list of dictionaries
+                                    area_fires = area_df.to_dict('records')
+                                    
+                                    # Add metadata
+                                    for fire in area_fires:
+                                        fire['data_source'] = source
+                                        fire['country'] = country_name
+                                        fire['id'] = f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}"
+                                        fire['fetch_timestamp'] = datetime.now(timezone.utc).isoformat()
+                                        fire['used_fallback'] = True
+                                    
+                                    all_fires.extend(area_fires)
+                                    print(f"✅ Fetched {len(area_fires)} fires from {source} in {country_name} using area API fallback")
+                                else:
+                                    print(f"ℹ️ Area API also returned no data for Greece")
+                                    
+                            except Exception as area_error:
+                                print(f"❌ Area API fallback failed for Greece: {area_error}")
                     else:
                         # Convert to list of dictionaries
                         fires = df.to_dict('records')
