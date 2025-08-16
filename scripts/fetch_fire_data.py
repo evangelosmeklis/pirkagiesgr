@@ -34,97 +34,109 @@ class FireDataFetcher:
         print(f"🗝️ NASA API Key: {'✅ Set' if self.nasa_api_key else '❌ Missing'}")
     
     def fetch_fires_from_source(self, source, days=1):
-        """Fetch fire data from a specific NASA FIRMS source for both Greece and Cyprus with URL fallback"""
+        """Fetch fire data from a specific NASA FIRMS source using area API as primary method"""
         all_fires = []
-        countries = [('GRC', 'Greece'), ('CYP', 'Cyprus')]
         
-        # Primary and fallback NASA FIRMS URLs
-        base_urls = [
-            'https://firms2.modaps.eosdis.nasa.gov'
+        # Define bounding boxes for Greece and Cyprus (more reliable than country codes)
+        regions = [
+            {
+                'name': 'Greece',
+                'bbox': '19.3781,35.8031,29.6442,42.0114',  # West, South, East, North
+                'description': 'Greece mainland and islands'
+            },
+            {
+                'name': 'Cyprus', 
+                'bbox': '32.2566,34.5718,34.5918,35.7014',  # Cyprus bounding box
+                'description': 'Cyprus island'
+            }
         ]
         
-        for country_code, country_name in countries:
+        for region in regions:
             success = False
             last_error = None
+            region_name = region['name']
+            bbox = region['bbox']
             
-            # Try each URL until one works
-            for url_index, base_url in enumerate(base_urls):
+            # Primary: use area API (more reliable than country API)
+            print(f"📡 Fetching {source} data for {region_name} (last {days} days) using area API...")
+            
+            try:
+                # Use NASA FIRMS area API: https://firms.modaps.eosdis.nasa.gov/api/area/csv/MAP_KEY/source/west,south,east,north/days
+                area_url = f'https://firms.modaps.eosdis.nasa.gov/api/area/csv/{self.nasa_api_key}/{source}/{bbox}/{days}'
+                
+                response = requests.get(area_url, timeout=120)
+                response.raise_for_status()
+                
+                # Parse CSV
+                from io import StringIO
+                df = pd.read_csv(StringIO(response.text))
+                
+                if df.empty:
+                    print(f"ℹ️ No {source} data found for {region_name} using area API")
+                else:
+                    # Convert to list of dictionaries
+                    fires = df.to_dict('records')
+                    
+                    # Add metadata
+                    for fire in fires:
+                        fire['data_source'] = source
+                        fire['region'] = region_name
+                        fire['id'] = f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}"
+                        fire['fetch_timestamp'] = datetime.now(timezone.utc).isoformat()
+                        fire['api_method'] = 'area_api'
+                    
+                    all_fires.extend(fires)
+                    print(f"✅ Fetched {len(fires)} fires from {source} in {region_name} using area API")
+                
+                success = True
+                
+            except Exception as e:
+                last_error = e
+                print(f"❌ Failed to fetch {source} for {region_name} using area API: {e}")
+                
+                # Fallback: try country API if area API fails
+                if region_name == 'Greece':
+                    country_code = 'GRC'
+                elif region_name == 'Cyprus':
+                    country_code = 'CYP'
+                else:
+                    continue
+                
+                print(f"🔄 Trying country API fallback for {region_name}...")
+                
                 try:
-                    # Use the correct NASA FIRMS API format: base/api/country/csv/apikey/source/country/days
-                    url = f'{base_url}/api/country/csv/{self.nasa_api_key}/{source}/{country_code}/{days}'
-                    url_label = "primary" if url_index == 0 else "fallback"
+                    country_url = f'https://firms2.modaps.eosdis.nasa.gov/api/country/csv/{self.nasa_api_key}/{source}/{country_code}/{days}'
                     
-                    print(f"📡 Fetching {source} data for {country_name} (last {days} days) using {url_label} URL...")
-                    
-                    response = requests.get(url, timeout=120)  # 10 minutes timeout for high traffic situations
+                    response = requests.get(country_url, timeout=120)
                     response.raise_for_status()
                     
                     # Parse CSV
-                    from io import StringIO
                     df = pd.read_csv(StringIO(response.text))
                     
-                    if df.empty:
-                        print(f"ℹ️ No {source} data found for {country_name} using {url_label} URL")
-                        
-                        # Fallback: area API ONLY for Greece (when country API returns no rows)
-                        if country_code == 'GRC':
-                            print(f"🔄 Trying area API fallback for Greece...")
-                            try:
-                                # Greece extremes (Wikipedia): West 19.3781E, South 35.8031N, East 29.6442E, North 42.0114N
-                                GRC_BBOX = '19.3781,35.8031,29.6442,42.0114'  # covers Othonoi..Gavdos..Strongyli (Kastellorizo)
-                                area_url = f'https://firms.modaps.eosdis.nasa.gov/api/area/csv/{self.nasa_api_key}/{source}/{GRC_BBOX}/{days}'
-                                
-                                area_response = requests.get(area_url, timeout=120)
-                                area_response.raise_for_status()
-                                
-                                # Parse CSV from area API
-                                area_df = pd.read_csv(StringIO(area_response.text))
-                                
-                                if not area_df.empty:
-                                    # Convert to list of dictionaries
-                                    area_fires = area_df.to_dict('records')
-                                    
-                                    # Add metadata
-                                    for fire in area_fires:
-                                        fire['data_source'] = source
-                                        fire['country'] = country_name
-                                        fire['id'] = f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}"
-                                        fire['fetch_timestamp'] = datetime.now(timezone.utc).isoformat()
-                                        fire['used_fallback'] = True
-                                    
-                                    all_fires.extend(area_fires)
-                                    print(f"✅ Fetched {len(area_fires)} fires from {source} in {country_name} using area API fallback")
-                                else:
-                                    print(f"ℹ️ Area API also returned no data for Greece")
-                                    
-                            except Exception as area_error:
-                                print(f"❌ Area API fallback failed for Greece: {area_error}")
-                    else:
+                    if not df.empty:
                         # Convert to list of dictionaries
                         fires = df.to_dict('records')
                         
                         # Add metadata
                         for fire in fires:
                             fire['data_source'] = source
-                            fire['country'] = country_name
+                            fire['region'] = region_name
                             fire['id'] = f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}"
                             fire['fetch_timestamp'] = datetime.now(timezone.utc).isoformat()
+                            fire['api_method'] = 'country_api_fallback'
                         
                         all_fires.extend(fires)
-                        print(f"✅ Fetched {len(fires)} fires from {source} in {country_name} using {url_label} URL")
-                    
-                    success = True
-                    break  # Success - don't try other URLs
-                    
-                except Exception as e:
-                    last_error = e
-                    print(f"❌ Failed to fetch {source} for {country_name} using {url_label} URL: {e}")
-                    continue  # Try next URL
+                        print(f"✅ Fetched {len(fires)} fires from {source} in {region_name} using country API fallback")
+                        success = True
+                    else:
+                        print(f"ℹ️ Country API also returned no data for {region_name}")
+                        
+                except Exception as country_error:
+                    print(f"❌ Country API fallback also failed for {region_name}: {country_error}")
             
-            # If no URL worked, log the final error
+            # If both methods failed, log the final error
             if not success:
-                print(f"❌ Failed to fetch {source} for {country_name} from all URLs. Last error: {last_error}")
-                continue
+                print(f"❌ Failed to fetch {source} for {region_name} from all methods. Last error: {last_error}")
         
         print(f"🔥 Total {len(all_fires)} fires from {source} (Greece + Cyprus)")
         return all_fires
@@ -200,7 +212,6 @@ class FireDataFetcher:
         
         # Track if we successfully fetched any new data
         successful_fetches = 0
-        total_expected_fetches = len(sources)  # Only fetching 24h data now for efficiency
         
         # Fetch recent data (24 hours) - this is our primary fetch for incremental updates
         print("📡 Fetching recent data (last 24 hours) from all satellites...")
