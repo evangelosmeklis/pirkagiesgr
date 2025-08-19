@@ -57,52 +57,17 @@ class FireDataFetcher:
             region_name = region['name']
             bbox = region['bbox']
             
-            # Primary: use area API (more reliable than country API)
-            print(f"📡 Fetching {source} data for {region_name} (last {days} days) using area API...")
+            # Get country code for this region
+            if region_name == 'Greece':
+                country_code = 'GRC'
+            elif region_name == 'Cyprus':
+                country_code = 'CYP'
+            else:
+                country_code = None
             
-            try:
-                # Use NASA FIRMS area API: https://firms.modaps.eosdis.nasa.gov/api/area/csv/MAP_KEY/source/west,south,east,north/days
-                area_url = f'https://firms.modaps.eosdis.nasa.gov/api/area/csv/{self.nasa_api_key}/{source}/{bbox}/{days}'
-                
-                response = requests.get(area_url, timeout=120)
-                response.raise_for_status()
-                
-                # Parse CSV
-                from io import StringIO
-                df = pd.read_csv(StringIO(response.text))
-                
-                if df.empty:
-                    print(f"ℹ️ No {source} data found for {region_name} using area API")
-                else:
-                    # Convert to list of dictionaries
-                    fires = df.to_dict('records')
-                    
-                    # Add metadata
-                    for fire in fires:
-                        fire['data_source'] = source
-                        fire['region'] = region_name
-                        fire['id'] = f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}"
-                        fire['fetch_timestamp'] = datetime.now(timezone.utc).isoformat()
-                        fire['api_method'] = 'area_api'
-                    
-                    all_fires.extend(fires)
-                    print(f"✅ Fetched {len(fires)} fires from {source} in {region_name} using area API")
-                
-                success = True
-                
-            except Exception as e:
-                last_error = e
-                print(f"❌ Failed to fetch {source} for {region_name} using area API: {e}")
-                
-                # Fallback: try country API if area API fails
-                if region_name == 'Greece':
-                    country_code = 'GRC'
-                elif region_name == 'Cyprus':
-                    country_code = 'CYP'
-                else:
-                    continue
-                
-                print(f"🔄 Trying country API fallback for {region_name}...")
+            # Primary: try country API first (when it's working)
+            if country_code:
+                print(f"📡 Fetching {source} data for {region_name} (last {days} days) using country API...")
                 
                 try:
                     country_url = f'https://firms2.modaps.eosdis.nasa.gov/api/country/csv/{self.nasa_api_key}/{source}/{country_code}/{days}'
@@ -110,10 +75,17 @@ class FireDataFetcher:
                     response = requests.get(country_url, timeout=120)
                     response.raise_for_status()
                     
+                    # Check if response contains "Invalid API call" (known issue)
+                    if "Invalid API call" in response.text:
+                        raise Exception("Country API returned 'Invalid API call' - API temporarily down")
+                    
                     # Parse CSV
+                    from io import StringIO
                     df = pd.read_csv(StringIO(response.text))
                     
-                    if not df.empty:
+                    if df.empty:
+                        print(f"ℹ️ No {source} data found for {region_name} using country API")
+                    else:
                         # Convert to list of dictionaries
                         fires = df.to_dict('records')
                         
@@ -123,16 +95,53 @@ class FireDataFetcher:
                             fire['region'] = region_name
                             fire['id'] = f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}"
                             fire['fetch_timestamp'] = datetime.now(timezone.utc).isoformat()
-                            fire['api_method'] = 'country_api_fallback'
+                            fire['api_method'] = 'country_api'
                         
                         all_fires.extend(fires)
-                        print(f"✅ Fetched {len(fires)} fires from {source} in {region_name} using country API fallback")
-                        success = True
+                        print(f"✅ Fetched {len(fires)} fires from {source} in {region_name} using country API")
+                    
+                    success = True
+                    
+                except Exception as e:
+                    last_error = e
+                    print(f"❌ Failed to fetch {source} for {region_name} using country API: {e}")
+            
+            # Fallback: use area API if country API fails or is unavailable
+            if not success:
+                print(f"🔄 Trying area API fallback for {region_name}...")
+                
+                try:
+                    # Use NASA FIRMS area API: https://firms.modaps.eosdis.nasa.gov/api/area/csv/MAP_KEY/source/west,south,east,north/days
+                    area_url = f'https://firms.modaps.eosdis.nasa.gov/api/area/csv/{self.nasa_api_key}/{source}/{bbox}/{days}'
+                    
+                    response = requests.get(area_url, timeout=120)
+                    response.raise_for_status()
+                    
+                    # Parse CSV
+                    from io import StringIO
+                    df = pd.read_csv(StringIO(response.text))
+                    
+                    if df.empty:
+                        print(f"ℹ️ No {source} data found for {region_name} using area API fallback")
                     else:
-                        print(f"ℹ️ Country API also returned no data for {region_name}")
+                        # Convert to list of dictionaries
+                        fires = df.to_dict('records')
                         
-                except Exception as country_error:
-                    print(f"❌ Country API fallback also failed for {region_name}: {country_error}")
+                        # Add metadata
+                        for fire in fires:
+                            fire['data_source'] = source
+                            fire['region'] = region_name
+                            fire['id'] = f"{fire.get('latitude', 0)}_{fire.get('longitude', 0)}_{fire.get('acq_date', '')}_{fire.get('acq_time', '')}"
+                            fire['fetch_timestamp'] = datetime.now(timezone.utc).isoformat()
+                            fire['api_method'] = 'area_api_fallback'
+                        
+                        all_fires.extend(fires)
+                        print(f"✅ Fetched {len(fires)} fires from {source} in {region_name} using area API fallback")
+                        success = True
+                        
+                except Exception as area_error:
+                    print(f"❌ Area API fallback also failed for {region_name}: {area_error}")
+                    last_error = area_error
             
             # If both methods failed, log the final error
             if not success:
