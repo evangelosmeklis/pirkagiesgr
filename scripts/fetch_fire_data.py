@@ -112,7 +112,7 @@ class FireDataFetcher:
                 
                 try:
                     # Use NASA FIRMS area API: https://firms.modaps.eosdis.nasa.gov/api/area/csv/MAP_KEY/source/west,south,east,north/days
-                    area_url = f'https://firms.modaps.eosdis.nasa.gov/api/area/csv/{self.nasa_api_key}/{source}/{bbox}/{days}'
+                    area_url = f'https://firms2.modaps.eosdis.nasa.gov/api/area/csv/{self.nasa_api_key}/{source}/{bbox}/{days}'
                     
                     response = requests.get(area_url, timeout=120)
                     response.raise_for_status()
