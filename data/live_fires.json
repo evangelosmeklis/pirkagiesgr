@@ -1,6 +1,153 @@
 {
   "fires": [
     {
+      "latitude": 38.7497,
+      "longitude": 26.9336,
+      "bright_ti4": 305.56,
+      "scan": 0.71,
+      "track": 0.75,
+      "acq_date": "2025-09-16",
+      "acq_time": 113,
+      "satellite": "N20",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 289.2,
+      "frp": 1.44,
+      "daynight": "N",
+      "data_source": "VIIRS_NOAA20_NRT",
+      "region": "Greece",
+      "id": "38.7497_26.9336_2025-09-16_113",
+      "fetch_timestamp": "2025-09-16T05:11:49.229292+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 38.75096,
+      "longitude": 26.93282,
+      "bright_ti4": 314.4,
+      "scan": 0.71,
+      "track": 0.75,
+      "acq_date": "2025-09-16",
+      "acq_time": 113,
+      "satellite": "N20",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 290.01,
+      "frp": 3.42,
+      "daynight": "N",
+      "data_source": "VIIRS_NOAA20_NRT",
+      "region": "Greece",
+      "id": "38.75096_26.93282_2025-09-16_113",
+      "fetch_timestamp": "2025-09-16T05:11:49.229309+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 38.75608,
+      "longitude": 26.93715,
+      "bright_ti4": 299.42,
+      "scan": 0.71,
+      "track": 0.75,
+      "acq_date": "2025-09-16",
+      "acq_time": 113,
+      "satellite": "N20",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 288.78,
+      "frp": 1.44,
+      "daynight": "N",
+      "data_source": "VIIRS_NOAA20_NRT",
+      "region": "Greece",
+      "id": "38.75608_26.93715_2025-09-16_113",
+      "fetch_timestamp": "2025-09-16T05:11:49.229314+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 39.35763,
+      "longitude": 22.98435,
+      "bright_ti4": 302.93,
+      "scan": 0.43,
+      "track": 0.62,
+      "acq_date": "2025-09-16",
+      "acq_time": 113,
+      "satellite": "N20",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 290.06,
+      "frp": 0.74,
+      "daynight": "N",
+      "data_source": "VIIRS_NOAA20_NRT",
+      "region": "Greece",
+      "id": "39.35763_22.98435_2025-09-16_113",
+      "fetch_timestamp": "2025-09-16T05:11:49.229317+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 39.86811,
+      "longitude": 26.24268,
+      "bright_ti4": 303.63,
+      "scan": 0.61,
+      "track": 0.71,
+      "acq_date": "2025-09-16",
+      "acq_time": 113,
+      "satellite": "N20",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 288.09,
+      "frp": 1.19,
+      "daynight": "N",
+      "data_source": "VIIRS_NOAA20_NRT",
+      "region": "Greece",
+      "id": "39.86811_26.24268_2025-09-16_113",
+      "fetch_timestamp": "2025-09-16T05:11:49.229320+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 41.02379,
+      "longitude": 28.54828,
+      "bright_ti4": 295.94,
+      "scan": 0.72,
+      "track": 0.76,
+      "acq_date": "2025-09-16",
+      "acq_time": 113,
+      "satellite": "N20",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 285.34,
+      "frp": 1.42,
+      "daynight": "N",
+      "data_source": "VIIRS_NOAA20_NRT",
+      "region": "Greece",
+      "id": "41.02379_28.54828_2025-09-16_113",
+      "fetch_timestamp": "2025-09-16T05:11:49.229323+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 41.49969,
+      "longitude": 19.74399,
+      "bright_ti4": 306.98,
+      "scan": 0.52,
+      "track": 0.5,
+      "acq_date": "2025-09-16",
+      "acq_time": 113,
+      "satellite": "N20",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 290.87,
+      "frp": 1.19,
+      "daynight": "N",
+      "data_source": "VIIRS_NOAA20_NRT",
+      "region": "Greece",
+      "id": "41.49969_19.74399_2025-09-16_113",
+      "fetch_timestamp": "2025-09-16T05:11:49.229327+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
       "latitude": 39.60773,
       "longitude": 27.87858,
       "bright_ti4": 298.64,
@@ -18,7 +165,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "39.60773_27.87858_2025-09-16_24",
-      "fetch_timestamp": "2025-09-16T04:45:21.035920+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412342+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -39,7 +186,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "39.86466_26.24304_2025-09-16_24",
-      "fetch_timestamp": "2025-09-16T04:45:21.035938+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412357+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -60,7 +207,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "40.2845_23.44395_2025-09-16_24",
-      "fetch_timestamp": "2025-09-16T04:45:21.035942+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412361+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -81,7 +228,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "40.44614_27.13223_2025-09-16_24",
-      "fetch_timestamp": "2025-09-16T04:45:21.035946+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412365+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -102,7 +249,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "40.77887_29.60113_2025-09-16_24",
-      "fetch_timestamp": "2025-09-16T04:45:21.035949+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412368+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -123,7 +270,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "41.08742_26.71229_2025-09-16_24",
-      "fetch_timestamp": "2025-09-16T04:45:21.035952+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412371+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -144,7 +291,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "41.10563_26.36773_2025-09-16_24",
-      "fetch_timestamp": "2025-09-16T04:45:21.035955+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412374+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -165,7 +312,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "41.30894_22.31808_2025-09-16_24",
-      "fetch_timestamp": "2025-09-16T04:45:21.035958+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412378+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -186,7 +333,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "41.50095_19.74445_2025-09-16_24",
-      "fetch_timestamp": "2025-09-16T04:45:21.035962+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412381+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -207,7 +354,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.37452_24.06119_2025-09-16_26",
-      "fetch_timestamp": "2025-09-16T04:45:21.035968+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412387+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -228,7 +375,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.42765_27.2188_2025-09-16_26",
-      "fetch_timestamp": "2025-09-16T04:45:21.035971+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412390+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -249,7 +396,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.73675_26.944_2025-09-16_26",
-      "fetch_timestamp": "2025-09-16T04:45:21.035974+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412393+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -270,7 +417,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.73904_26.93269_2025-09-16_26",
-      "fetch_timestamp": "2025-09-16T04:45:21.035977+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412396+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -291,7 +438,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.74063_26.96345_2025-09-16_26",
-      "fetch_timestamp": "2025-09-16T04:45:21.035980+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412399+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -312,7 +459,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.74408_26.94641_2025-09-16_26",
-      "fetch_timestamp": "2025-09-16T04:45:21.035983+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412402+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -333,7 +480,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.75003_26.9363_2025-09-16_26",
-      "fetch_timestamp": "2025-09-16T04:45:21.035986+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412405+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -354,7 +501,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "39.09141_27.51519_2025-09-16_26",
-      "fetch_timestamp": "2025-09-16T04:45:21.035989+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412408+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -375,7 +522,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "39.09997_27.51237_2025-09-16_26",
-      "fetch_timestamp": "2025-09-16T04:45:21.035992+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412411+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -396,7 +543,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "39.1137_27.52314_2025-09-16_26",
-      "fetch_timestamp": "2025-09-16T04:45:21.035995+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412415+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -417,7 +564,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "39.16649_27.63169_2025-09-16_26",
-      "fetch_timestamp": "2025-09-16T04:45:21.035998+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412418+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -438,13 +585,13 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "39.35257_22.98493_2025-09-16_26",
-      "fetch_timestamp": "2025-09-16T04:45:21.036002+00:00",
+      "fetch_timestamp": "2025-09-16T05:11:50.412421+00:00",
       "api_method": "area_api_fallback"
     }
   ],
-  "count": 21,
+  "count": 28,
   "dataset": "live",
-  "last_updated": "2025-09-16T04:45:21.618899+00:00",
+  "last_updated": "2025-09-16T05:11:50.994166+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
