@@ -18,7 +18,7 @@
       "data_source": "MODIS_NRT",
       "region": "Greece",
       "id": "39.34329_20.46163_2025-11-05_828",
-      "fetch_timestamp": "2025-11-05T11:44:10.429471+00:00",
+      "fetch_timestamp": "2025-11-05T12:25:48.240716+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -39,7 +39,28 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Greece",
       "id": "41.50145_19.74499_2025-11-05_34",
-      "fetch_timestamp": "2025-11-05T11:44:11.950516+00:00",
+      "fetch_timestamp": "2025-11-05T12:25:49.269030+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 37.28165,
+      "longitude": 27.70903,
+      "bright_ti4": 325.31,
+      "scan": 0.41,
+      "track": 0.61,
+      "acq_date": "2025-11-05",
+      "acq_time": 1017,
+      "satellite": "N20",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 291.18,
+      "frp": 1.27,
+      "daynight": "D",
+      "data_source": "VIIRS_NOAA20_NRT",
+      "region": "Greece",
+      "id": "37.28165_27.70903_2025-11-05_1017",
+      "fetch_timestamp": "2025-11-05T12:25:49.269043+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -60,7 +81,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "41.49995_19.74438_2025-11-05_126",
-      "fetch_timestamp": "2025-11-05T11:44:12.788639+00:00",
+      "fetch_timestamp": "2025-11-05T12:25:49.772564+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -81,13 +102,13 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "41.50043_19.74352_2025-11-05_126",
-      "fetch_timestamp": "2025-11-05T11:44:12.788651+00:00",
+      "fetch_timestamp": "2025-11-05T12:25:49.772578+00:00",
       "api_method": "area_api_fallback"
     }
   ],
-  "count": 4,
+  "count": 5,
   "dataset": "recent",
-  "last_updated": "2025-11-05T11:44:13.158514+00:00",
+  "last_updated": "2025-11-05T12:25:50.022156+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
