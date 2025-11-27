@@ -18,13 +18,13 @@
       "data_source": "MODIS_NRT",
       "region": "Greece",
       "id": "40.13236_27.91988_2025-11-27_807",
-      "fetch_timestamp": "2025-11-27T18:43:43.058029+00:00",
+      "fetch_timestamp": "2025-11-27T19:10:04.994818+00:00",
       "api_method": "area_api_fallback"
     }
   ],
   "count": 1,
   "dataset": "recent",
-  "last_updated": "2025-11-27T18:43:47.515622+00:00",
+  "last_updated": "2025-11-27T19:10:05.905750+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
