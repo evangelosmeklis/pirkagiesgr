@@ -1,6 +1,27 @@
 {
   "fires": [
     {
+      "latitude": 41.50407,
+      "longitude": 19.74313,
+      "bright_ti4": 300.7,
+      "scan": 0.53,
+      "track": 0.5,
+      "acq_date": "2025-12-21",
+      "acq_time": 115,
+      "satellite": "N20",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 277.18,
+      "frp": 1.19,
+      "daynight": "N",
+      "data_source": "VIIRS_NOAA20_NRT",
+      "region": "Greece",
+      "id": "41.50407_19.74313_2025-12-21_115",
+      "fetch_timestamp": "2025-12-21T04:49:34.236598+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
       "latitude": 37.08458,
       "longitude": 21.84002,
       "bright_ti4": 330.71,
@@ -18,7 +39,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "37.08458_21.84002_2025-12-21_26",
-      "fetch_timestamp": "2025-12-21T04:08:32.844506+00:00",
+      "fetch_timestamp": "2025-12-21T04:49:34.703816+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -39,13 +60,13 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "41.50079_19.74121_2025-12-21_26",
-      "fetch_timestamp": "2025-12-21T04:08:32.844523+00:00",
+      "fetch_timestamp": "2025-12-21T04:49:34.703828+00:00",
       "api_method": "area_api_fallback"
     }
   ],
-  "count": 2,
+  "count": 3,
   "dataset": "live",
-  "last_updated": "2025-12-21T04:08:32.999221+00:00",
+  "last_updated": "2025-12-21T04:49:34.939213+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
