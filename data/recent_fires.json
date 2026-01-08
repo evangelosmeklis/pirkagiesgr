@@ -18,13 +18,13 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Greece",
       "id": "39.38696_22.80882_2026-01-08_37",
-      "fetch_timestamp": "2026-01-08T09:21:05.298270+00:00",
+      "fetch_timestamp": "2026-01-08T09:53:15.529942+00:00",
       "api_method": "area_api_fallback"
     }
   ],
   "count": 1,
   "dataset": "recent",
-  "last_updated": "2026-01-08T09:21:05.750918+00:00",
+  "last_updated": "2026-01-08T09:53:17.411272+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
