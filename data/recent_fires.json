@@ -1,6 +1,27 @@
 {
   "fires": [
     {
+      "latitude": 38.39413,
+      "longitude": 23.14772,
+      "brightness": 300.92,
+      "scan": 1.78,
+      "track": 1.31,
+      "acq_date": "2026-01-11",
+      "acq_time": 1242,
+      "satellite": "Aqua",
+      "instrument": "MODIS",
+      "confidence": 38,
+      "version": "6.1NRT",
+      "bright_t31": 286.42,
+      "frp": 11.68,
+      "daynight": "D",
+      "data_source": "MODIS_NRT",
+      "region": "Greece",
+      "id": "38.39413_23.14772_2026-01-11_1242",
+      "fetch_timestamp": "2026-01-11T13:42:28.896712+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
       "latitude": 40.69844,
       "longitude": 22.95189,
       "bright_ti4": 296.86,
@@ -18,7 +39,7 @@
       "data_source": "VIIRS_SNPP_NRT",
       "region": "Greece",
       "id": "40.69844_22.95189_2026-01-11_102",
-      "fetch_timestamp": "2026-01-11T13:09:59.580253+00:00",
+      "fetch_timestamp": "2026-01-11T13:42:29.382795+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -39,7 +60,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.12904_23.52546_2026-01-11_32",
-      "fetch_timestamp": "2026-01-11T13:10:00.236599+00:00",
+      "fetch_timestamp": "2026-01-11T13:42:30.380287+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -60,7 +81,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "41.01463_27.9611_2026-01-11_32",
-      "fetch_timestamp": "2026-01-11T13:10:00.236610+00:00",
+      "fetch_timestamp": "2026-01-11T13:42:30.380298+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -81,13 +102,13 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "41.01954_27.95805_2026-01-11_32",
-      "fetch_timestamp": "2026-01-11T13:10:00.236615+00:00",
+      "fetch_timestamp": "2026-01-11T13:42:30.380303+00:00",
       "api_method": "area_api_fallback"
     }
   ],
-  "count": 4,
+  "count": 5,
   "dataset": "recent",
-  "last_updated": "2026-01-11T13:10:00.396077+00:00",
+  "last_updated": "2026-01-11T13:42:30.655346+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
