@@ -18,7 +18,7 @@
       "data_source": "VIIRS_SNPP_NRT",
       "region": "Greece",
       "id": "39.86526_26.242_2026-01-24_17",
-      "fetch_timestamp": "2026-01-24T19:43:08.743295+00:00",
+      "fetch_timestamp": "2026-01-24T20:13:57.507683+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -39,13 +39,13 @@
       "data_source": "VIIRS_SNPP_NRT",
       "region": "Greece",
       "id": "40.77993_29.60361_2026-01-24_17",
-      "fetch_timestamp": "2026-01-24T19:43:08.743314+00:00",
+      "fetch_timestamp": "2026-01-24T20:13:57.507697+00:00",
       "api_method": "area_api_fallback"
     }
   ],
   "count": 2,
   "dataset": "recent",
-  "last_updated": "2026-01-24T19:43:12.088148+00:00",
+  "last_updated": "2026-01-24T20:13:58.423240+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
