@@ -18,7 +18,7 @@
       "data_source": "VIIRS_SNPP_NRT",
       "region": "Greece",
       "id": "38.12828_23.52539_2026-01-30_5",
-      "fetch_timestamp": "2026-01-30T12:35:01.497549+00:00",
+      "fetch_timestamp": "2026-01-30T13:38:59.021668+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -39,7 +39,7 @@
       "data_source": "VIIRS_SNPP_NRT",
       "region": "Greece",
       "id": "38.12928_23.52675_2026-01-30_5",
-      "fetch_timestamp": "2026-01-30T12:35:01.497565+00:00",
+      "fetch_timestamp": "2026-01-30T13:38:59.021684+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -60,7 +60,7 @@
       "data_source": "VIIRS_SNPP_NRT",
       "region": "Greece",
       "id": "38.74228_26.95218_2026-01-30_7",
-      "fetch_timestamp": "2026-01-30T12:35:01.497569+00:00",
+      "fetch_timestamp": "2026-01-30T13:38:59.021689+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -81,7 +81,49 @@
       "data_source": "VIIRS_SNPP_NRT",
       "region": "Greece",
       "id": "38.74294_26.94769_2026-01-30_7",
-      "fetch_timestamp": "2026-01-30T12:35:01.497573+00:00",
+      "fetch_timestamp": "2026-01-30T13:38:59.021693+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 38.032,
+      "longitude": 23.60314,
+      "bright_ti4": 329.47,
+      "scan": 0.38,
+      "track": 0.36,
+      "acq_date": "2026-01-30",
+      "acq_time": 1127,
+      "satellite": "N",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 289.79,
+      "frp": 2.04,
+      "daynight": "D",
+      "data_source": "VIIRS_SNPP_NRT",
+      "region": "Greece",
+      "id": "38.032_23.60314_2026-01-30_1127",
+      "fetch_timestamp": "2026-01-30T13:38:59.021696+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 38.88025,
+      "longitude": 22.50319,
+      "bright_ti4": 345.93,
+      "scan": 0.39,
+      "track": 0.36,
+      "acq_date": "2026-01-30",
+      "acq_time": 1127,
+      "satellite": "N",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 274.74,
+      "frp": 6.59,
+      "daynight": "D",
+      "data_source": "VIIRS_SNPP_NRT",
+      "region": "Greece",
+      "id": "38.88025_22.50319_2026-01-30_1127",
+      "fetch_timestamp": "2026-01-30T13:38:59.021700+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -102,7 +144,7 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Greece",
       "id": "37.91956_23.07078_2026-01-30_26",
-      "fetch_timestamp": "2026-01-30T12:35:02.001542+00:00",
+      "fetch_timestamp": "2026-01-30T13:38:59.357478+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -123,7 +165,7 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Greece",
       "id": "38.12886_23.52643_2026-01-30_26",
-      "fetch_timestamp": "2026-01-30T12:35:02.001552+00:00",
+      "fetch_timestamp": "2026-01-30T13:38:59.357489+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -144,13 +186,34 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Greece",
       "id": "38.37507_24.06008_2026-01-30_26",
-      "fetch_timestamp": "2026-01-30T12:35:02.001557+00:00",
+      "fetch_timestamp": "2026-01-30T13:38:59.357494+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 38.39498,
+      "longitude": 23.11657,
+      "bright_ti4": 330.38,
+      "scan": 0.42,
+      "track": 0.45,
+      "acq_date": "2026-01-30",
+      "acq_time": 1057,
+      "satellite": "N21",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 289.19,
+      "frp": 3.95,
+      "daynight": "D",
+      "data_source": "VIIRS_NOAA21_NRT",
+      "region": "Greece",
+      "id": "38.39498_23.11657_2026-01-30_1057",
+      "fetch_timestamp": "2026-01-30T13:38:59.691219+00:00",
       "api_method": "area_api_fallback"
     }
   ],
-  "count": 7,
+  "count": 10,
   "dataset": "recent",
-  "last_updated": "2026-01-30T12:35:02.735389+00:00",
+  "last_updated": "2026-01-30T13:38:59.862058+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
