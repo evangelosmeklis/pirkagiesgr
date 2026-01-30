@@ -2,7 +2,7 @@
   "fires": [],
   "count": 0,
   "dataset": "live",
-  "last_updated": "2026-01-29T23:43:59.456619+00:00",
+  "last_updated": "2026-01-30T01:15:07.517913+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
@@ -15,5 +15,5 @@
     "east": 34.8,
     "west": 19.5
   },
-  "using_fallback_data": false
+  "using_fallback_data": true
 }
