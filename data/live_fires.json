@@ -18,13 +18,13 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Cyprus",
       "id": "34.72635_33.31643_2026-02-02_20",
-      "fetch_timestamp": "2026-02-02T11:59:08.018086+00:00",
+      "fetch_timestamp": "2026-02-02T13:04:11.667304+00:00",
       "api_method": "area_api_fallback"
     }
   ],
   "count": 1,
   "dataset": "live",
-  "last_updated": "2026-02-02T11:59:08.018499+00:00",
+  "last_updated": "2026-02-02T13:04:11.667703+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
