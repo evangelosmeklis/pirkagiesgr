@@ -1,10 +1,11 @@
 {
-  "last_update": "2026-02-07T23:59:31.733432+00:00",
+  "last_update": "2026-02-08T02:47:45.448492+00:00",
   "datasets": {
     "live": 31,
     "recent": 31
   },
-  "status": "success",
-  "using_fallback_data": false,
-  "nasa_api_available": true
+  "status": "fallback",
+  "using_fallback_data": true,
+  "nasa_api_available": false,
+  "message": "NASA FIRMS API temporarily unavailable - displaying last known fire data"
 }
