@@ -18,7 +18,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.73691_26.94956_2026-02-17_37",
-      "fetch_timestamp": "2026-02-17T06:35:59.785154+00:00",
+      "fetch_timestamp": "2026-02-17T07:34:48.638610+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -39,7 +39,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.7381_26.94435_2026-02-17_37",
-      "fetch_timestamp": "2026-02-17T06:35:59.785172+00:00",
+      "fetch_timestamp": "2026-02-17T07:34:48.638627+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -60,7 +60,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.74112_26.95127_2026-02-17_37",
-      "fetch_timestamp": "2026-02-17T06:35:59.785177+00:00",
+      "fetch_timestamp": "2026-02-17T07:34:48.638632+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -81,7 +81,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.74655_26.94762_2026-02-17_37",
-      "fetch_timestamp": "2026-02-17T06:35:59.785181+00:00",
+      "fetch_timestamp": "2026-02-17T07:34:48.638635+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -102,7 +102,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.74896_26.93701_2026-02-17_37",
-      "fetch_timestamp": "2026-02-17T06:35:59.785184+00:00",
+      "fetch_timestamp": "2026-02-17T07:34:48.638639+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -123,7 +123,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.75317_26.93869_2026-02-17_37",
-      "fetch_timestamp": "2026-02-17T06:35:59.785187+00:00",
+      "fetch_timestamp": "2026-02-17T07:34:48.638642+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -144,13 +144,13 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.78682_26.91911_2026-02-17_37",
-      "fetch_timestamp": "2026-02-17T06:35:59.785190+00:00",
+      "fetch_timestamp": "2026-02-17T07:34:48.638645+00:00",
       "api_method": "area_api_fallback"
     }
   ],
   "count": 7,
   "dataset": "recent",
-  "last_updated": "2026-02-17T06:35:59.953302+00:00",
+  "last_updated": "2026-02-17T07:34:48.775987+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
