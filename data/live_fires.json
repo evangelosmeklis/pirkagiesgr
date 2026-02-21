@@ -18,7 +18,7 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Greece",
       "id": "39.38843_22.80537_2026-02-21_13",
-      "fetch_timestamp": "2026-02-21T03:32:06.981803+00:00",
+      "fetch_timestamp": "2026-02-21T04:53:49.421419+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -39,7 +39,7 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Greece",
       "id": "39.61_27.8787_2026-02-21_13",
-      "fetch_timestamp": "2026-02-21T03:32:06.981820+00:00",
+      "fetch_timestamp": "2026-02-21T04:53:49.421438+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -60,7 +60,7 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Greece",
       "id": "41.02126_28.55717_2026-02-21_13",
-      "fetch_timestamp": "2026-02-21T03:32:06.981825+00:00",
+      "fetch_timestamp": "2026-02-21T04:53:49.421442+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -81,13 +81,34 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Cyprus",
       "id": "34.7235_33.31616_2026-02-21_13",
-      "fetch_timestamp": "2026-02-21T03:32:07.645299+00:00",
+      "fetch_timestamp": "2026-02-21T04:53:50.090168+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 39.38755,
+      "longitude": 22.80538,
+      "bright_ti4": 315.11,
+      "scan": 0.59,
+      "track": 0.53,
+      "acq_date": "2026-02-21",
+      "acq_time": 104,
+      "satellite": "N21",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 277.87,
+      "frp": 2.12,
+      "daynight": "N",
+      "data_source": "VIIRS_NOAA21_NRT",
+      "region": "Greece",
+      "id": "39.38755_22.80538_2026-02-21_104",
+      "fetch_timestamp": "2026-02-21T04:53:50.752092+00:00",
       "api_method": "area_api_fallback"
     }
   ],
-  "count": 4,
+  "count": 5,
   "dataset": "live",
-  "last_updated": "2026-02-21T03:32:08.947158+00:00",
+  "last_updated": "2026-02-21T04:53:51.418240+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
