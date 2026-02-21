@@ -18,7 +18,7 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Greece",
       "id": "39.38843_22.80537_2026-02-21_13",
-      "fetch_timestamp": "2026-02-21T11:50:24.473084+00:00",
+      "fetch_timestamp": "2026-02-21T12:28:50.884910+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -39,7 +39,7 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Greece",
       "id": "39.61_27.8787_2026-02-21_13",
-      "fetch_timestamp": "2026-02-21T11:50:24.473103+00:00",
+      "fetch_timestamp": "2026-02-21T12:28:50.884931+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -60,7 +60,7 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Greece",
       "id": "41.02126_28.55717_2026-02-21_13",
-      "fetch_timestamp": "2026-02-21T11:50:24.473107+00:00",
+      "fetch_timestamp": "2026-02-21T12:28:50.884936+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -81,7 +81,7 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Cyprus",
       "id": "34.7235_33.31616_2026-02-21_13",
-      "fetch_timestamp": "2026-02-21T11:50:24.822787+00:00",
+      "fetch_timestamp": "2026-02-21T12:28:51.414062+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -102,13 +102,55 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "39.38755_22.80538_2026-02-21_104",
-      "fetch_timestamp": "2026-02-21T11:50:25.202640+00:00",
+      "fetch_timestamp": "2026-02-21T12:28:51.937028+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 34.76254,
+      "longitude": 33.17126,
+      "bright_ti4": 344.91,
+      "scan": 0.39,
+      "track": 0.36,
+      "acq_date": "2026-02-21",
+      "acq_time": 1045,
+      "satellite": "N21",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 297,
+      "frp": 4.13,
+      "daynight": "D",
+      "data_source": "VIIRS_NOAA21_NRT",
+      "region": "Cyprus",
+      "id": "34.76254_33.17126_2026-02-21_1045",
+      "fetch_timestamp": "2026-02-21T12:28:52.466639+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 34.87914,
+      "longitude": 32.47482,
+      "bright_ti4": 328.74,
+      "scan": 0.4,
+      "track": 0.37,
+      "acq_date": "2026-02-21",
+      "acq_time": 1045,
+      "satellite": "N21",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 292,
+      "frp": 1.74,
+      "daynight": "D",
+      "data_source": "VIIRS_NOAA21_NRT",
+      "region": "Cyprus",
+      "id": "34.87914_32.47482_2026-02-21_1045",
+      "fetch_timestamp": "2026-02-21T12:28:52.466655+00:00",
       "api_method": "area_api_fallback"
     }
   ],
-  "count": 5,
+  "count": 7,
   "dataset": "live",
-  "last_updated": "2026-02-21T11:50:25.594867+00:00",
+  "last_updated": "2026-02-21T12:28:52.467173+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
