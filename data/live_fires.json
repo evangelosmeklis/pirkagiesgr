@@ -1431,7 +1431,7 @@
   ],
   "count": 68,
   "dataset": "live",
-  "last_updated": "2026-03-03T23:44:34.494142+00:00",
+  "last_updated": "2026-03-04T01:15:45.613478+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
@@ -1444,5 +1444,5 @@
     "east": 34.8,
     "west": 19.5
   },
-  "using_fallback_data": false
+  "using_fallback_data": true
 }
