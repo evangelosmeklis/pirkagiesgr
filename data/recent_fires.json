@@ -18,13 +18,13 @@
       "data_source": "VIIRS_SNPP_NRT",
       "region": "Greece",
       "id": "38.42765_27.21657_2026-03-18_26",
-      "fetch_timestamp": "2026-03-18T09:34:09.845269+00:00",
+      "fetch_timestamp": "2026-03-18T10:31:54.872288+00:00",
       "api_method": "area_api_fallback"
     }
   ],
   "count": 1,
   "dataset": "recent",
-  "last_updated": "2026-03-18T09:34:12.910112+00:00",
+  "last_updated": "2026-03-18T10:31:58.008169+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
