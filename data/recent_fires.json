@@ -1,6 +1,48 @@
 {
   "fires": [
     {
+      "latitude": 41.47086,
+      "longitude": 21.37376,
+      "bright_ti4": 334.07,
+      "scan": 0.54,
+      "track": 0.51,
+      "acq_date": "2026-03-22",
+      "acq_time": 1214,
+      "satellite": "N",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 283.91,
+      "frp": 2.85,
+      "daynight": "D",
+      "data_source": "VIIRS_SNPP_NRT",
+      "region": "Greece",
+      "id": "41.47086_21.37376_2026-03-22_1214",
+      "fetch_timestamp": "2026-03-22T15:18:19.221322+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 41.47202,
+      "longitude": 21.37241,
+      "bright_ti4": 334.97,
+      "scan": 0.54,
+      "track": 0.51,
+      "acq_date": "2026-03-22",
+      "acq_time": 1214,
+      "satellite": "N",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 285.53,
+      "frp": 4.86,
+      "daynight": "D",
+      "data_source": "VIIRS_SNPP_NRT",
+      "region": "Greece",
+      "id": "41.47202_21.37241_2026-03-22_1214",
+      "fetch_timestamp": "2026-03-22T15:18:19.221341+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
       "latitude": 38.82234,
       "longitude": 20.74884,
       "bright_ti4": 328.73,
@@ -18,7 +60,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "38.82234_20.74884_2026-03-22_1142",
-      "fetch_timestamp": "2026-03-22T14:46:50.063067+00:00",
+      "fetch_timestamp": "2026-03-22T15:18:22.200065+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -39,7 +81,7 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "40.94651_23.86262_2026-03-22_1142",
-      "fetch_timestamp": "2026-03-22T14:46:50.063086+00:00",
+      "fetch_timestamp": "2026-03-22T15:18:22.200079+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -60,13 +102,13 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "41.47206_21.37428_2026-03-22_1142",
-      "fetch_timestamp": "2026-03-22T14:46:50.063090+00:00",
+      "fetch_timestamp": "2026-03-22T15:18:22.200084+00:00",
       "api_method": "area_api_fallback"
     }
   ],
-  "count": 3,
+  "count": 5,
   "dataset": "recent",
-  "last_updated": "2026-03-22T14:46:50.333304+00:00",
+  "last_updated": "2026-03-22T15:18:22.884414+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
