@@ -18,7 +18,7 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Greece",
       "id": "40.28332_23.44307_2026-05-03_122",
-      "fetch_timestamp": "2026-05-03T11:58:40.753639+00:00",
+      "fetch_timestamp": "2026-05-03T13:12:15.335616+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -39,7 +39,28 @@
       "data_source": "VIIRS_NOAA20_NRT",
       "region": "Greece",
       "id": "41.50187_19.74406_2026-05-03_122",
-      "fetch_timestamp": "2026-05-03T11:58:40.753662+00:00",
+      "fetch_timestamp": "2026-05-03T13:12:15.335634+00:00",
+      "api_method": "area_api_fallback"
+    },
+    {
+      "latitude": 41.37067,
+      "longitude": 26.63569,
+      "bright_ti4": 337.14,
+      "scan": 0.39,
+      "track": 0.36,
+      "acq_date": "2026-05-03",
+      "acq_time": 1106,
+      "satellite": "N20",
+      "instrument": "VIIRS",
+      "confidence": "n",
+      "version": "2.0NRT",
+      "bright_ti5": 287.5,
+      "frp": 3.86,
+      "daynight": "D",
+      "data_source": "VIIRS_NOAA20_NRT",
+      "region": "Greece",
+      "id": "41.37067_26.63569_2026-05-03_1106",
+      "fetch_timestamp": "2026-05-03T13:12:15.335638+00:00",
       "api_method": "area_api_fallback"
     },
     {
@@ -60,13 +81,13 @@
       "data_source": "VIIRS_NOAA21_NRT",
       "region": "Greece",
       "id": "39.11316_27.52539_2026-05-03_33",
-      "fetch_timestamp": "2026-05-03T11:58:41.006155+00:00",
+      "fetch_timestamp": "2026-05-03T13:12:15.641301+00:00",
       "api_method": "area_api_fallback"
     }
   ],
-  "count": 3,
+  "count": 4,
   "dataset": "live",
-  "last_updated": "2026-05-03T11:58:41.135309+00:00",
+  "last_updated": "2026-05-03T13:12:15.790940+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
