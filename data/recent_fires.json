@@ -9222,7 +9222,7 @@
   ],
   "count": 439,
   "dataset": "recent",
-  "last_updated": "2026-10-21T22:27:22.187146+00:00",
+  "last_updated": "2026-10-22T00:51:32.854054+00:00",
   "sources": [
     "MODIS_NRT",
     "VIIRS_SNPP_NRT",
@@ -9235,5 +9235,5 @@
     "east": 34.8,
     "west": 19.5
   },
-  "using_fallback_data": false
+  "using_fallback_data": true
 }
